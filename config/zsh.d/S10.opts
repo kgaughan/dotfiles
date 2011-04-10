@@ -1,0 +1,6 @@
+zstyle ':completion:*' completer _expand _complete _approximate
+zstyle ':completion:*' max-errors 0 not-numeric
+zstyle :compinstall filename '/home/keith/.zshrc'
+
+setopt appendhistory autocd extendedglob hist_ignore_dups hist_save_no_dups
+setopt sharehistory

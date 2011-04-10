@@ -1,0 +1,34 @@
+mkdir -p $HOME/.local/{bin,lib,share} $HOME/{.cache,.config}
+
+HISTFILE=~/.histfile
+HISTSIZE=500000
+SAVEHIST=100000
+
+# file permissions: rwxr-xr-x
+umask 022
+
+# Enable the builtin emacs(1) command line editor in sh(1),
+# e.g. C-a -> beginning-of-line.
+# set -o emacs
+
+export LC_ALL=en_IE.UTF-8
+export LC_CTYPE=en_IE.UTF-8
+# test -z "$XTERM_LOCALE" && export XTERM_LOCALE=$LC_CTYPE
+# export LANG=en
+
+if test "x$PATH" = "x"; then
+	PATH=/bin:/sbin:/usr/bin:/usr/sbin
+fi
+for dir in /usr/{pkg,local}/{sbin,bin} $HOME/.local/bin $HOME/bin; do
+	if test -d "$dir"; then
+		PATH="$PATH:$dir"
+	fi
+done
+export PATH
+
+# To ensure that ROX-CLib behaves.
+if test "x$LIBDIRPATH" = "x"; then
+	LIBDIRPATH="/usr/local/lib:/usr/lib:/lib"
+fi
+LIBDIRPATH="$LIBDIRPATH:$HOME/.local/lib"
+export LIBDIRPATH
