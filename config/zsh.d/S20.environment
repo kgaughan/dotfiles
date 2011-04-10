@@ -11,24 +11,6 @@ umask 022
 # e.g. C-a -> beginning-of-line.
 # set -o emacs
 
+export LANG=en_IE.UTF-8
 export LC_ALL=en_IE.UTF-8
 export LC_CTYPE=en_IE.UTF-8
-# test -z "$XTERM_LOCALE" && export XTERM_LOCALE=$LC_CTYPE
-# export LANG=en
-
-if test "x$PATH" = "x"; then
-	PATH=/bin:/sbin:/usr/bin:/usr/sbin
-fi
-for dir in /usr/{pkg,local}/{sbin,bin} $HOME/.local/bin $HOME/bin; do
-	if test -d "$dir"; then
-		PATH="$PATH:$dir"
-	fi
-done
-export PATH
-
-# To ensure that ROX-CLib behaves.
-if test "x$LIBDIRPATH" = "x"; then
-	LIBDIRPATH="/usr/local/lib:/usr/lib:/lib"
-fi
-LIBDIRPATH="$LIBDIRPATH:$HOME/.local/lib"
-export LIBDIRPATH

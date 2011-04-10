@@ -1,3 +1,4 @@
+# Idea adapted from http://lumberjaph.net/app/2008/06/18/keep-your-zshrc-simple.html
 autoload -U compinit zrecompile zmv
 zsh_cache=$HOME/.cache/zsh
 mkdir -p $zsh_cache
