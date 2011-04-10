@@ -1,0 +1,61 @@
+# .shcommonrc - Common startup file between sh, bash, and zsh.
+
+HISTFILE=~/.histfile
+HISTSIZE=500000
+SAVEHIST=100000
+
+# file permissions: rwxr-xr-x
+umask	022
+
+# Enable the builtin emacs(1) command line editor in sh(1),
+# e.g. C-a -> beginning-of-line.
+# set -o emacs
+
+export LC_ALL=en_IE.UTF-8
+export LC_CTYPE=en_IE.UTF-8
+#test -z "$XTERM_LOCALE" && export XTERM_LOCALE=$LC_CTYPE
+# export LANG=en
+
+# To ensure that ROX-CLib behaves.
+if test "x$LIBDIRPATH" = "x"; then
+	LIBDIRPATH="/usr/local/lib:/usr/lib:/lib"
+fi
+LIBDIRPATH="$LIBDIRPATH:$HOME/.local/lib"
+export LIBDIRPATH
+
+# Select the preferred pager.
+if test "x$PAGER" = "x"; then
+	for pager in most less more; do
+		if which $pager 2>&1 >/dev/null; then
+			export PAGER=`which $pager`
+			break
+		fi
+	done
+fi
+
+# some useful aliases
+alias h='fc -l'
+alias j=jobs
+alias m=$PAGER
+alias ll='ls -hlaFo'
+alias ls='ls -F'
+alias l='ls -hl'
+alias g='egrep -i'
+if which svk 2>&1 >/dev/null; then
+	# Workaround for some UTF-8 based weirdness in svk, if it's installed.
+	alias svk='LC_ALL=C svk'
+fi
+alias untar='tar xf'
+alias md='mkdir -p'
+alias ff='find . -name $*'
+# I'm prone to typing this by accident.
+alias cd..='cd ..'
+alias du='du -h'
+alias df='df -h'
+ 
+# # be paranoid
+# alias cp='cp -ip'
+# alias mv='mv -i'
+alias rm='rm -i'
+
+which gpg-agent >/dev/null && export GPG_TTY=`tty`
