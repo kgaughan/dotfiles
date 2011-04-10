@@ -16,6 +16,8 @@ export LC_CTYPE=en_IE.UTF-8
 #test -z "$XTERM_LOCALE" && export XTERM_LOCALE=$LC_CTYPE
 # export LANG=en
 
+test ! -d $HOME/.local/bin && mkdir -p $HOME/.local/{bin,lib,share}
+
 # To ensure that ROX-CLib behaves.
 if test "x$LIBDIRPATH" = "x"; then
 	LIBDIRPATH="/usr/local/lib:/usr/lib:/lib"
