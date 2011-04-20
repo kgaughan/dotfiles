@@ -21,27 +21,28 @@ set incsearch
 set backspace=indent,eol,start
 set laststatus=2
 set foldmethod=marker
-set background=dark
 set statusline=%<%f%h%m%r%=%l,%c%V\ %P\ %{&ff}\ 
-syntax on
-colors koehler
+set number
 
-let php_folding=1
 " let php_noShortTags=1
+" let php_folding=1
 
 " Don't use Ex mode, use Q for formatting. Ex is annoying anyway.
 map Q gq
 
 if has("gui_running")
   set toolbariconsize=tiny
-  set guifont=Monaco\ 8
+  set guifont=Consolas\ 9
 endif
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if &t_Co > 2 || has("gui_running")
-  syntax on
   set hlsearch
+  set background=dark
+  syntax enable
+  " colors koehler
+  colors solarized
 endif
 " }}}
 
@@ -51,7 +52,8 @@ if &term == 'screen'
 endif
 " }}}
 
-if has("autocmd") " {{{
+" Autocommands {{{
+if has("autocmd")
 
   " Enable file type detection.
   " Use the default filetype settings, so that mail gets 'tw' set to 72,
@@ -84,13 +86,12 @@ if has("autocmd") " {{{
   autocmd FileType python
     \ setlocal et si
 
+  "autocmd BufWritePre *.php,*.css,*.py,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc
+  "  \ call ScrubTrailing()
 
   " Python autocompletion.
   autocmd FileType python set omnifunc=pythoncomplete#Complete
   inoremap <Nul> <C-x><C-o>
-
-  "autocmd BufWritePre *.php,*.css,*.py,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc
-  "  \ call ScrubTrailing()
 
   " automatically give executable permissions
   au BufWritePost *.pl,*.cgi,*.sh,*.py,*.rb
@@ -102,7 +103,8 @@ else
 
   set autoindent " always set autoindenting on
 
-endif " }}}
+endif " has("autocmd")
+" }}}
 
 " Sane tab navigation {{{
 nmap <A-PageUp>   :tabprevious<cr>
