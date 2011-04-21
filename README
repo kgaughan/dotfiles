@@ -1,0 +1,45 @@
+What's the story, like?
+-----------------------
+
+You're currently looking at my public dotfiles BZR repository. I use it to make
+sure I (a) don't bugger up any of these files by making unintended or stupid
+changes to them and (b) so that I can point people towards them for
+inspiration/smugness. :-)
+
+
+What's with the lack of dots?
+-----------------------------
+
+I like to keep the files and directories here visible, which means I drop the
+initial dot from any of the files. Machines I use these files on have a
+branch of this repo, and I symlink from the expected locations of the files
+back to the local branch of this repo. See, simple!
+
+
+I want to have my machine set up with your dotfiles, what would I need to do?
+-----------------------------------------------------------------------------
+
+Most of the directories and files are simple: just create symlinks back to
+the copies in this repo, and you're sorted.
+
+The 'config' directory is a little different, mind. In that case, you'll need
+to link the individual files and directories in that into your '.config'
+directory. Using the vim and zsh files, here's what you'll need to do:
+
+    % mkdir ~/.config ~/repos
+    % cd ~/repos
+    % bzr branch http://projects.talideon.com/repos/dotfiles/
+    % cd ~/.config
+    % ln -s ../repos/dotfiles/config/zsh.d .
+    % cd ..
+    % for i in vim vimrc zprofile zshrc; do ln -s repos/dotfiles/$i .$i; done
+
+
+Anything interesting here?
+--------------------------
+
+Not that I can think of. I guess zshrc and config/zsh.d/* are clever, but the
+basic idea behind that isn't mine.
+
+
+Keith Gaughan <http://stereochro.me/>
