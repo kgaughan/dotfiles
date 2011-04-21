@@ -40,6 +40,8 @@ endif
 if &t_Co > 2 || has("gui_running")
   set hlsearch
   set background=dark
+  " Enable 256-colour mode (rather than the default 8-colour mode).
+  set t_Co=256
   syntax enable
   " colors koehler
   colors solarized
