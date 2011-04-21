@@ -185,7 +185,12 @@ statusbar = {
   };
 };
 settings = {
-  core = { real_name = "Keith Gaughan"; user_name = "keith"; nick = "talideon"; };
+  core = {
+    real_name = "Keith Gaughan";
+    user_name = "keith";
+    nick = "talideon";
+  };
   "fe-text" = { actlist_sort = "refnum"; };
-  "perl/core/scripts" = { twirssi_first_run = "no"; };
+  "perl/core/scripts" = { };
+  "fe-common/core" = { theme = "solarish"; };
 };
