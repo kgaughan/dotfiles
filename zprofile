@@ -1,7 +1,7 @@
 ENV=$HOME/.zshrc; export ENV
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
-for dir in /usr/{pkg,local}/{sbin,bin} $HOME/.local/bin; do
+for dir in /usr/{pkg,local}/{sbin,bin} /usr/games $HOME/.local/bin; do
 	if test "x$dir" != "x${PATH##*$dir*}" -a -d "$dir"; then
 		PATH="$PATH:$dir"
 	fi
