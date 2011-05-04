@@ -1,0 +1,194 @@
+#!/usr/bin/env python
+#
+# fetchenclosures
+# by Keith Gaughan <http://stereochro.me/>
+#
+# Copyright (c) Keith Gaughan, 2011.
+# All Rights Reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+#  1. Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+#
+#  2. Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS "AS IS" AND ANY
+# EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# This license is subject to the laws and courts of the Republic of
+# Ireland.
+#
+
+"""
+Fetches an RSS feed and saves its enclosures to a directory. Feed items
+can be excluded if they've already been fetched and/or by the item title.
+"""
+
+from __future__ import with_statement
+from xml.dom import minidom
+from os import path
+import urllib2
+import anydbm
+import re
+import getopt
+import sys
+import shutil
+
+
+__all__ = ['fetch']
+
+
+__version__ = '0.1.1'
+
+
+USAGE = 'Usage: %s [-h] -f<url> -f<dir> [-c<cachedb>] [-e<regex>]*'
+
+
+def get_enclosure_filename(enclosure, disposition):
+    """
+    Given an enclosure URL and a Content-Disposition header, get the
+    filename to use when saving the enclosure.
+    """
+    filename = None
+    if disposition is not None:
+        parts = disposition.split('=', 1)
+        if len(parts) == 2:
+            _, filename = parts
+    if filename is None:
+        filename = enclosure
+    return path.basename(filename)
+
+
+def children(node, types=()):
+    """
+    Turns the child nodes of a DOM element into an iterable.
+    """
+    child = node.firstChild
+    while child is not None:
+        if child.nodeType in types:
+            yield child
+        child = child.nextSibling
+
+
+def parse_item(item, tags):
+    """
+    Extract the various fields of a feed item into a dict.
+    """
+    result = {}
+    for child in children(item, (item.ELEMENT_NODE,)):
+        if child.tagName in tags:
+            if child.tagName == 'enclosure':
+                # Retro! NameNodeMap doesn't support 'in' properly, it
+                # seems.
+                if not child.attributes.has_key('url'):
+                    continue
+                value = child.attributes['url'].value
+            else:
+                value = child.firstChild.data
+            result[child.tagName] = str(value)
+    return result
+
+
+def fetch(feed_url, directory, cache, patterns):
+    """
+    The meat! Fetch a feed, download its enclosures to a directory, but
+    only do so if not already fetched or the title's excluded by some
+    pattern.
+    """
+    compiled_patterns = [re.compile(pattern) for pattern in patterns]
+    def excluded(title):
+        for pattern in compiled_patterns:
+            if pattern.search(title):
+                return True
+        return False
+
+    try:
+        fd = urllib2.urlopen(feed_url)
+        for elem in minidom.parse(fd).getElementsByTagName('item'):
+            item = parse_item(elem, ('title', 'guid', 'enclosure'))
+            if 'enclosure' in item and \
+                    item['guid'] not in cache and \
+                    not excluded(item['title']):
+                fsrc = urllib2.urlopen(item['enclosure'])
+                filename = get_enclosure_filename(
+                        item['enclosure'],
+                        fsrc.info().getheader('content-disposition'))
+                cache[item['guid']] = filename
+                with open(path.join(directory, filename), 'w') as fdst:
+                    shutil.copyfileobj(fsrc, fdst)
+    except urllib2.HTTPError, err:
+        # The server isn't happy, so don't bother.
+        if err.code in (500, 502, 503, 504):
+            return
+        # Anything else, die loudly.
+        raise
+
+
+def usage(message=None):
+    """
+    Prints usage information and possibly an error message.
+    """
+    fd = sys.stdout
+    exit_code = 0
+    if message:
+        fd = sys.stderr
+        exit_code = 2
+        print >> fd, str(message)
+    name = path.basename(sys.argv[0])
+    print >> fd, USAGE % (name,)
+    sys.exit(exit_code)
+
+
+def main():
+    try:
+        opts, _ = getopt.getopt(sys.argv[1:], 'f:d:c:e:h')
+    except getopt.GetoptError, err:
+        usage(err)
+
+    feed_url = None
+    directory = None
+    cache_path = None
+    exclusion_patterns = []
+    for opt, val in opts:
+        if opt == '-f':
+            feed_url = val
+        elif opt == '-d':
+            directory = val
+        elif opt == '-c':
+            cache_path = val
+        elif opt == '-e':
+            exclusion_patterns.append(val)
+        elif opt == '-h':
+            usage()
+        else:
+            usage('Unknown flag: %s' % opt)
+
+    if feed_url is None:
+        usage('No feed url (-f) supplied.')
+
+    if directory is None:
+        usage('No destination directory (-d) supplied.')
+    if not path.isdir(directory):
+        usage('Bad destination directory path: %s' % directory)
+
+    cache = {} if cache_path is None else anydbm.open(cache_path, 'c')
+
+    fetch(feed_url, directory, cache, exclusion_patterns)
+
+
+if __name__ == '__main__':
+    main()

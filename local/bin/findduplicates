@@ -1,0 +1,191 @@
+#!/usr/bin/env python
+#
+# find-duplicates
+# by Keith Gaughan <http://talideon.com/>
+#
+# Copyright (c) Keith Gaughan, 2008.
+# All Rights Reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+#  1. Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+#
+#  2. Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS "AS IS" AND ANY
+# EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+# THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# This license is subject to the laws and courts of the Republic of Ireland.
+#
+
+"""
+Finds an lists any duplicate files in the given directories.
+"""
+
+from __future__ import with_statement
+import sys
+import os
+import hashlib
+import getopt
+import filecmp
+import re
+
+
+USAGE = "Usage: %s [-h] [-t] [-e] [-m<crc|md5>] [-x<glob>] <dir>*"
+
+
+class CRC(object):
+    """
+    Wraps up zlib.crc32 to make it suitable for use as a faster but less
+    accurate alternative to the hashlib.* classes.
+
+    >>> foo = crc()
+    >>> foo.update('foo').hexdigest()
+    '-738C9ADF'
+    >>> foo.update('bar').hexdigest()
+    '-6109E06B'
+    >>> crc('foobar').hexdigest()
+    '-6109E06B'
+    """
+    def __init__(self, initial=None):
+        self.crc = 0
+        if initial is not None:
+            self.update(initial)
+    def update(self, block):
+        import zlib
+        self.crc = zlib.crc32(block, self.crc)
+        return self
+    def hexdigest(self):
+        return "%X" % self.crc
+    def digest(self):
+        # Er...
+        return self.crc
+
+
+def all_files(tops, exclusions, ignore_empties):
+    """Lists all files in the given directories."""
+    for top in tops:
+        for dirname, _, filenames in os.walk(top):
+            if any(pattern.search(dirname) is not None for pattern in exclusions):
+                continue
+            for f in filenames:
+                path = os.path.join(dirname, f)
+                if os.path.isfile(path) and (not ignore_empties or os.path.getsize(path) > 0):
+                    yield path
+
+
+def digest(name, method=hashlib.md5):
+    with open(name) as hdl:
+        result = method(hdl.read()).digest()
+    return result
+
+
+def true_duplicates(items, compare=filecmp.cmp):
+    """
+    Compare the given items, breaking them down into groups with identical
+    content. The comparison function is meant to behave like filecmp.cmp(),
+    which is also the default comparison method.
+    """
+    while len(items) > 1:
+        next_set = []
+        this_set = []
+        master = items[0]
+        this_set.append(master)
+        for other in items[1:]:
+            if compare(master, other, False):
+                this_set.append(other)
+            else:
+                next_set.append(other)
+        if len(this_set) > 1:
+            yield this_set
+        items = next_set
+
+
+def group_by(groups, grouper, min_size=1):
+    """Breaks each of the groups into smaller subgroups."""
+    for group in groups:
+        subgroups = {}
+        for item in group:
+            g = grouper(item)
+            if not subgroups.has_key(g):
+                subgroups[g] = []
+            subgroups[g].append(item)
+        for g in subgroups.itervalues():
+            if len(g) >= min_size:
+                yield g
+
+
+def usage(message=None):
+    fh = sys.stdout
+    exit_code = 0
+    if message:
+        fh = sys.stderr
+        exit_code = 2
+        print >> fh, str(message)
+    name = os.path.basename(sys.argv[0])
+    print >> fh, USAGE % (name,)
+    sys.exit(exit_code)
+
+
+def main():
+    try:
+        opts, paths = getopt.getopt(sys.argv[1:], "ehm:x:t")
+    except getopt.GetoptError, err:
+        usage(err)
+    method = CRC
+    exclusions = []
+    ignore_empties = False
+    for opt, arg in opts:
+        if opt == "-m":
+            if arg == "crc":
+                method = CRC
+            elif arg == "md5":
+                method = hashlib.md5
+            else:
+                usage("Unknown grouping method: %s" % (arg,))
+        elif opt == "-h":
+            usage()
+        elif opt == "-t":
+            # Run doctests.
+            import doctest
+            doctest.testmod(verbose=True, exclude_empty=True)
+            sys.exit()
+        elif opt == '-x':
+            pattern = "/" + re.escape(arg) + "(/|$)"
+            exclusions.append(re.compile(pattern))
+        elif opt == '-e':
+            ignore_empties = True
+        else:
+            usage("Unknown option: %s%s" % (opt, arg))
+
+    if len(paths) == 0:
+        paths = ["."]
+
+    first = True
+    groups = [all_files(paths, exclusions, ignore_empties)]
+    for grouper in [os.path.getsize, lambda name: digest(name, method)]:
+        groups = group_by(groups, grouper, 2)
+    for group in groups:
+        for files in sorted(true_duplicates(group)):
+            if first:
+                first = False
+            else:
+                print
+            for name in files:
+                print name
+
+
+if __name__ == "__main__":
+    main()

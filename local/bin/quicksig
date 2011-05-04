@@ -1,0 +1,66 @@
+#!/usr/bin/env python
+
+from __future__ import with_statement
+import mmap
+import random
+import getopt
+import sys
+import os.path
+
+
+USAGE = "Usage: %s [-q<quips-file>] [-s<sig-file>]"
+
+
+def read_quip(quips_file):
+    with open(quips_file, 'r+b') as fh:
+        map = mmap.mmap(fh.fileno(), 0)
+        middle = random.randint(0, max(map.size() - 2, 0))
+        start = map.rfind('%', 0, middle) + 1
+        end = map.find('%', middle + 1) - 1
+        return map[start:end].strip()
+
+
+def usage(message=None):
+    global USAGE
+    fh = sys.stdout
+    exit_code = 0
+    if message:
+        fh = sys.stderr
+        exit_code = 2
+        print >> fh, str(message)
+    name = os.path.basename(sys.argv[0])
+    print >> fh, USAGE % (name,)
+    sys.exit(exit_code)
+
+
+def main():
+    signature_path = None
+    quips_path = None
+
+    try:
+        opts, _ = getopt.getopt(sys.argv[1:], "s:q:")
+    except getopt.GetoptError, err:
+        usage(err)
+
+    for opt, arg in opts:
+        if opt == '-s':
+            if not os.path.isfile(arg):
+                usage("No such signature file: %s" % (arg,))
+            signature_path = arg
+        elif opt == '-q':
+            if not os.path.isfile(arg):
+                usage("No such quip file: %s" % (arg,))
+            quips_path = arg
+
+    if signature_path is not None or quips_path is not None:
+        print "-- "
+    if signature_path is not None:
+        with open(signature_path, 'rb') as fh:
+            for line in fh:
+                print line.rstrip()
+    if quips_path is not None:
+        print read_quip(quips_path)
+
+
+if __name__ == '__main__':
+    main()
