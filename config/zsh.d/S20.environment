@@ -1,12 +1,4 @@
-mkdir -p $HOME/.local/{bin,lib,share} $HOME/{.cache,.config}
-
-HISTFILE=~/.histfile
-HISTSIZE=500000
-SAVEHIST=100000
+mkdir -p $HOME/.local/{lib,share} $HOME/{.cache,.config}
 
 # file permissions: rwxr-xr-x
 umask 022
-
-export LANG=en_IE.UTF-8
-export LC_ALL=en_IE.UTF-8
-export LC_CTYPE=en_IE.UTF-8
