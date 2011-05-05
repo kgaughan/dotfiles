@@ -38,12 +38,12 @@ if test "x$PAGER" = "x"; then
 fi
 
 ## gpg-agent
-if test -f $HOME/.gpg-agent-info; then
-	. $HOME/.gpg-agent-info
-	export GPG_AGENT_INFO
-	export SSH_AUTH_SOCK
-	export SSH_AGENT_PID
-fi
+#if test -f $HOME/.gpg-agent-info; then
+#	. $HOME/.gpg-agent-info
+#	export GPG_AGENT_INFO
+#	export SSH_AUTH_SOCK
+#	export SSH_AGENT_PID
+#fi
 
 ## Miscellany
 export BLOCKSIZE=K

@@ -1,1 +1,1 @@
-gpg-agent --daemon --enable-ssh-support --write-env-file "$HOME/.gpg-agent-info"
+eval `keychain --eval id_rsa`
