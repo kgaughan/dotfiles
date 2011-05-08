@@ -1,0 +1,98 @@
+#!/usr/bin/env python
+
+"""Serves a directory over HTTP and publishes itself via DNS-SD."""
+
+import avahi
+import dbus
+import getopt
+import os
+import SimpleHTTPServer
+import SocketServer
+import sys
+from os import path
+
+
+__version__ = '0.1.1'
+
+
+USAGE = 'Usage: %s [-p<port>] [-d<dir>] [-t<title>]'
+
+
+def avahi_get(obj_path, iface):
+    obj = dbus.SystemBus().get_object(avahi.DBUS_NAME, obj_path)
+    return dbus.Interface(obj, iface)
+
+
+def avahi_make_entry_group():
+    svr = avahi_get('/', avahi.DBUS_INTERFACE_SERVER)
+    return avahi_get(svr.EntryGroupNew(), avahi.DBUS_INTERFACE_ENTRY_GROUP)
+
+
+def avahi_add_service(group, svc_type, port, name='', txt_records=None):
+    if txt_records is None:
+        txt_records = []
+    group.AddService(
+            avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, dbus.UInt32(0),
+            name, svc_type, '', '', dbus.UInt16(port),
+            txt_records)
+
+
+def serve(port, title):
+    # First, create the server.
+    httpd = SocketServer.TCPServer(
+            ('', port),
+            SimpleHTTPServer.SimpleHTTPRequestHandler)
+
+    # Now register it with Avahi as a service
+    group = avahi_make_entry_group()
+    avahi_add_service(group, '_http._tcp', port, title)
+    group.Commit()
+
+    # And serve!
+    httpd.serve_forever()
+
+
+def usage(message=None):
+    """
+    Prints usage information and possibly an error message.
+    """
+    fd = sys.stdout
+    exit_code = 0
+    if message:
+        fd = sys.stderr
+        exit_code = 2
+        print >> fd, str(message)
+    name = path.basename(sys.argv[0])
+    print >> fd, USAGE % (name,)
+    sys.exit(exit_code)
+
+
+def main():
+    try:
+        opts, _ = getopt.getopt(sys.argv[1:], 'p:d:t:h')
+    except getopt.GetoptError, err:
+        usage(err)
+
+    port = 8080
+    title = 'Shared directory'
+    for opt, val in opts:
+        if opt == '-p':
+            port = int(val)
+            if 0 >= port >= 65536:
+                usage("Bad port number: %d" % port)
+        elif opt == '-t' and len(val) > 0:
+            title = val
+        elif opt == '-d':
+            if not path.isdir(val):
+                usage("Bad directory path: '%s'" % val)
+            os.chdir(val)
+        elif opt == '-h':
+            usage()
+        else:
+            usage("Unknown flag: %s" % opt)
+
+    serve(port, title)
+
+
+if __name__ == '__main__':
+    main()
