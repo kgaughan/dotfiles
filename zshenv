@@ -37,6 +37,13 @@ if test "x$PAGER" = "x"; then
 	done
 fi
 
+## This dance makes sure that if if TERM is 'blah' or 'blah-256color', it
+## always ends up 'blah-256color'. This is necessary to get tmux and vim
+## playing nice with the more idiotic terminal emulators out there.
+if test "x$TERM" != "x"; then
+	export TERM=${TERM%-256color}-256color
+fi
+
 ## gpg-agent
 #if test -f $HOME/.gpg-agent-info; then
 #	. $HOME/.gpg-agent-info
