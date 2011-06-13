@@ -23,6 +23,10 @@ set laststatus=2
 set foldmethod=marker
 set statusline=%<%f%h%m%r%=%l,%c%V\ %P\ %{&ff}\ 
 set number
+set wildmenu
+set wildmode=list:longest,full
+set ttyfast
+set colorcolumn=80
 
 " let php_noShortTags=1
 " let php_folding=1
@@ -124,6 +128,12 @@ imap <A-PageUp>   <ESC>:tabprevious<cr>i
 imap <A-PageDown> <ESC>:tabnext<cr>i
 nmap <C-n>        :tabnew<cr>
 imap <C-n>        <ESC>:tabnew<cr>
+" }}}
+
+" Deactivate F1 and turn it into Escape {{{
+inoremap <F1> <ESC>
+nnoremap <F1> <ESC>
+vnoremap <F1> <ESC>
 " }}}
 
 " Helpful window navigation {{{
