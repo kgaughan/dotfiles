@@ -54,6 +54,9 @@ def main():
 
     if signature_path is not None or quips_path is not None:
         print "-- "
+    else:
+        usage()
+
     if signature_path is not None:
         with open(signature_path, 'rb') as fh:
             for line in fh:
