@@ -26,7 +26,15 @@ set number
 set wildmenu
 set wildmode=list:longest,full
 set ttyfast
-set colorcolumn=80
+" Both for minime, which as oddly slow scrolling.
+set scrolljump=4
+set ttyscroll=100
+" http://stackoverflow.com/questions/235439/vim-80-column-layout-concerns/3765575
+if exists('+colorcolumn')
+  set colorcolumn=80
+else
+  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
+endif
 
 " let php_noShortTags=1
 " let php_folding=1
@@ -51,6 +59,8 @@ if &t_Co > 2 || has("gui_running")
   " colors koehler
   colors solarized
 endif
+
+set list listchars=tab:▷⋅,trail:⋅,nbsp:⋅
 " }}}
 
 " Fix backspace behaviour under screen. {{{
@@ -92,12 +102,10 @@ if has("autocmd")
   " Settings for various modes.
   autocmd BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc
     \ setlocal sw=2 ts=2 sts=2 et
-  autocmd BufNewFile,BufRead,Syntax *.erl
-    \ setlocal ai et
-  autocmd BufNewFile,BufRead,Syntax *.py,*.hs
-    \ setlocal et si
+  autocmd BufNewFile,BufRead,Syntax *.erl,*.py,*.hs
+    \ setlocal et ai si
   autocmd FileType python
-    \ setlocal et si
+    \ setlocal et ai si
 
   "autocmd BufWritePre *.php,*.css,*.py,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc
   "  \ call ScrubTrailing()
