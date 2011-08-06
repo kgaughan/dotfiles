@@ -1,0 +1,2 @@
+setlocal smarttab
+setlocal expandtab

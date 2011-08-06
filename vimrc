@@ -2,6 +2,7 @@
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
+set textwidth=80
 " }}}
 
 " General Configuration {{{
@@ -88,9 +89,6 @@ if has("autocmd")
   augroup vimrcEx
   au!
 
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
-
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
   " (happens when dropping a file on gvim).
@@ -102,10 +100,8 @@ if has("autocmd")
   " Settings for various modes.
   autocmd BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc
     \ setlocal sw=2 ts=2 sts=2 et
-  autocmd BufNewFile,BufRead,Syntax *.erl,*.py,*.hs
-    \ setlocal et ai si
-  autocmd FileType python
-    \ setlocal et ai si
+  autocmd BufNewFile,BufRead,Syntax *.erl,*.hs
+    \ setlocal et ai si sta
 
   "autocmd BufWritePre *.php,*.css,*.py,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc
   "  \ call ScrubTrailing()
