@@ -92,22 +92,22 @@ if has("autocmd")
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
   " (happens when dropping a file on gvim).
-  autocmd BufReadPost *
+  au BufReadPost *
     \ if line("'\"") > 0 && line("'\"") <= line("$") |
     \   exe "normal g`\"" |
     \ endif
 
   " Settings for various modes.
-  autocmd BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc
+  au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc
     \ setlocal sw=2 ts=2 sts=2 et
-  autocmd BufNewFile,BufRead,Syntax *.erl,*.hs
+  au BufNewFile,BufRead,Syntax *.erl,*.hs
     \ setlocal et ai si sta
 
-  "autocmd BufWritePre *.php,*.css,*.py,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc
+  "au BufWritePre *.php,*.css,*.py,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc
   "  \ call ScrubTrailing()
 
   " Python autocompletion.
-  autocmd FileType python set omnifunc=pythoncomplete#Complete
+  au FileType python set omnifunc=pythoncomplete#Complete
   inoremap <Nul> <C-x><C-o>
 
   " automatically give executable permissions
