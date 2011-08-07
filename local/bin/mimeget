@@ -1,0 +1,136 @@
+#!/usr/bin/env python
+#
+# mimeget
+# by Keith Gaughan <http://stereochro.me/>
+#
+# Copyright (c) Keith Gaughan, 2011.
+# All Rights Reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+#  1. Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+#
+#  2. Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS "AS IS" AND ANY
+# EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# This license is subject to the laws and courts of the Republic of
+# Ireland.
+#
+
+"""
+Extracts information from MIME messages.
+"""
+
+import sys
+import os.path
+import getopt
+import email
+
+USAGE = """
+Usage: %s [options] <path>
+
+Extracts information from MIME messages.
+
+Please note that this program does not deal with multipart/* messages.
+
+Options:
+
+    -h, --help
+        Show this information.
+
+    -H HEADER, --header=HEADER
+        Show the named header.
+
+    -F, --first-only
+        Show the first instance of the named header only.
+
+    -B, --body
+        Show the body of the MIME message. If both this flag and a list of
+        headers is provided, the headers will be written with their names
+        and a blank line will be written between between the headers and
+        the payload.
+"""
+
+
+def usage(msg=None):
+    hdl = sys.stdout if msg is None else sys.stderr
+    if msg is not None:
+        print >> hdl, "Error: %s\n" % str(msg)
+    print >> hdl, USAGE.strip() % os.path.basename(sys.argv[0])
+    sys.exit(2)
+
+
+def main():
+    try:
+        opts, args = getopt.getopt(
+                sys.argv[1:],
+                'H:FBh',
+                ['header=', 'first-only', 'body', 'help'])
+    except getopt.GetoptError, err:
+        usage(err)
+
+    headers = set()
+    body = False
+    first_only = False
+
+    for opt, arg in opts:
+        if opt in ('-h', '--help'):
+            usage()
+        elif opt in ('-H', '--header'):
+            headers.add(arg.lower())
+        elif opt in ('-F', '--first-only'):
+            first_only = True
+        elif opt in ('-B', '--body'):
+            body = True
+        else:
+            usage('Unknown argument: "%s"' % opt)
+
+    if len(args) != 1:
+        usage('Specify one and only one message path.')
+
+    if not os.path.isfile(args[0]):
+        usage('You must provide a valid file path.')
+
+    with open(args[0], 'r') as fh:
+        msg = email.message_from_file(fh)
+
+    dumped_header = {}
+    for name in headers:
+        dumped_header[name] = False
+    for name, value in msg.items():
+        canon_name = name.lower()
+        if canon_name not in headers or (dumped_header[canon_name] and first_only):
+            continue
+        dumped_header[canon_name] = True
+
+        if body:
+            print "%s: %s" % (name, value)
+        else:
+            print value
+
+    if body:
+        if len(headers) > 0:
+            print
+        # We use this because we don't want the trailing newline Python
+        # shoves in with 'print'.
+        sys.stdout.write(msg.get_payload())
+
+
+if __name__ == '__main__':
+    main()
