@@ -54,7 +54,7 @@ set mail_check=60
 # And poll the current mailbox more often (not needed with IDLE in post 1.5.11)
 set timeout=10
 # keep a cache of headers for faster loading (1.5.9+?)
-#set header_cache=~/.mutt.hcache
+set header_cache=~/.cache/mutt.hcache
 # Display download progress every 5K
 set net_inc=5
 
