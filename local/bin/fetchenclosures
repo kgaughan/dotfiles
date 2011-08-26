@@ -41,12 +41,13 @@ can be excluded if they've already been fetched and/or by the item title.
 from __future__ import with_statement
 from xml.dom import minidom
 from os import path
-import urllib2
 import anydbm
-import re
+import errno
 import getopt
-import sys
+import re
 import shutil
+import sys
+import urllib2
 
 
 __all__ = ['fetch']
@@ -103,6 +104,15 @@ def parse_item(item, tags):
     return result
 
 
+def fetch_enclosure(url, guid, directory, cache):
+    fsrc = urllib2.urlopen(url)
+    filename = get_enclosure_filename(
+            url, fsrc.info().getheader('content-disposition'))
+    cache[guid] = filename
+    with open(path.join(directory, filename), 'w') as fdst:
+        shutil.copyfileobj(fsrc, fdst)
+
+
 def fetch(feed_url, directory, cache, patterns):
     """
     The meat! Fetch a feed, download its enclosures to a directory, but
@@ -111,25 +121,29 @@ def fetch(feed_url, directory, cache, patterns):
     """
     compiled_patterns = [re.compile(pattern) for pattern in patterns]
     def excluded(title):
-        for pattern in compiled_patterns:
-            if pattern.search(title):
-                return True
-        return False
+        return any(pattern.search(title) for pattern in compiled_patterns)
+
+    def can_download(item):
+        return 'enclosure' in item and \
+                item['guid'] not in cache and \
+                not excluded(item['title'])
 
     try:
-        fd = urllib2.urlopen(feed_url)
-        for elem in minidom.parse(fd).getElementsByTagName('item'):
+        ffeed = urllib2.urlopen(feed_url)
+        for elem in minidom.parse(ffeed).getElementsByTagName('item'):
             item = parse_item(elem, ('title', 'guid', 'enclosure'))
-            if 'enclosure' in item and \
-                    item['guid'] not in cache and \
-                    not excluded(item['title']):
-                fsrc = urllib2.urlopen(item['enclosure'])
-                filename = get_enclosure_filename(
+            if can_download(item):
+                fetch_enclosure(
                         item['enclosure'],
-                        fsrc.info().getheader('content-disposition'))
-                cache[item['guid']] = filename
-                with open(path.join(directory, filename), 'w') as fdst:
-                    shutil.copyfileobj(fsrc, fdst)
+                        item['guid'],
+                        directory, cache)
+    except urllib2.URLError, err:
+        err_code, _ = err.reason
+        # If it times out, we don't care: we just try again later.
+        if err_code == errno.ETIMEDOUT:
+            return
+        # Anything else, die loudly.
+        raise
     except urllib2.HTTPError, err:
         # The server isn't happy, so don't bother.
         if err.code in (500, 502, 503, 504):
