@@ -1,0 +1,57 @@
+# Basic colours
+
+color normal     color250    default
+color error      red         default
+color message    cyan        default
+color markers    red         default
+color attachment yellow      default
+color search     magenta     default
+color status     white       color238
+color indicator  brightwhite color130
+color tree       yellow      default
+
+mono  indicator  reverse
+mono  error      bold
+
+# Formatting
+
+color bold       white       default
+color underline  yellow      default
+
+mono  bold       bold
+mono  underline  underline
+
+# Message index
+
+color index      default     default  ~A # Default
+color index      brightwhite default  ~N # New
+color index      white       default  ~O # Old
+color index      green       default  ~Q # Replied to
+color index      red         default  ~F # Flagged
+color index      black       red      ~D # Deleted
+
+# Headers
+
+color hdrdefault default     color8
+color header     yellow      color8   "^(From)"
+color header     brightwhite color8   "^(Subject)"
+
+# Body
+
+color quoted     cyan        default
+color quoted1    yellow      default
+color quoted2    magenta     default
+color quoted3    green       default
+color quoted4    red         default
+color signature  blue        default
+
+# GPG
+
+color body       red         default  "^gpg: BAD signature .*"
+color body       green       default  "^gpg: Good signature .*"
+color body       blue        default  "^gpg: "
+
+mono  body       bold                 "^gpg: BAD signature.*"
+mono  body       bold                 "^gpg: Good signature.*"
+
+# vim:filetype=muttrc
