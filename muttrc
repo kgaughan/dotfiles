@@ -7,7 +7,6 @@ set menu_scroll
 set status_on_top
 set sort=threads
 set edit_headers=yes
-set editor=/usr/local/bin/vim
 set send_charset=us-ascii:iso-8859-1:utf-8
 set charset="utf-8"
 auto_view text/html
