@@ -52,9 +52,7 @@ def main():
                 usage("No such quip file: %s" % (arg,))
             quips_path = arg
 
-    if signature_path is not None or quips_path is not None:
-        print "-- "
-    else:
+    if signature_path is None and quips_path is None:
         usage()
 
     if signature_path is not None:
