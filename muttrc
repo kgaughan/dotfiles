@@ -60,7 +60,7 @@ set header_cache=~/.cache/mutt.hcache
 set net_inc=5
 # }}}
 
-set signature=quicksig|
+set signature='quicksig -q ~/.config/signatures/fortunes -s ~/.config/signatures/signature|'
 
 ignore *
 unignore Date To From: Subject Organization
