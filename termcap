@@ -1,3 +1,4 @@
 screen-256color|VT 100/ANSI X3.64 terminal with 256 colors:\
 	:Co#256:pa#32767:\
 	:AB=\E[48;5;%dm:AF=\E[38;5;%dm:tc=screen:
+xterm-256color|xterm alias 3:Co#256:AF=\E[38;5;%dm:AB=\E[48;5;%dm:tc=rxvt:
