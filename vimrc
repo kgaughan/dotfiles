@@ -37,9 +37,6 @@ else
   au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 endif
 
-" let php_noShortTags=1
-" let php_folding=1
-
 " Don't use Ex mode, use Q for formatting. Ex is annoying anyway.
 map Q gq
 
@@ -57,11 +54,14 @@ if &t_Co > 2 || has("gui_running")
   " Enable 256-colour mode (rather than the default 8-colour mode).
   set t_Co=256
   syntax enable
-  " colors koehler
   colors solarized
 endif
 
-set list listchars=tab:▷⋅,trail:⋅,nbsp:⋅
+if &term == 'cons25'
+  set list listchars=tab:>.,trail:.,nbsp:.
+else
+  set list listchars=tab:▷⋅,trail:⋅,nbsp:⋅
+endif
 " }}}
 
 " Fix backspace behaviour under screen. {{{
