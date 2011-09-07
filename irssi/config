@@ -34,7 +34,7 @@ chatnets = {
 channels = (
   { name = "#linux"; chatnet = "LSpace"; autojoin = "yes"; },
   { name = "#blacknight"; chatnet = "INEX"; autojoin = "yes"; },
-  { name = "#bkdevs"; chatnet = "INEX"; autojoin = "yes"; }
+  { name = "#bkdevs"; chatnet = "INEX"; autojoin = "yes"; },
   { name = "#python.ie"; chatnet = "Freenode"; autojoin = "yes"; }
 );
 
@@ -207,3 +207,4 @@ settings = {
   "perl/core/scripts" = { };
   "fe-common/core" = { theme = "solarish"; };
 };
+logs = { "~/irc-logs/bkdevs" = { level = "ALL"; }; };
