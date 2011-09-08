@@ -57,11 +57,8 @@ if &t_Co > 2 || has("gui_running")
   colors solarized
 endif
 
-if &term == 'cons25'
-  set list listchars=tab:>.,trail:.,nbsp:.
-else
-  set list listchars=tab:▷⋅,trail:⋅,nbsp:⋅
-endif
+" For displaying nasty whitespace.
+set listchars=tab:>.,trail:.,nbsp:.
 " }}}
 
 " Fix backspace behaviour under screen. {{{
