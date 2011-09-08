@@ -1,0 +1,4 @@
+#!/usr/bin/env python
+import os
+for i in sorted(j for k in os.getenv('PATH').split(':') for j in os.listdir(k)):
+    print i

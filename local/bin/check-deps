@@ -1,0 +1,44 @@
+#!/usr/local/bin/python
+
+from __future__ import with_statement
+import os
+
+PKG_DB = '/var/db/pkg'
+
+def each_dep(lines):
+    """Extracts the package dependencies from the iterable."""
+    return (line[8:-1] for line in lines if line.startswith('@pkgdep '))
+
+# Figure out from the dependencies which packages are required by which.
+reqs = {}
+print "==>\tGathering dependencies..."
+for pkg in os.listdir(PKG_DB):
+    print "-->\t%s" % (pkg,)
+    path = os.path.join(PKG_DB, pkg, "+CONTENTS")
+    if os.path.isfile(path):
+        with open(path) as f:
+            for dep in each_dep(f):
+                if dep not in reqs:
+                    reqs[dep] = set()
+                reqs[dep].add(pkg)
+
+# Check that the currently recorded ones are valid.
+print "\n==>\tRunning checks..."
+for pkg in reqs.keys():
+    print "-->\t%s" % (pkg,)
+    path = os.path.join(PKG_DB, pkg, "+REQUIRED_BY")
+    if os.path.isfile(path):
+        with open(path) as f:
+            for line in f:
+                line = line[:-1]
+                if line in reqs[pkg]:
+                    reqs[pkg].remove(line)
+                else:
+                    print "==>\tErroneous dep '%s' in '%s'" & (line, pkg)
+    if len(reqs[pkg]) == 0:
+        del reqs[pkg]
+    else:
+        print "==>\t%s does not record:\n%s" % (pkg, "\n".join(reqs[pkg]))
+
+if len(reqs) == 0:
+    print "All clean!"

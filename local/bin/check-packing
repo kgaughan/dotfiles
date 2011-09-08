@@ -1,0 +1,66 @@
+#!/usr/local/bin/python
+
+from __future__ import with_statement
+import os
+import hashlib
+import sys
+
+
+PKG_DB = '/var/db/pkg'
+
+
+def each_file(f, pkg_path):
+    """
+    Generates a list of tuples, the first element being an absolute file
+    path, and the second being its recorded hash, from a package manifest.
+    """
+    cwd = ''
+    file = ''
+    try:
+        for line in f:
+            if line[0] != '@':
+                file = os.path.join(cwd, line.strip())
+            elif line.startswith('@cwd '):
+                new_cwd = line.split(' ', 2)[1].strip()
+                if new_cwd == '.':
+                    cwd = pkg_path
+                elif new_cwd != '':
+                    # This check is a hack for dealing with broken manifests.
+                    # mysql-client-5.0, nss, pth, portupgrade and zsh are
+                    # examples.
+                    cwd = new_cwd
+            elif file != '' and line.startswith('@comment MD5:'):
+                digest = line.split(':', 2)[1].strip()
+                yield (file, digest)
+                file = ''
+    finally:
+        pass
+
+
+def hash_matches(path, original_hash):
+    """Checks if the given file matches a hash."""
+    with open(path) as f:
+        new_hash = hashlib.md5(f.read()).hexdigest()
+    return new_hash == original_hash
+
+
+for pkg in sorted(os.listdir(PKG_DB)):
+    path = os.path.join(PKG_DB, pkg, "+CONTENTS")
+    if os.path.isfile(path):
+        print "===>\tChecking %s" % (pkg,)
+        with open(path) as f:
+            for (file_path, hash) in each_file(f, os.path.join(PKG_DB, pkg)):
+                try:
+                    if not os.path.exists(file_path):
+                        if os.path.islink(file_path):
+                            print "Missing: %s -> %s" % (file_path, os.path.realpath(file_path))
+                        else:
+                            print "Missing: %s" % (file_path,)
+                    elif not os.path.islink(file_path) and not hash_matches(file_path, hash):
+                        print "Altered: %s" % (file_path,)
+                except KeyboardInterrupt:
+                    raise
+                except:
+                    print "Unchecked: %s" % (file_path,)
+
+# ex:et sts=4 ts=4 sw=4:

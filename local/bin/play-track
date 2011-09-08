@@ -1,0 +1,62 @@
+#!/bin/sh
+#
+# play-track
+# by Keith Gaughan <http://talideon.com/>
+#
+# Think of it as the poor man's MPD. :-) Specifically, I use it for playing
+# audio files with ROX. Start it with a file to play that file and without
+# to stop whatever the file currently being played from playing.
+#
+# I, Keith Gaughan, hereby put this script in the public domain. It comes
+# without warranty of any kind and the author disclaims responsibility for
+# any mishap that may occur due to its use. You are requested, but not
+# obligated, to leave the attribution of the original author in place and
+# to append your name to the attribution if you distribute altered versions
+# of this script.
+#
+
+PID_FILE=$HOME/.`basename "$0"`.pid
+
+kill_existing () {
+	test -r $PID_FILE && kill `cat $PID_FILE`
+}
+
+play () {
+	kill_existing
+	for i in mplayer mpg321 mpg123 plaympeg; do
+		if which $i >/dev/null; then
+			$i "$@" 2>&1 >/dev/null &
+			PID=$!
+			echo $PID >$PID_FILE
+			if wait $PID; then
+				test -r $PID_FILE && rm $PID_FILE
+				return 0
+			fi
+			test -r $PID_FILE && rm $PID_FILE
+			return 1
+		fi
+	done
+	return 1
+}
+
+randomise_files () {
+	for i in "$@"/*; do
+		# jot is *BSD specific and generates numbers, much like seq. However,
+		# it's also able to generate sequences of *random* numbers.
+		echo "`jot -rn 1 1 100000`	$i"
+	done | sort -n | cut -f2
+}
+
+play_dir () {
+	randomise_files "$@" | while read j; do
+		play "$j" || exit
+	done
+}
+
+if [ "$@ " = " " ]; then
+	kill_existing
+elif [ -d "$@" ]; then
+	play_dir "$@"
+else
+	play "$@"
+fi
