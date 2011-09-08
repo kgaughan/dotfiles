@@ -1,0 +1,1 @@
+(which transset-df && test -n "$WINDOWID" && transset-df -i $WINDOWID 0.8) >/dev/null

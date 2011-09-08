@@ -1,0 +1,43 @@
+Xft.dpi: 96
+Xft.autohinting: 1
+Xft.hintstyle: hintfull
+Xft.antialias: 1
+Xft.rgba: rgb
+
+! XTerm resources.
+XTerm.vt100.scrollBar: false
+XTerm.vt100.utf8: 2
+XTerm.vt100.locale: true
+XTerm.vt100.pointerMode: 2
+XTerm.vt100.scrollBarBorder: 0
+XTerm.vt100.utf8Fonts.font: -xos4-terminus-*-r-*-*-12-*-*-*-*-*-iso10646-1
+XTerm.vt100.font: -xos4-terminus-*-r-*-*-12-*-*-*-*-*-iso8859-1
+XTerm.vt100.visualBell: true
+XTerm.vt100.cursorBlink: true
+XTerm.toolBar: true
+XTerm*borderWidth: 0
+
+! Solarized palette
+*background: #002b36
+*foreground: #657b83
+*fading: 40
+*fadeColor: #002b36
+*cursorColor: #93a1a1
+*pointerColorBackground: #586e75
+*pointerColorForeground: #93a1a1
+*color0: #073642
+*color1: #dc322f
+*color2: #859900
+*color3: #b58900
+*color4: #268bd2
+*color5: #d33682
+*color6: #2aa198
+*color7: #eee8d5
+*color8: #002b36
+*color9: #cb4b16
+*color10: #586e75
+*color11: #657b83
+*color12: #839496
+*color13: #6c71c4
+*color14: #93a1a1
+*color15: #fdf6e3
