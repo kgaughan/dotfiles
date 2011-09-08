@@ -20,7 +20,7 @@ fi
 # map is used.
 setxkbmap ie &
 
-talideon-wallpaper &
+set-wallpaper &
 
 xrdb ~/.Xdefaults
 
