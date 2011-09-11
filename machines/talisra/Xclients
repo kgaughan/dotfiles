@@ -1,20 +1,7 @@
 #!/bin/sh
 
-# D-Bus
-if which dbus-launch >/dev/null && test -z "$DBUS_SESSION_BUS_ADDRESS"; then
-	eval `dbus-launch --sh-syntax --exit-with-session`
-fi
-
-# Compositing for slight xterm transparency
-xcompmgr &
-
-
-# Make GTK apps look and behave how they were set up in the gnome config tools
-if test -x /usr/local/libexec/gnome-settings-daemon >/dev/null; then
-	/usr/local/libexec/gnome-settings-daemon &
-elif which gnome-settings-daemon >/dev/null; then
-	gnome-settings-daemon &
-fi
+# Eye candy! 
+xcompmgr -c &
 
 # A temporary hack to until I find a better way of ensuring the right keyboard
 # map is used.
@@ -24,4 +11,4 @@ set-wallpaper &
 
 xrdb ~/.Xdefaults
 
-exec awesome2
+exec openbox
