@@ -36,6 +36,7 @@
 import os, sys
 from os import path
 from sys import argv
+from pipes import quote
 from xml.etree import ElementTree as et
 
 
@@ -101,7 +102,7 @@ def generate_directory_menu(dirname, tree):
             tree.start('item', {'label': name[:name.rfind('.')]})
             tree.start('action', {'name': 'Execute'})
             tree.start('execute', {})
-            tree.data("%s '%s'" % (argv[0], full_path))
+            tree.data("%s %s" % (argv[0], quote(full_path)))
             tree.end('execute')
             tree.end('action')
             tree.end('item')
@@ -109,7 +110,7 @@ def generate_directory_menu(dirname, tree):
             tree.start('menu', {
                 'label': name,
                 'id': 'dir:' + name,
-                'execute': "%s '%s'" % (argv[0], full_path)})
+                'execute': "%s %s" % (argv[0], quote(full_path))})
             tree.end('menu')
 
 
