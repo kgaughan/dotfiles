@@ -105,12 +105,11 @@ def generate_directory_menu(dirname, tree):
             tree.end('execute')
             tree.end('action')
             tree.end('item')
-        # Unfortunately, submenus, either as pipemenus or directly embedded
-        # in a pipemenu, aren't allowed, but we'll leave this in anyway as
-        # if/when it does, it'll be a nice hidden bonus feature.
         elif path.isdir(full_path):
-            tree.start('menu', {'label': name})
-            generate_directory_menu(full_path, tree)
+            tree.start('menu', {
+                'label': name,
+                'id': 'dir:' + name,
+                'execute': "%s '%s'" % (argv[0], full_path)})
             tree.end('menu')
 
 
