@@ -1,14 +1,8 @@
 #!/bin/sh
 
-# Eye candy! 
-xcompmgr -c &
-
-# A temporary hack to until I find a better way of ensuring the right keyboard
-# map is used.
 setxkbmap ie &
-
+xcompmgr -c &
+conky &
 set-wallpaper &
-
 xrdb ~/.Xdefaults
-
 exec openbox
