@@ -142,7 +142,7 @@ screen 0
 			{
 				button = "1"
 				command = "spawn"
-				arg = "exec xterm -e man awesome"
+				arg = "exec xterm -e man awesome2"
 			}
 		}
 	}
