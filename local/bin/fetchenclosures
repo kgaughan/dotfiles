@@ -137,16 +137,16 @@ def fetch(feed_url, directory, cache, patterns):
                         item['enclosure'],
                         item['guid'],
                         directory, cache)
+    except urllib2.HTTPError, err:
+        # The server isn't happy, so don't bother.
+        if err.code in (500, 502, 503, 504):
+            return
+        # Anything else, die loudly.
+        raise
     except urllib2.URLError, err:
         err_code, _ = err.reason
         # If it times out, we don't care: we just try again later.
         if err_code == errno.ETIMEDOUT:
-            return
-        # Anything else, die loudly.
-        raise
-    except urllib2.HTTPError, err:
-        # The server isn't happy, so don't bother.
-        if err.code in (500, 502, 503, 504):
             return
         # Anything else, die loudly.
         raise
