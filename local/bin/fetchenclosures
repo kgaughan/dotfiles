@@ -146,7 +146,7 @@ def fetch(feed_url, directory, cache, patterns):
     except urllib2.URLError, err:
         err_code, _ = err.reason
         # If it times out, we don't care: we just try again later.
-        if err_code == errno.ETIMEDOUT:
+        if err_code in (errno.ETIMEDOUT,):
             return
         # Anything else, die loudly.
         raise
