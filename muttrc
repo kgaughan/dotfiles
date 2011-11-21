@@ -72,3 +72,4 @@ bind pager h display-toggle-weed
 # Solarized theme
 # https://github.com/altercation/mutt-colors-solarized
 source ~/.config/mutt.d/talideon-256.theme
+source ~/.muttrc.local
