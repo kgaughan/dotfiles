@@ -1,12 +1,10 @@
 # For useful tips, see:
 # http://blogs.perl.org/users/smylers/2011/08/ssh-productivity-tips.html
 
+Host *
+IdentityFile ~/.ssh/id_rsa
 # The following two lines turn on connection sharing
 ControlMaster auto
 ControlPath /tmp/ssh_mux.%h.%p.%r
-
 # Avoid needless delays
 GSSAPIAuthentication no
-
-Host *
-IdentityFile ~/.ssh/id_rsa
