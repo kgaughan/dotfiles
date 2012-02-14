@@ -1,7 +1,9 @@
 set realname="Cíat Ó Gáibhtheacháin"                                                        
 set from="k@stereochro.me"                                                                  
-set pgp_sign_as=0xCF9F6473                                                                  
                                                                                             
 set spoolfile="imap://keith@mail.talideon.com/INBOX"                                        
 set folder="imap://keith@mail.talideon.com/"                                                
 set signature='quicksig -q ~/.config/signatures/fortunes -s ~/.config/signatures/signature|'
+
+set pgp_sign_as=0xCF9F6473                                                                  
+source ~/.config/mutt.d/pgp.rc            
