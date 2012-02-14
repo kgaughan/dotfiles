@@ -8,14 +8,6 @@ servers = (
     autoconnect = "yes";
   },
   {
-    address = "irc.inex.ie";
-    chatnet = "INEX";
-    port = "6697";
-    use_ssl = "yes";
-    ssl_verify = "no";
-    autoconnect = "yes";
-  },
-  {
     address = "irc.freenode.net";
     chatnet = "Freenode";
     port = "7000";
@@ -27,14 +19,11 @@ servers = (
 
 chatnets = {
   LSpace = { type = "IRC"; };
-  INEX = { type = "IRC"; };
   Freenode = { type = "IRC"; };
 };
 
 channels = (
   { name = "#linux"; chatnet = "LSpace"; autojoin = "yes"; },
-  { name = "#blacknight"; chatnet = "INEX"; autojoin = "yes"; },
-  { name = "#bkdevs"; chatnet = "INEX"; autojoin = "yes"; },
   { name = "#python.ie"; chatnet = "Freenode"; autojoin = "yes"; }
 );
 
