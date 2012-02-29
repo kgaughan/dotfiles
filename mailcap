@@ -1,0 +1,3 @@
+text/html; w3m -T text/html -dump %s; nametemplate%s.html; copiousoutput
+text/html; w3m -T text/html %s; nametemplate=%s.html; needsterminal
+text/*; most %s
