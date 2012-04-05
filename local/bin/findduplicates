@@ -178,12 +178,12 @@ def main():
     for grouper in [os.path.getsize, lambda name: digest(name, method)]:
         groups = group_by(groups, grouper, 2)
     for group in groups:
-        for files in sorted(true_duplicates(group)):
+        for files in true_duplicates(group):
             if first:
                 first = False
             else:
                 print
-            for name in files:
+            for name in sorted(files):
                 print name
 
 
