@@ -108,7 +108,7 @@ if has("autocmd")
   inoremap <Nul> <C-x><C-o>
 
   " automatically give executable permissions
-  au BufWritePost *.pl,*.cgi,*.sh,*.py,*.rb
+  au BufWritePost *.pl,*.cgi,*.sh,*.rb
     \ call EnsureExecutable(expand("<afile>"))
 
   augroup END
