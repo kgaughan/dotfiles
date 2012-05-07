@@ -1,3 +1,5 @@
 [user]
 	name = Keith Gaughan
 	email = k@stereochro.me
+[color]
+	ui = true
