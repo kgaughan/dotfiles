@@ -43,7 +43,7 @@ map Q gq
 if has("gui_running")
   set guioptions-=tT
   set toolbariconsize=tiny
-  set guifont=Consolas\ 9
+  set guifont=Inconsolata\ 9
 endif
 
 " Switch syntax highlighting on, when the terminal has colors
