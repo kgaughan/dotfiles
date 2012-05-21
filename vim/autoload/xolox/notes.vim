@@ -1,10 +1,75 @@
 ﻿" Vim auto-load script
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: July 9, 2011
+" Last Change: January 18, 2012
 " URL: http://peterodding.com/code/vim/notes/
 
 " Note: This file is encoded in UTF-8 including a byte order mark so
 " that Vim loads the script using the right encoding transparently.
+
+let g:xolox#notes#version = '0.16.17'
+let s:scriptdir = expand('<sfile>:p:h')
+
+function! xolox#notes#init() " {{{1
+  " Initialize the configuration of the notes plug-in. This is a bit tricky:
+  " We want to be compatible with Pathogen which installs plug-ins as
+  " "bundles" under ~/.vim/bundle/*/ so we use a relative path to make sure we
+  " 'stay inside the bundle'. However if the notes.vim plug-in is installed
+  " system wide the user probably won't have permission to write inside the
+  " installation directory, so we have to switch to $HOME then.
+  let systemdir = xolox#misc#path#absolute(s:scriptdir . '/../../misc/notes')
+  if filewritable(systemdir) == 2
+    let localdir = systemdir
+  elseif xolox#misc#os#is_win()
+    let localdir = xolox#misc#path#absolute('~/vimfiles/misc/notes')
+  else
+    let localdir = xolox#misc#path#absolute('~/.vim/misc/notes')
+  endif
+  " Define the default location where the user's notes are saved?
+  if !exists('g:notes_directory')
+    let g:notes_directory = xolox#misc#path#merge(localdir, 'user')
+  endif
+  " Define the default location of the shadow directory with predefined notes?
+  if !exists('g:notes_shadowdir')
+    let g:notes_shadowdir = xolox#misc#path#merge(systemdir, 'shadow')
+  endif
+  " Define the default location for the full text index.
+  if !exists('g:notes_indexfile')
+    let g:notes_indexfile = xolox#misc#path#merge(localdir, 'index.pickle')
+  endif
+  " Define the default location for the keyword scanner script.
+  if !exists('g:notes_indexscript')
+    let g:notes_indexscript = xolox#misc#path#merge(systemdir, 'search-notes.py')
+  endif
+  " Define the default suffix for note filenames.
+  if !exists('g:notes_suffix')
+    let g:notes_suffix = ''
+  endif
+  " Define the default location for the tag name index (used for completion).
+  if !exists('g:notes_tagsindex')
+    let g:notes_tagsindex = xolox#misc#path#merge(localdir, 'tags.txt')
+  endif
+  " Define the default action when a note's filename and title are out of sync.
+  if !exists('g:notes_title_sync')
+    " Valid values are "no", "change_title", "rename_file" and "prompt".
+    let g:notes_title_sync = 'prompt'
+  endif
+  " Smart quotes and such are enabled by default.
+  if !exists('g:notes_smart_quotes')
+    let g:notes_smart_quotes = 1
+  endif
+  " Text used for horizontal rulers.
+  if !exists('g:notes_ruler_text')
+    let g:notes_ruler_text = repeat(' ', ((&tw > 0 ? &tw : 79) - 5) / 2) . '* * *'
+  endif
+  " Symbols used to denote list items with increasing nesting levels.
+  if !exists('g:notes_list_bullets')
+    if xolox#notes#unicode_enabled()
+      let g:notes_list_bullets = ['•', '◦', '▸', '▹', '▪', '▫']
+    else
+      let g:notes_list_bullets = ['*', '-', '+']
+    endif
+  endif
+endfunction
 
 function! xolox#notes#shortcut() " {{{1
   " The "note:" pseudo protocol is just a shortcut for the :Note command.
@@ -24,15 +89,15 @@ function! xolox#notes#edit(bang, title) abort " {{{1
         call s:transcode_utf8_latin1()
       endif
       setlocal filetype=notes
-      call xolox#misc#timer#stop('notes.vim %s: Opened note in %s.', g:notes_version, starttime)
+      call xolox#misc#timer#stop('notes.vim %s: Opened note in %s.', g:xolox#notes#version, starttime)
       return
     endif
   else
     let title = 'New note'
   endif
+  " At this point we're dealing with a new note.
   let fname = xolox#notes#title_to_fname(title)
-  execute 'edit' . a:bang fnameescape(fname)
-  setlocal filetype=notes
+  noautocmd execute 'edit' . a:bang fnameescape(fname)
   if line('$') == 1 && getline(1) == ''
     let fname = xolox#misc#path#merge(g:notes_shadowdir, 'New note')
     execute 'silent read' fnameescape(fname)
@@ -45,15 +110,73 @@ function! xolox#notes#edit(bang, title) abort " {{{1
   if title != 'New note'
     call setline(1, title)
   endif
+  setlocal filetype=notes
   doautocmd BufReadPost
-  call xolox#misc#timer#stop('notes.vim %s: Started new note in %s.', g:notes_version, starttime)
+  call xolox#misc#timer#stop('notes.vim %s: Started new note in %s.', g:xolox#notes#version, starttime)
 endfunction
 
-function! xolox#notes#from_selection(bang) " {{{1
-  " TODO This will always open a new buffer in the current window which I
-  " don't consider very friendly (because the user loses his/her context),
-  " but choosing to always split the window doesn't seem right either...
-  call xolox#notes#edit(a:bang, s:get_visual_selection())
+function! xolox#notes#check_sync_title() " {{{1
+  " Check if the note's title and filename are out of sync.
+  if g:notes_title_sync != 'no' && xolox#notes#buffer_is_note() && &buftype == ''
+    let title = xolox#notes#current_title()
+    let name_on_disk = xolox#misc#path#absolute(expand('%:p'))
+    let name_from_title = xolox#notes#title_to_fname(title)
+    if !xolox#misc#path#equals(name_on_disk, name_from_title)
+      call xolox#misc#msg#debug("notes.vim %s: Filename (%s) doesn't match note title (%s)", g:xolox#notes#version, name_on_disk, name_from_title)
+      let action = g:notes_title_sync
+      if action == 'prompt' && empty(name_from_title)
+        " There's no point in prompting the user when there's only one choice.
+        let action = 'change_title'
+      elseif action == 'prompt'
+        " Prompt the user what to do (if anything). First we perform a redraw
+        " to make sure the note's content is visible (without this the Vim
+        " window would be blank in my tests).
+        redraw
+        let message = "The note's title and filename do not correspond. What do you want to do?\n\n"
+        let message .= "Current filename: " . s:sync_value(name_on_disk) . "\n"
+        let message .= "Corresponding title: " . s:sync_value(xolox#notes#fname_to_title(name_on_disk)) . "\n\n"
+        let message .= "Current title: " . s:sync_value(title) . "\n"
+        let message .= "Corresponding filename: " . s:sync_value(xolox#notes#title_to_fname(title))
+        let choice = confirm(message, "Change &title\nRename &file\nDo &nothing", 3, 'Question')
+        if choice == 1
+          let action = 'change_title'
+        elseif choice == 2
+          let action = 'rename_file'
+        else
+          " User chose to do nothing or <Escape>'d the prompt.
+          return
+        endif
+        " Intentional fall through here :-)
+      endif
+      if action == 'change_title'
+        let new_title = xolox#notes#fname_to_title(name_on_disk)
+        call setline(1, new_title)
+        setlocal modified
+        call xolox#misc#msg#info("notes.vim %s: Changed note title to match filename.", g:xolox#notes#version)
+      elseif action == 'rename_file'
+        let new_fname = xolox#notes#title_to_fname(xolox#notes#current_title())
+        if rename(name_on_disk, new_fname) == 0
+          execute 'edit' fnameescape(new_fname)
+          setlocal filetype=notes
+          call xolox#misc#msg#info("notes.vim %s: Renamed file to match note title.", g:xolox#notes#version)
+        else
+          call xolox#misc#msg#warn("notes.vim %s: Failed to rename file to match note title?!", g:xolox#notes#version)
+        endif
+      endif
+    endif
+  endif
+endfunction
+
+function! s:sync_value(s)
+  let s = xolox#misc#str#trim(a:s)
+  return empty(s) ? '(none)' : s
+endfunction
+
+function! xolox#notes#from_selection(bang, cmd) " {{{1
+  " Edit a note with the visually selected text as title.
+  let selection = s:get_visual_selection()
+  if a:cmd != 'edit' | execute a:cmd | endif
+  call xolox#notes#edit(a:bang, selection)
 endfunction
 
 function! s:get_visual_selection()
@@ -97,7 +220,7 @@ function! xolox#notes#select(filter) " {{{1
   " Interactively select an existing note whose title contains {filter}.
   let notes = {}
   let filter = xolox#misc#str#trim(a:filter)
-  for [fname, title] in items(xolox#notes#get_fnames_and_titles())
+  for [fname, title] in items(xolox#notes#get_fnames_and_titles(1))
     if title ==? filter
       return fname
     elseif title =~? filter
@@ -109,7 +232,7 @@ function! xolox#notes#select(filter) " {{{1
   elseif !empty(notes)
     let choices = ['Please select a note:']
     let values = ['']
-    for fname in sort(keys(notes))
+    for fname in sort(keys(notes), 1)
       call add(choices, ' ' . len(choices) . ') ' . notes[fname])
       call add(values, fname)
     endfor
@@ -131,7 +254,7 @@ function! xolox#notes#cmd_complete(arglead, cmdline, cursorpos) " {{{1
   let cmdline = split(a:cmdline, '\\\@<!|')
   let cmdargs = substitute(cmdline[-1], '^\s*\w\+\s\+', '', '')
   let arguments = split(cmdargs)
-  let titles = xolox#notes#get_titles()
+  let titles = xolox#notes#get_titles(1)
   if a:arglead != '' && len(arguments) == 1
     " If we are completing a single argument and we are able to replace it
     " (the user didn't type <Space><Tab> after the argument) we can select the
@@ -152,10 +275,13 @@ function! xolox#notes#cmd_complete(arglead, cmdline, cursorpos) " {{{1
     let prevargs = '^' . xolox#misc#escape#pattern(cmdargs[0 : len(cmdargs) - len(a:arglead) - 1])
     call map(titles, 'substitute(v:val, prevargs, "", "")')
   endif
-  return titles
+  " Sort from shortest to longest as a rough approximation of
+  " sorting by similarity to the word that's being completed.
+  return reverse(sort(titles, 's:sort_longest_to_shortest'))
 endfunction
 
 function! xolox#notes#user_complete(findstart, base) " {{{1
+  " Completion of note titles with Control-X Control-U.
   if a:findstart
     let line = getline('.')[0 : col('.') - 2]
     let words = split(line)
@@ -165,7 +291,7 @@ function! xolox#notes#user_complete(findstart, base) " {{{1
       return -1
     endif
   else
-    let titles = xolox#notes#get_titles()
+    let titles = xolox#notes#get_titles(1)
     if !empty(a:base)
       let pattern = xolox#misc#escape#pattern(a:base)
       call filter(titles, 'v:val =~ pattern')
@@ -175,87 +301,23 @@ function! xolox#notes#user_complete(findstart, base) " {{{1
 endfunction
 
 function! xolox#notes#omni_complete(findstart, base) " {{{1
+  " Completion of tag names with Control-X Control-O.
   if a:findstart
     " For now we assume omni completion was triggered by the mapping for
     " automatic tag completion. Eventually it might be nice to check for a
     " leading "@" here and otherwise make it complete e.g. note names, so that
     " there's only one way to complete inside notes and the plug-in is smart
     " enough to know what the user wants to complete :-)
-    return col('.') - 1
+    return col('.')
   else
-    let fname = expand(g:notes_tagsindex)
-    if !filereadable(fname)
-      return xolox#notes#index_tagged_notes(0)
-    else
-      return readfile(fname)
-    endif
+    return sort(keys(xolox#notes#tags#load_index()), 1)
   endif
-endfunction
-
-function! xolox#notes#index_tagged_notes(verbose) " {{{1
-  let starttime = xolox#misc#timer#start()
-  let notes = xolox#notes#get_fnames()
-  let num_notes = len(notes)
-  let known_tags = {}
-  for idx in range(len(notes))
-    let fname = notes[idx]
-    call xolox#misc#msg#info("notes.vim %s: Scanning note %i of %i: %s", g:notes_version, idx + 1, num_notes, fname)
-    let text = join(readfile(fname), "\n")
-    " Strip code blocks from the text.
-    let text = substitute(text, '{{{\w\+\_.\{-}}}}', '', 'g')
-    for token in filter(split(text), 'v:val =~ "^@"')
-      " Strip any trailing punctuation.
-      let token = substitute(token, '[[:punct:]]*$', '', '')
-      if token != ''
-        if !a:verbose
-          let known_tags[token] = 1
-        else
-          " Track the origins of tags.
-          if !has_key(known_tags, token)
-            let known_tags[token] = {}
-          endif
-          let known_tags[token][fname] = 1
-        endif
-      endif
-    endfor
-  endfor
-  " Save the index of known tags as a text file.
-  let fname = expand(g:notes_tagsindex)
-  let tagnames = keys(known_tags)
-  call sort(tagnames, 1)
-  if writefile(tagnames, fname) != 0
-    call xolox#misc#msg#warn("notes.vim %s: Failed to save tags index as %s!", g:notes_version, fname)
-  else
-    call xolox#misc#timer#stop('notes.vim %s: Indexed tags in %s.', g:notes_version, starttime)
-  endif
-  if !a:verbose
-    return tagnames
-  endif
-  " If the user executed :IndexTaggedNotes! we show them the origins of tags,
-  " because after the first time I tried the :IndexTaggedNotes command I was
-  " immediately wondering where all of those false positives came from... This
-  " doesn't give a complete picture (doing so would slow down the indexing
-  " and complicate this code significantly) but it's better than nothing!
-  let lines = ['All tags', '', printf("You have used %i tags in your notes, they're listed below.", len(known_tags))]
-  let bullet = xolox#notes#insert_bullet('*')
-  for tagname in tagnames
-    call extend(lines, ['', '# ' . tagname, ''])
-    let fnames = keys(known_tags[tagname])
-    let titles = map(fnames, 'xolox#notes#fname_to_title(v:val)')
-    call sort(titles, 1)
-    for title in titles
-      call add(lines, ' ' . bullet . ' ' . title)
-    endfor
-  endfor
-  vnew
-  call setline(1, lines)
-  setlocal ft=notes nomod
 endfunction
 
 function! xolox#notes#save() abort " {{{1
   " When the current note's title is changed, automatically rename the file.
-  if &filetype == 'notes'
-    let title = getline(1)
+  if xolox#notes#filetype_is_note(&ft)
+    let title = xolox#notes#current_title()
     let oldpath = expand('%:p')
     let newpath = xolox#notes#title_to_fname(title)
     if newpath == ''
@@ -263,7 +325,7 @@ function! xolox#notes#save() abort " {{{1
       return
     endif
     let bang = v:cmdbang ? '!' : ''
-    execute 'saveas' bang fnameescape(newpath)
+    execute 'saveas' . bang fnameescape(newpath)
     " XXX If {oldpath} and {newpath} end up pointing to the same file on disk
     " yet xolox#misc#path#equals() doesn't catch this, we might end up
     " deleting the user's one and only note! One way to circumvent this
@@ -278,29 +340,45 @@ function! xolox#notes#save() abort " {{{1
       endif
       call delete(oldpath)
     endif
+    " Update the tags index on disk and in-memory.
+    call xolox#notes#tags#forget_note(xolox#notes#fname_to_title(oldpath))
+    call xolox#notes#tags#scan_note(title, join(getline(1, '$'), "\n"))
+    call xolox#notes#tags#save_index()
+    " Update in-memory list of all notes.
     call xolox#notes#cache_del(oldpath)
     call xolox#notes#cache_add(newpath, title)
   endif
 endfunction
 
-function! xolox#notes#delete(bang) " {{{1
-  " Delete the current note, close the associated buffer & window.
-  let filename = expand('%:p')
-  if filereadable(filename) && delete(filename)
-    call xolox#misc#msg#warn("notes.vim %s: Failed to delete %s!", g:notes_version, filename)
-    return
+function! xolox#notes#delete(bang, title) " {{{1
+  " Delete the note {title} and close the associated buffer & window.
+  " If no {title} is given the current note is deleted.
+  let title = xolox#misc#str#trim(a:title)
+  if title == ''
+    " Try the current buffer.
+    let title = xolox#notes#fname_to_title(expand('%:p'))
   endif
-  call xolox#notes#cache_del(filename)
-  execute 'bdelete' . a:bang
+  if !xolox#notes#exists(title)
+    call xolox#misc#msg#warn("notes.vim %s: Failed to delete %s! (not a note)", g:xolox#notes#version, expand('%:p'))
+  else
+    let filename = xolox#notes#title_to_fname(title)
+    if filereadable(filename) && delete(filename)
+      call xolox#misc#msg#warn("notes.vim %s: Failed to delete %s!", g:xolox#notes#version, filename)
+    else
+      call xolox#notes#cache_del(filename)
+      execute 'bdelete' . a:bang . ' ' . bufnr(filename)
+    endif
+  endif
 endfunction
 
 function! xolox#notes#search(bang, input) " {{{1
   " Search all notes for the pattern or keywords {input} (current word if none given).
+  let starttime = xolox#misc#timer#start()
   let input = a:input
   if input == ''
     let input = s:tag_under_cursor()
     if input == ''
-      call xolox#misc#msg#warn("notes.vim %s: No string under cursor", g:notes_version)
+      call xolox#misc#msg#warn("notes.vim %s: No string under cursor", g:xolox#notes#version)
       return
     endif
   endif
@@ -316,10 +394,21 @@ function! xolox#notes#search(bang, input) " {{{1
     call s:internal_search(a:bang, all_keywords, input, any_keyword)
     if &buftype == 'quickfix'
       call map(keywords, '"`" . v:val . "''"')
+      " Enable line wrapping in the quick-fix window.
+      setlocal wrap
+      " Resize the quick-fix window to 1/3 of the screen height.
+      let max_height = &lines / 3
+      execute 'resize' max_height
+      " Make it smaller if the content doesn't fill the window.
+      normal G$
+      let preferred_height = winline()
+      execute 'resize' min([max_height, preferred_height])
+      normal gg
       let w:quickfix_title = printf('Notes containing the word%s %s', len(keywords) == 1 ? '' : 's',
           \ len(keywords) > 1 ? (join(keywords[0:-2], ', ') . ' and ' . keywords[-1]) : keywords[0])
     endif
   endif
+  call xolox#misc#timer#stop("notes.vim %s: Searched notes in %s.", g:xolox#notes#version, starttime)
 endfunction
 
 function! s:tag_under_cursor() " {{{2
@@ -346,23 +435,17 @@ function! s:match_any_keyword(keywords)
   return '/' . escape(join(results, '\|'), '/') . '/'
 endfunction
 
-function! xolox#notes#swaphack() " {{{1
-  " Selectively ignore the dreaded E325 interactive prompt.
-  if exists('s:swaphack_enabled')
-    let v:swapchoice = 'o'
-  endif
-endfunction
-
 function! xolox#notes#related(bang) " {{{1
   " Find all notes related to the current note or file.
+  let starttime = xolox#misc#timer#start()
   let bufname = bufname('%')
   if bufname == ''
-    call xolox#misc#msg#warn("notes.vim %s: :RelatedNotes only works on named buffers!", g:notes_version)
+    call xolox#misc#msg#warn("notes.vim %s: :RelatedNotes only works on named buffers!", g:xolox#notes#version)
   else
     let filename = xolox#misc#path#absolute(bufname)
-    if &filetype == 'notes' && xolox#misc#path#equals(g:notes_directory, expand('%:h'))
-      let pattern = '\<' . s:words_to_pattern(getline(1)) . '\>'
-      let keywords = getline(1)
+    if xolox#notes#buffer_is_note()
+      let keywords = xolox#notes#current_title()
+      let pattern = '\<' . s:words_to_pattern(keywords) . '\>'
     else
       let pattern = s:words_to_pattern(filename)
       let keywords = filename
@@ -380,13 +463,15 @@ function! xolox#notes#related(bang) " {{{1
         let w:quickfix_title = 'Notes related to ' . friendly_path
       endif
     catch /^Vim\%((\a\+)\)\=:E480/
-      call xolox#misc#msg#warn("notes.vim %s: No related notes found for %s", g:notes_version, friendly_path)
+      call xolox#misc#msg#warn("notes.vim %s: No related notes found for %s", g:xolox#notes#version, friendly_path)
     endtry
   endif
+  call xolox#misc#timer#stop("notes.vim %s: Found related notes in %s.", g:xolox#notes#version, starttime)
 endfunction
 
 function! xolox#notes#recent(bang, title_filter) " {{{1
-  let start = xolox#misc#timer#start()
+  " Show generated note listing all notes by last modified time.
+  let starttime = xolox#misc#timer#start()
   let bufname = '[All Notes]'
   " Open buffer that holds list of notes.
   if !bufexists(bufname)
@@ -400,7 +485,7 @@ function! xolox#notes#recent(bang, title_filter) " {{{1
   " Filter notes by pattern (argument)?
   let notes = []
   let title_filter = '\v' . a:title_filter
-  for [fname, title] in items(xolox#notes#get_fnames_and_titles())
+  for [fname, title] in items(xolox#notes#get_fnames_and_titles(0))
     if title =~? title_filter
       call add(notes, [getftime(fname), title])
     endif
@@ -430,43 +515,91 @@ function! xolox#notes#recent(bang, title_filter) " {{{1
   " Sort, group and format list of (matching) notes.
   let last_date = ''
   let list_item_format = xolox#notes#unicode_enabled() ? ' • %s' : ' * %s'
-  let date_format = '%A, %B %d:'
-  let today = strftime(date_format, localtime())
-  let yesterday = strftime(date_format, localtime() - 60*60*24)
   call sort(notes)
   call reverse(notes)
   let lines = []
   for [ftime, title] in notes
-    let date = strftime(date_format, ftime)
-    " Add date heading because date changed?
+    let date = xolox#notes#friendly_date(ftime)
     if date != last_date
       call add(lines, '')
-      if date == today
-        call add(lines, "Today:")
-      elseif date == yesterday
-        call add(lines, "Yesterday:")
-      else
-        call add(lines, date)
-      endif
+      call add(lines, substitute(date, '^\w', '\u\0', '') . ':')
       let last_date = date
     endif
     call add(lines, printf(list_item_format, title))
   endfor
   call setline(line('$') + 1, lines)
   setlocal readonly nomodifiable nomodified filetype=notes
-  call xolox#misc#timer#stop("notes.vim %s: Created list of notes in %s.", g:notes_version, start)
+  call xolox#misc#timer#stop("notes.vim %s: Generated %s in %s.", g:xolox#notes#version, bufname, starttime)
 endfunction
 
 " Miscellaneous functions. {{{1
 
-function! s:is_empty_buffer() " {{{2
-  " Check if the buffer is an empty, unchanged buffer which can be reused.
-  return !&modified && expand('%') == '' && line('$') <= 1 && getline(1) == ''
+function! xolox#notes#swaphack() " {{{2
+  " Selectively ignore the dreaded E325 interactive prompt.
+  if exists('s:swaphack_enabled')
+    let v:swapchoice = 'o'
+  endif
+endfunction
+
+function! xolox#notes#autocmd_pattern(directory, use_extension) " {{{2
+  " Generate a normalized automatic command pattern. First we resolve the path
+  " to the directory with notes (eliminating any symbolic links) so that the
+  " automatic command also applies to symbolic links pointing to notes (Vim
+  " matches filename patterns in automatic commands after resolving
+  " filenames).
+  let directory = xolox#misc#path#absolute(a:directory)
+  " On Windows we have to replace backslashes with forward slashes, otherwise
+  " the automatic command will never trigger! This has to happen before we
+  " make the fnameescape() call.
+  if xolox#misc#os#is_win()
+    let directory = substitute(directory, '\\', '/', 'g')
+  endif
+  " Escape the directory but not the trailing "*".
+  let pattern = fnameescape(directory) . '/*'
+  if a:use_extension && !empty(g:notes_suffix)
+    let pattern .= g:notes_suffix
+  endif
+  " On Windows the pattern won't match if it contains repeating slashes.
+  return substitute(pattern, '/\+', '/', 'g')
+endfunction
+
+function! xolox#notes#filetype_is_note(ft) " {{{2
+  " Check whether the given file type value refers to the notes.vim plug-in.
+  return index(split(a:ft, '\.'), 'notes') >= 0
+endfunction
+
+function! xolox#notes#buffer_is_note() " {{{2
+  " Check whether the current buffer is a note (with the correct file type and path).
+  return xolox#notes#filetype_is_note(&ft) && xolox#misc#path#equals(expand('%:p:h'), g:notes_directory)
+endfunction
+
+function! xolox#notes#current_title() " {{{2
+  " Get the title of the current note.
+  let title = getline(1)
+  let trimmed = xolox#misc#str#trim(title)
+  if title != trimmed
+    call setline(1, trimmed)
+  endif
+  return trimmed
+endfunction
+
+function! xolox#notes#friendly_date(time) " {{{2
+  " Format a date as a human readable string.
+  let format = '%A, %B %d, %Y'
+  let today = strftime(format, localtime())
+  let yesterday = strftime(format, localtime() - 60*60*24)
+  let datestr = strftime(format, a:time)
+  if datestr == today
+    return "today"
+  elseif datestr == yesterday
+    return "yesterday"
+  else
+    return datestr
+  endif
 endfunction
 
 function! s:internal_search(bang, pattern, keywords, phase2) " {{{2
   " Search notes for {pattern} regex, try to accelerate with {keywords} search.
-  let starttime = xolox#misc#timer#start()
   let bufnr_save = bufnr('%')
   let pattern = a:pattern
   silent cclose
@@ -475,12 +608,14 @@ function! s:internal_search(bang, pattern, keywords, phase2) " {{{2
   let phase2_needed = 1
   if a:keywords != '' && s:run_scanner(a:keywords, notes)
     if notes == []
-      call xolox#misc#msg#warn("notes.vim %s: No matches", g:notes_version)
+      call xolox#misc#msg#warn("notes.vim %s: No matches", g:xolox#notes#version)
       return
     endif
-    let pattern = a:phase2 != '' ? a:phase2 : pattern
+    if a:phase2 != ''
+      let pattern = a:phase2
+    endif
   else
-    call s:vimgrep_wrapper(a:bang, a:pattern, xolox#notes#get_fnames())
+    call s:vimgrep_wrapper(a:bang, a:pattern, xolox#notes#get_fnames(0))
     let notes = s:qflist_to_filenames()
     if a:phase2 != ''
       let pattern = a:phase2
@@ -503,13 +638,7 @@ function! s:internal_search(bang, pattern, keywords, phase2) " {{{2
   endif
   silent cwindow
   if &buftype == 'quickfix'
-    setlocal ignorecase
-    execute 'match IncSearch' pattern
-  endif
-  call xolox#misc#timer#stop('notes.vim %s: Searched notes in %s.', g:notes_version, starttime)
-  if &verbose == 0
-    " Don't hang on the hit-enter prompt.
-    redraw
+    execute 'match IncSearch' substitute(pattern, '^/', '/\\c', '')
   endif
 endfunction
 
@@ -539,22 +668,44 @@ endfunction
 
 function! s:run_scanner(keywords, matches) " {{{2
   " Try to run scanner.py script to find notes matching {keywords}.
-  let scanner = xolox#misc#path#absolute(g:notes_indexscript)
-  let python = 'python'
-  if executable('python2')
-    let python = 'python2'
+  let lines = s:python_command(a:keywords)
+  if type(lines) == type([])
+    call extend(a:matches, lines)
+    return 1
   endif
-  if !(executable(python) && filereadable(scanner))
-    call xolox#misc#msg#debug("notes.vim %s: The %s script isn't executable.", g:notes_version, scanner)
+endfunction
+
+function! xolox#notes#keyword_complete(arglead, cmdline, cursorpos) " {{{2
+  " Search keyword completion for the :SearchNotes command.
+  let first_run = !filereadable(g:notes_indexfile)
+  if first_run | call inputsave() | endif
+  let keywords = s:python_command('--list=' . a:arglead)
+  if first_run | call inputrestore() | endif
+  return type(keywords) == type([]) ? keywords : []
+endfunction
+
+function! s:python_command(...) " {{{2
+  " Vim function to interface with the "search-notes.py" script.
+  let script = xolox#misc#path#absolute(g:notes_indexscript)
+  let python = executable('python2') ? 'python2' : 'python'
+  if !(executable(python) && filereadable(script))
+    call xolox#misc#msg#debug("notes.vim %s: The %s script isn't executable.", g:xolox#notes#version, script)
   else
-    let arguments = [scanner, g:notes_indexfile, g:notes_directory, g:notes_shadowdir, a:keywords]
-    call map(arguments, 'shellescape(v:val)')
-    let output = xolox#misc#str#trim(system(join([python] + arguments)))
-    if !v:shell_error
-      call extend(a:matches, split(output, '\n'))
-      return 1
+    let options = ['--database', g:notes_indexfile, '--notes', g:notes_directory]
+    let arguments = map([script] + options + a:000, 'xolox#misc#escape#shell(v:val)')
+    let command = join([python] + arguments)
+    call xolox#misc#msg#debug("notes.vim %s: Executing external command %s", g:xolox#notes#version, command)
+    if !filereadable(xolox#misc#path#absolute(g:notes_indexfile))
+      call xolox#misc#msg#info("notes.vim %s: Building keyword index (this might take a while) ..", g:xolox#notes#version)
+    endif
+    let output = xolox#misc#str#trim(system(command))
+    if v:shell_error
+      call xolox#misc#msg#warn("notes.vim %s: Search script failed with output: %s", g:xolox#notes#version, output)
     else
-      call xolox#misc#msg#warn("notes.vim %s: scanner.py failed with output: %s", g:notes_version, output)
+      let lines = split(output, "\n")
+      if !empty(lines) && lines[0] == 'Python works fine!'
+        return lines[1:]
+      endif
     endif
   endif
 endfunction
@@ -569,42 +720,56 @@ if !exists('s:cache_mtime')
   let s:cached_titles = []
   let s:cached_pairs = {}
   let s:cache_mtime = 0
+  let s:shadow_notes = ['New note', 'Note taking commands', 'Note taking syntax']
 endif
 
-function! xolox#notes#get_fnames() " {{{3
+function! xolox#notes#get_fnames(include_shadow_notes) " {{{3
   " Get list with filenames of all existing notes.
   if !s:have_cached_names
     let starttime = xolox#misc#timer#start()
-    for directory in [g:notes_shadowdir, g:notes_directory]
-      let pattern = xolox#misc#path#merge(directory, '*')
-      let listing = glob(xolox#misc#path#absolute(pattern))
-      call extend(s:cached_fnames, split(listing, '\n'))
-    endfor
+    let pattern = xolox#misc#path#merge(g:notes_directory, '*')
+    let listing = glob(xolox#misc#path#absolute(pattern))
+    call extend(s:cached_fnames, filter(split(listing, '\n'), 'filereadable(v:val)'))
     let s:have_cached_names = 1
-    call xolox#misc#timer#stop('notes.vim %s: Cached note filenames in %s.', g:notes_version, starttime)
+    call xolox#misc#timer#stop('notes.vim %s: Cached note filenames in %s.', g:xolox#notes#version, starttime)
   endif
-  return copy(s:cached_fnames)
+  let fnames = copy(s:cached_fnames)
+  if a:include_shadow_notes
+    for title in s:shadow_notes
+      call add(fnames, xolox#misc#path#merge(g:notes_shadowdir, title))
+    endfor
+  endif
+  return fnames
 endfunction
 
-function! xolox#notes#get_titles() " {{{3
+function! xolox#notes#get_titles(include_shadow_notes) " {{{3
   " Get list with titles of all existing notes.
   if !s:have_cached_titles
     let starttime = xolox#misc#timer#start()
-    for filename in xolox#notes#get_fnames()
+    for filename in xolox#notes#get_fnames(0)
       call add(s:cached_titles, xolox#notes#fname_to_title(filename))
     endfor
     let s:have_cached_titles = 1
-    call xolox#misc#timer#stop('notes.vim %s: Cached note titles in %s.', g:notes_version, starttime)
+    call xolox#misc#timer#stop('notes.vim %s: Cached note titles in %s.', g:xolox#notes#version, starttime)
   endif
-  return copy(s:cached_titles)
+  let titles = copy(s:cached_titles)
+  if a:include_shadow_notes
+    call extend(titles, s:shadow_notes)
+  endif
+  return titles
 endfunction
 
-function! xolox#notes#get_fnames_and_titles() " {{{3
+function! xolox#notes#exists(title) " {{{3
+  " Return true if the note {title} exists.
+  return index(xolox#notes#get_titles(0), a:title, 0, xolox#misc#os#is_win()) >= 0
+endfunction
+
+function! xolox#notes#get_fnames_and_titles(include_shadow_notes) " {{{3
   " Get dictionary of filename => title pairs of all existing notes.
   if !s:have_cached_items
     let starttime = xolox#misc#timer#start()
-    let fnames = xolox#notes#get_fnames()
-    let titles = xolox#notes#get_titles()
+    let fnames = xolox#notes#get_fnames(0)
+    let titles = xolox#notes#get_titles(0)
     let limit = len(fnames)
     let index = 0
     while index < limit
@@ -612,9 +777,16 @@ function! xolox#notes#get_fnames_and_titles() " {{{3
       let index += 1
     endwhile
     let s:have_cached_items = 1
-    call xolox#misc#timer#stop('notes.vim %s: Cached note filenames and titles in %s.', g:notes_version, starttime)
+    call xolox#misc#timer#stop('notes.vim %s: Cached note filenames and titles in %s.', g:xolox#notes#version, starttime)
   endif
-  return s:cached_pairs
+  let pairs = copy(s:cached_pairs)
+  if a:include_shadow_notes
+    for title in s:shadow_notes
+      let fname = xolox#misc#path#merge(g:notes_shadowdir, title)
+      let pairs[fname] = title
+    endfor
+  endif
+  return pairs
 endfunction
 
 function! xolox#notes#fname_to_title(filename) " {{{3
@@ -672,6 +844,7 @@ function! xolox#notes#cache_del(filename) " {{{3
 endfunction
 
 function! xolox#notes#unload_from_cache() " {{{3
+  " Forget deleted notes automatically (called by "BufUnload" automatic command).
   let bufname = expand('<afile>:p')
   if !filereadable(bufname)
     call xolox#notes#cache_del(bufname)
@@ -679,6 +852,20 @@ function! xolox#notes#unload_from_cache() " {{{3
 endfunction
 
 " Functions called by the file type plug-in and syntax script. {{{2
+
+function! xolox#notes#insert_ruler() " {{{3
+  " Insert horizontal ruler delimited by empty lines.
+  let lnum = line('.')
+  if getline(lnum) =~ '\S' && getline(lnum + 1) !~ '\S'
+    let lnum += 1
+  endif
+  let line1 = prevnonblank(lnum)
+  let line2 = nextnonblank(lnum)
+  if line1 < lnum && line2 > lnum
+    execute printf('%i,%idelete', line1 + 1, line2 - 1)
+  endif
+  call append(line1, ['', g:notes_ruler_text, ''])
+endfunction
 
 function! xolox#notes#insert_quote(style) " {{{3
   " XXX When I pass the below string constants as arguments from the file type
@@ -689,43 +876,122 @@ function! xolox#notes#insert_quote(style) " {{{3
   else
     let [open_quote, close_quote] = a:style == 1 ? ['`', "'"] : ['"', '"']
   endif
-  return getline('.')[col('.')-2] =~ '\S$' ? close_quote : open_quote
+  return getline('.')[col('.')-2] =~ '[^\t (]$' ? close_quote : open_quote
 endfunction
 
 function! xolox#notes#insert_bullet(chr) " {{{3
   " Insert a UTF-8 list bullet when the user types "*".
-  if xolox#notes#unicode_enabled()
-    if getline('.')[0 : max([0, col('.') - 2])] =~ '^\s*$'
-      return '•'
-    endif
+  if getline('.')[0 : max([0, col('.') - 2])] =~ '^\s*$'
+    return xolox#notes#get_bullet(a:chr)
   endif
   return a:chr
 endfunction
 
-function! xolox#notes#indent_list(command, line1, line2) " {{{3
+function! xolox#notes#get_bullet(chr)
+  return xolox#notes#unicode_enabled() ? '•' : a:chr
+endfunction
+
+function! xolox#notes#indent_list(direction, line1, line2) " {{{3
   " Change indent of list items from {line1} to {line2} using {command}.
+  let indentstr = repeat(' ', &tabstop)
   if a:line1 == a:line2 && getline(a:line1) == ''
-    call setline(a:line1, repeat(' ', &tabstop))
+    call setline(a:line1, indentstr)
   else
-    execute a:line1 . ',' . a:line2 . 'normal' a:command
-    if getline('.') =~ '\(•\|\*\)$'
+    " Regex to match a leading bullet.
+    let leading_bullet = xolox#notes#leading_bullet_pattern()
+    for lnum in range(a:line1, a:line2)
+      let line = getline(lnum)
+      " Calculate new nesting level, should not result in < 0.
+      let level = max([0, xolox#notes#get_list_level(line) + a:direction])
+      if a:direction == 1
+        " Indent the line.
+        let line = indentstr . line
+      else
+        " Unindent the line.
+        let line = substitute(line, '^' . indentstr, '', '')
+      endif
+      " Replace the bullet.
+      let bullet = g:notes_list_bullets[level % len(g:notes_list_bullets)]
+      call setline(lnum, substitute(line, leading_bullet, xolox#misc#escape#substitute(bullet), ''))
+    endfor
+    " Regex to match a trailing bullet.
+    if getline('.') =~ xolox#notes#trailing_bullet_pattern()
+      " Restore trailing space after list bullet.
       call setline('.', getline('.') . ' ')
     endif
   endif
   normal $
 endfunction
 
+function! xolox#notes#leading_bullet_pattern()
+  " Return a regular expression pattern that matches any leading list bullet.
+  let escaped_bullets = copy(g:notes_list_bullets)
+  call map(escaped_bullets, 'xolox#misc#escape#pattern(v:val)')
+  return '\(\_^\s*\)\@<=\(' . join(escaped_bullets, '\|') . '\)'
+endfunction
+
+function! xolox#notes#trailing_bullet_pattern()
+  " Return a regular expression pattern that matches any trailing list bullet.
+  let escaped_bullets = copy(g:notes_list_bullets)
+  call map(escaped_bullets, 'xolox#misc#escape#pattern(v:val)')
+  return '\(' . join(escaped_bullets, '\|') . '\|\*\)$'
+endfunction
+
+function! xolox#notes#get_comments_option()
+  " Get the value for the &comments option including user defined list bullets.
+  let items = copy(g:notes_list_bullets)
+  call map(items, '": " . v:val . " "')
+  call add(items, ':> ') " <- e-mail style block quotes.
+  return join(items, ',')
+endfunction
+
+function! xolox#notes#get_list_level(line)
+  " Get the nesting level of the list item on the given line. This will only
+  " work with the list item indentation style expected by the notes plug-in
+  " (that is, top level list items are indented with one space, each nested
+  " level below that is indented by pairs of three spaces).
+  return (len(matchstr(a:line, '^\s*')) - 1) / 3
+endfunction
+
+function! xolox#notes#cleanup_list() " {{{3
+  " Automatically remove empty list items on Enter.
+  if getline('.') =~ (xolox#notes#leading_bullet_pattern() . '\s*$')
+    let s:sol_save = &startofline
+    setlocal nostartofline " <- so that <C-u> clears the complete line
+    return "\<C-o>0\<C-o>d$\<C-o>o"
+  else
+    if exists('s:sol_save')
+      let &l:startofline = s:sol_save
+      unlet s:sol_save
+    endif
+    return "\<CR>"
+  endif
+endfunction
+
+function! xolox#notes#refresh_syntax() " {{{3
+  " Update syntax highlighting of note names and code blocks.
+  if xolox#notes#filetype_is_note(&ft) && line('$') > 1
+    let starttime = xolox#misc#timer#start()
+    call xolox#notes#highlight_names(0)
+    call xolox#notes#highlight_sources(0)
+    call xolox#misc#timer#stop("notes.vim %s: Refreshed highlighting in %s.", g:xolox#notes#version, starttime)
+  endif
+endfunction
+
 function! xolox#notes#highlight_names(force) " {{{3
   " Highlight the names of all notes as "notesName" (linked to "Underlined").
   if a:force || !(exists('b:notes_names_last_highlighted') && b:notes_names_last_highlighted > s:cache_mtime)
     let starttime = xolox#misc#timer#start()
-    let titles = filter(xolox#notes#get_titles(), '!empty(v:val)')
+    let current_note = xolox#notes#current_title()
+    let titles = filter(xolox#notes#get_titles(1), '!empty(v:val) && v:val != current_note')
     call map(titles, 's:words_to_pattern(v:val)')
     call sort(titles, 's:sort_longest_to_shortest')
-    syntax clear notesName
-    execute 'syntax match notesName /\c\%>2l\<\%(' . escape(join(titles, '\|'), '/') . '\)\>/'
+    if hlexists('notesName')
+      syntax clear notesName
+    endif
+    execute 'syntax match notesName /\c\%>1l\<\%(' . escape(join(titles, '\|'), '/') . '\)\>/'
     let b:notes_names_last_highlighted = localtime()
-    call xolox#misc#timer#stop("notes.vim %s: Highlighted note names in %s.", g:notes_version, starttime)
+    call xolox#misc#timer#stop("notes.vim %s: Highlighted note names in %s.", g:xolox#notes#version, starttime)
   endif
 endfunction
 
@@ -739,22 +1005,35 @@ function! s:sort_longest_to_shortest(a, b)
   return len(a:a) < len(a:b) ? 1 : -1
 endfunction
 
-function! xolox#notes#highlight_sources(sg, eg) " {{{3
+function! xolox#notes#highlight_sources(force) " {{{3
   " Syntax highlight source code embedded in notes.
   let starttime = xolox#misc#timer#start()
-  let lines = getline(1, '$')
+  " Look for code blocks in the current note.
   let filetypes = {}
   for line in getline(1, '$')
     let ft = matchstr(line, '{{' . '{\zs\w\+\>')
     if ft !~ '^\d*$' | let filetypes[ft] = 1 | endif
   endfor
-  for ft in keys(filetypes)
-    let group = 'notesSnippet' . toupper(ft)
-    let include = s:syntax_include(ft)
-    let command = 'syntax region %s matchgroup=%s start="{{{%s" matchgroup=%s end="}}}" keepend contains=%s%s'
-    execute printf(command, group, a:sg, ft, a:eg, include, has('conceal') ? ' concealends' : '')
-  endfor
-  call xolox#misc#timer#stop("notes.vim %s: Highlighted embedded sources in %s.", g:notes_version, starttime)
+  " Don't refresh the highlighting if nothing has changed.
+  if !a:force && exists('b:notes_previous_sources') && b:notes_previous_sources == filetypes
+    return
+  else
+    let b:notes_previous_sources = filetypes
+  endif
+  " Now we're ready to actually highlight the code blocks.
+  if !empty(filetypes)
+    let startgroup = 'notesCodeStart'
+    let endgroup = 'notesCodeEnd'
+    for ft in keys(filetypes)
+      let group = 'notesSnippet' . toupper(ft)
+      let include = s:syntax_include(ft)
+      let command = 'syntax region %s matchgroup=%s start="{{{%s" matchgroup=%s end="}}}" keepend contains=%s%s'
+      execute printf(command, group, startgroup, ft, endgroup, include, has('conceal') ? ' concealends' : '')
+    endfor
+    if &vbs >= 1
+      call xolox#misc#timer#stop("notes.vim %s: Highlighted embedded %s sources in %s.", g:xolox#notes#version, join(sort(keys(filetypes)), '/'), starttime)
+    endif
+  endif
 endfunction
 
 function! s:syntax_include(filetype)
@@ -784,7 +1063,7 @@ endfunction
 function! xolox#notes#include_expr(fname) " {{{3
   " Translate string {fname} to absolute filename of note.
   " TODO Use inputlist() when more than one note matches?!
-  let notes = copy(xolox#notes#get_fnames_and_titles())
+  let notes = copy(xolox#notes#get_fnames_and_titles(1))
   let pattern = xolox#misc#escape#pattern(a:fname)
   call filter(notes, 'v:val =~ pattern')
   if !empty(notes)
@@ -813,16 +1092,31 @@ function! xolox#notes#foldexpr() " {{{3
   " Folding expression to fold atx style Markdown headings.
   let lastlevel = foldlevel(v:lnum - 1)
   let nextlevel = match(getline(v:lnum), '^#\+\zs')
+  let retval = '='
   if lastlevel <= 0 && nextlevel >= 1
-    return '>' . nextlevel
+    let retval = '>' . nextlevel
   elseif nextlevel >= 1
     if lastlevel > nextlevel
-      return '<' . nextlevel
+      let retval = '<' . nextlevel
     else
-      return '>' . nextlevel
+      let retval = '>' . nextlevel
     endif
   endif
-  return '='
+  if retval != '='
+    " Check whether the change in folding introduced by 'rv'
+    " is invalidated because we're inside a code block.
+    let pos_save = getpos('.')
+    try
+      call setpos('.', [0, v:lnum, 1, 0])
+      if search('{{{\|\(}}}\)', 'bnpW') == 1
+        let retval = '='
+      endif
+    finally
+      " Always restore the cursor position!
+      call setpos('.', pos_save)
+    endtry
+  endif
+  return retval
 endfunction
 
 function! xolox#notes#foldtext() " {{{3
@@ -839,5 +1133,11 @@ function! xolox#notes#foldtext() " {{{3
     return line
   endif
 endfunction
+
+" }}}1
+
+" Make sure the plug-in configuration has been properly initialized before
+" any of the auto-load functions in this Vim script can be called.
+call xolox#notes#init()
 
 " vim: ts=2 sw=2 et bomb

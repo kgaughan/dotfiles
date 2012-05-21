@@ -1,6 +1,6 @@
 " Vim file type plug-in
 " Author: Peter Odding <peter@peterodding.com>
-" Last Change: July 9, 2011
+" Last Change: December 1, 2011
 " URL: http://peterodding.com/code/vim/notes/
 
 if exists('b:did_ftplugin')
@@ -9,70 +9,68 @@ else
   let b:did_ftplugin = 1
 endif
 
-" Disable highlighting of matching pairs. {{{1
-setlocal matchpairs=
-let b:undo_ftplugin = 'set matchpairs<'
-
 " Copy indent from previous line. {{{1
 setlocal autoindent
-let b:undo_ftplugin .= ' autoindent<'
+let b:undo_ftplugin = 'set autoindent<'
 
 " Set &tabstop and &shiftwidth options for bulleted lists. {{{1
 setlocal tabstop=3 shiftwidth=3 expandtab
-let b:undo_ftplugin .= ' tabstop< shiftwidth< expandtab<'
+let b:undo_ftplugin .= ' | set tabstop< shiftwidth< expandtab<'
 
 " Automatic formatting for bulleted lists. {{{1
-if xolox#notes#unicode_enabled()
-  let &l:comments = ': • ,: * ,:> '
-else
-  let &l:comments = ': * ,:> '
-endif
-let &l:commentstring = '> %s'
+let &l:comments = xolox#notes#get_comments_option()
 setlocal formatoptions=tcron
-let b:undo_ftplugin .= ' commentstring< comments< formatoptions<'
+let b:undo_ftplugin .= ' | set comments< formatoptions<'
 
 " Automatic text folding based on headings. {{{1
 setlocal foldmethod=expr
 setlocal foldexpr=xolox#notes#foldexpr()
 setlocal foldtext=xolox#notes#foldtext()
-let b:undo_ftplugin .= ' foldmethod< foldexpr< foldtext<'
+let b:undo_ftplugin .= ' | set foldmethod< foldexpr< foldtext<'
 
 " Enable concealing of notes syntax markers? {{{1
 if has('conceal')
   setlocal conceallevel=3
-  let b:undo_ftplugin .= ' conceallevel<'
+  let b:undo_ftplugin .= ' | set conceallevel<'
 endif
 
 " Change <cfile> to jump to notes by name. {{{1
 setlocal includeexpr=xolox#notes#include_expr(v:fname)
-let b:undo_ftplugin .= ' includeexpr<'
+let b:undo_ftplugin .= ' | set includeexpr<'
 
 " Enable completion of note titles using C-x C-u. {{{1
 setlocal completefunc=xolox#notes#user_complete
-let b:undo_ftplugin .= ' completefunc<'
+let b:undo_ftplugin .= ' | set completefunc<'
 
 " Enable completion of tag names using C-x C-o. {{{1
 setlocal omnifunc=xolox#notes#omni_complete
-let b:undo_ftplugin .= ' omnifunc<'
+let b:undo_ftplugin .= ' | set omnifunc<'
 
 " Automatic completion of tag names after typing "@". {{{1
-inoremap <buffer> <silent> @ <C-x><C-o>
+
+inoremap <buffer> <silent> @ @<C-x><C-o>
 let b:undo_ftplugin .= ' | execute "iunmap <buffer> @"'
 
+" Automatic completion of tag names should not interrupt the flow of typing,
+" for this we have to change the (unfortunately) global option &completeopt.
+set completeopt+=longest
+
 " Change double-dash to em-dash as it is typed. {{{1
-if xolox#notes#unicode_enabled()
+if g:notes_smart_quotes && xolox#notes#unicode_enabled()
   imap <buffer> -- —
   let b:undo_ftplugin .= ' | execute "iunmap <buffer> --"'
 endif
 
 " Change plain quotes to curly quotes as they're typed. {{{1
-imap <buffer> <expr> ' xolox#notes#insert_quote(1)
-imap <buffer> <expr> " xolox#notes#insert_quote(2)
-let b:undo_ftplugin .= ' | execute "iunmap <buffer> ''"'
-let b:undo_ftplugin .= ' | execute ''iunmap <buffer> "'''
+if g:notes_smart_quotes
+  imap <buffer> <expr> ' xolox#notes#insert_quote(1)
+  imap <buffer> <expr> " xolox#notes#insert_quote(2)
+  let b:undo_ftplugin .= ' | execute "iunmap <buffer> ''"'
+  let b:undo_ftplugin .= ' | execute ''iunmap <buffer> "'''
+endif
 
 " Change ASCII style arrows to Unicode arrows. {{{1
-if xolox#notes#unicode_enabled()
+if g:notes_smart_quotes && xolox#notes#unicode_enabled()
   imap <buffer> -> →
   imap <buffer> <- ←
   let b:undo_ftplugin .= ' | execute "iunmap <buffer> ->"'
@@ -80,21 +78,59 @@ if xolox#notes#unicode_enabled()
 endif
 
 " Convert ASCII list bullets to Unicode bullets. {{{1
-imap <buffer> <expr> - xolox#notes#insert_bullet('-')
-imap <buffer> <expr> + xolox#notes#insert_bullet('+')
-imap <buffer> <expr> * xolox#notes#insert_bullet('*')
-let b:undo_ftplugin .= ' | execute "iunmap <buffer> -"'
-let b:undo_ftplugin .= ' | execute "iunmap <buffer> +"'
-let b:undo_ftplugin .= ' | execute "iunmap <buffer> *"'
+if g:notes_smart_quotes
+  imap <buffer> <expr> * xolox#notes#insert_bullet('*')
+  imap <buffer> <expr> - xolox#notes#insert_bullet('-')
+  imap <buffer> <expr> + xolox#notes#insert_bullet('+')
+  let b:undo_ftplugin .= ' | execute "iunmap <buffer> *"'
+  let b:undo_ftplugin .= ' | execute "iunmap <buffer> -"'
+  let b:undo_ftplugin .= ' | execute "iunmap <buffer> +"'
+endif
 
-" Indent list items using <Tab>. {{{1
-imap <buffer> <silent> <Tab> <C-o>:call xolox#notes#indent_list('>>', line('.'), line('.'))<CR>
-smap <buffer> <silent> <Tab> <C-o>:<C-u>call xolox#notes#indent_list('>>', line("'<"), line("'>"))<CR><C-o>gv
+" Format three asterisks as a horizontal ruler. {{{1
+inoremap <buffer> *** <C-o>:call xolox#notes#insert_ruler()<CR>
+let b:undo_ftplugin .= ' | execute "iunmap <buffer> ***"'
+
+" Indent list items using <Tab> and <Shift-Tab>. {{{1
+imap <buffer> <silent> <Tab> <C-o>:call xolox#notes#indent_list(1, line('.'), line('.'))<CR>
+smap <buffer> <silent> <Tab> <C-o>:<C-u>call xolox#notes#indent_list(1, line("'<"), line("'>"))<CR><C-o>gv
 let b:undo_ftplugin .= ' | execute "iunmap <buffer> <Tab>"'
 let b:undo_ftplugin .= ' | execute "sunmap <buffer> <Tab>"'
-imap <buffer> <silent> <S-Tab> <C-o>:call xolox#notes#indent_list('<<', line('.'), line('.'))<CR>
-smap <buffer> <silent> <S-Tab> <C-o>:<C-u>call xolox#notes#indent_list('<<', line("'<"), line("'>"))<CR><C-o>gv
+imap <buffer> <silent> <S-Tab> <C-o>:call xolox#notes#indent_list(-1, line('.'), line('.'))<CR>
+smap <buffer> <silent> <S-Tab> <C-o>:<C-u>call xolox#notes#indent_list(-1, line("'<"), line("'>"))<CR><C-o>gv
 let b:undo_ftplugin .= ' | execute "iunmap <buffer> <S-Tab>"'
 let b:undo_ftplugin .= ' | execute "sunmap <buffer> <S-Tab>"'
+
+" Indent list items using <Alt-Left> and <Alt-Right>. {{{1
+imap <buffer> <silent> <A-Right> <C-o>:call xolox#notes#indent_list(1, line('.'), line('.'))<CR>
+smap <buffer> <silent> <A-Right> <C-o>:<C-u>call xolox#notes#indent_list(1, line("'<"), line("'>"))<CR><C-o>gv
+let b:undo_ftplugin .= ' | execute "iunmap <buffer> <A-Right>"'
+let b:undo_ftplugin .= ' | execute "sunmap <buffer> <A-Right>"'
+imap <buffer> <silent> <A-Left> <C-o>:call xolox#notes#indent_list(-1, line('.'), line('.'))<CR>
+smap <buffer> <silent> <A-Left> <C-o>:<C-u>call xolox#notes#indent_list(-1, line("'<"), line("'>"))<CR><C-o>gv
+let b:undo_ftplugin .= ' | execute "iunmap <buffer> <A-Left>"'
+let b:undo_ftplugin .= ' | execute "sunmap <buffer> <A-Left>"'
+
+" Automatically remove empty list items on Enter. {{{1
+inoremap <buffer> <silent> <expr> <CR> xolox#notes#cleanup_list()
+let b:undo_ftplugin .= ' | execute "iunmap <buffer> <CR>"'
+
+" Shortcuts to create new notes from the selected text. {{{1
+
+vmap <buffer> <silent> <Leader>en :NoteFromSelectedText<CR>
+let b:undo_ftplugin .= ' | execute "vunmap <buffer> <Leader>en"'
+
+vmap <buffer> <silent> <Leader>sn :SplitNoteFromSelectedText<CR>
+let b:undo_ftplugin .= ' | execute "vunmap <buffer> <Leader>sn"'
+
+vmap <buffer> <silent> <Leader>tn :TabNoteFromSelectedText<CR>
+let b:undo_ftplugin .= ' | execute "vunmap <buffer> <Leader>tn"'
+
+" }}}1
+
+" This is currently the only place where a command is guaranteed to be
+" executed when the user edits a note. Maybe I shouldn't abuse this (it
+" doesn't feel right ;-) but for now it will do.
+call xolox#notes#check_sync_title()
 
 " vim: ts=2 sw=2 et
