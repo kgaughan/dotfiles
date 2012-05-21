@@ -51,9 +51,11 @@ endif
 if &t_Co > 2 || has("gui_running")
   set hlsearch
   set background=dark
-  " Enable 256-colour mode (rather than the default 8-colour mode).
-  set t_Co=256
   syntax enable
+  if $TERM != "linux"
+    " Enable 256-colour mode (rather than the default 8-colour mode).
+    set t_Co=256
+  endif
   colors solarized
 endif
 
@@ -108,7 +110,7 @@ if has("autocmd")
   inoremap <Nul> <C-x><C-o>
 
   " automatically give executable permissions
-  au BufWritePost *.pl,*.cgi,*.sh,*.rb
+  au BufWritePost *.cgi,*.sh
     \ call EnsureExecutable(expand("<afile>"))
 
   augroup END
@@ -160,11 +162,11 @@ endfunction
 
 " }}}
 
-"python <<EOF
-"import os, sys, vim
-"for p in sys.path:
-"  if os.path.isdir(p):
-"    vim.command(r"set path+=%s" % (p.replace(" ", r"\ ")))
-"EOF
+python <<EOF
+import os, sys, vim
+for p in sys.path:
+    if os.path.isdir(p):
+        vim.command(r"set path+=%s" % (p.replace(" ", r"\ ")))
+EOF
 
-"set tags+=$HOME/.vim/tags/python.ctags
+set tags+=$HOME/.vim/tags/python.ctags
