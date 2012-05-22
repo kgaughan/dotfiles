@@ -46,6 +46,7 @@ import errno
 import getopt
 import re
 import shutil
+import socket
 import sys
 import urllib2
 
@@ -145,8 +146,9 @@ def fetch(feed_url, directory, cache, patterns):
         raise
     except urllib2.URLError, err:
         err_code, _ = err.reason
-        # If it times out, we don't care: we just try again later.
-        if err_code in (errno.ETIMEDOUT,):
+        # If it times out or is unreachable, we don't care: we just try again
+        # later.
+        if err_code in (errno.ETIMEDOUT, socket.EAI_NONAME):
             return
         # Anything else, die loudly.
         raise
