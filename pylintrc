@@ -1,0 +1,18 @@
+[MASTER]
+ignore=.svn
+
+[MESSAGES CONTROL]
+disable-msg=C0103,C0111,R0912,R0201
+
+[REPORTS]
+output-format=colorized
+include-ids=yes
+
+[BASIC]
+good-names=i,j,k,ex,_,kw
+
+[DESIGN]
+max-args=7
+
+[FORMAT]
+max-line-length=100
