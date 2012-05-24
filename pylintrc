@@ -2,7 +2,7 @@
 ignore=.svn
 
 [MESSAGES CONTROL]
-disable-msg=C0103,C0111,R0912,R0201
+disable-msg=C0103,C0111,R0912,R0201,R0922
 
 [REPORTS]
 output-format=colorized
