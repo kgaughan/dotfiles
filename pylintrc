@@ -16,3 +16,8 @@ max-args=7
 
 [FORMAT]
 max-line-length=100
+
+[SIMILARITIES]
+min-similarity-lines=10
+ignore-comments=yes
+ignore-docstrings=yes
