@@ -1,0 +1,7 @@
+#!/usr/bin/env python
+
+import smtpd
+import asyncore
+ 
+smtpd.DebuggingServer(('127.0.0.1', 1025), None)
+asyncore.loop()
