@@ -2,14 +2,14 @@
 ignore=.svn
 
 [MESSAGES CONTROL]
-disable-msg=C0103,C0111,R0912,R0201,R0922
+disable-msg=C0103,C0111,R0912,R0201,R0922,R0921,W0142
 
 [REPORTS]
 output-format=colorized
 include-ids=yes
 
 [BASIC]
-good-names=i,j,k,ex,_,kw
+good-names=n,i,j,k,v,ex,_,kw,db,logger,fh,fd,fn,ns,cc,op,pw,ip,cb
 
 [DESIGN]
 max-args=7
