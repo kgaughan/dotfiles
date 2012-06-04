@@ -88,36 +88,35 @@ if has("autocmd")
   augroup vimrcEx
   au!
 
+  au BufRead *.vala,*.vapi
+        \ set efm=%f:%l.%c-%[%^:]%#:\ %t%[^:]%#:\ %m
+  au BufRead,BufNewFile *.vala,*.vapi 
+        \ setfiletype vala |
+        \ setlocal cin et
+
+  " Settings for various modes.
+  au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc
+        \ setlocal sw=2 ts=2 sts=2 et
+  au BufNewFile,BufRead,Syntax *.erl,*.hs
+        \ setlocal et ai si sta
+
+  " Automatically give executable permissions
+  au BufWritePost *.cgi,*.sh
+        \ call EnsureExecutable(expand("<afile>"))
+
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
   " (happens when dropping a file on gvim).
   au BufReadPost *
-    \ if line("'\"") > 0 && line("'\"") <= line("$") |
-    \   exe "normal g`\"" |
-    \ endif
-
-  " Settings for various modes.
-  au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc
-    \ setlocal sw=2 ts=2 sts=2 et
-  au BufNewFile,BufRead,Syntax *.erl,*.hs
-    \ setlocal et ai si sta
-
-  "au BufWritePre *.php,*.css,*.py,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc
-  "  \ call ScrubTrailing()
-
-  " Python autocompletion.
-  au FileType python set omnifunc=pythoncomplete#Complete
-  inoremap <Nul> <C-x><C-o>
-
-  " automatically give executable permissions
-  au BufWritePost *.cgi,*.sh
-    \ call EnsureExecutable(expand("<afile>"))
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \   exe "normal g`\"" |
+        \ endif
 
   augroup END
 
 else
 
-  set autoindent " always set autoindenting on
+  set autoindent " Always set autoindenting on
 
 endif " has("autocmd")
 " }}}
@@ -161,12 +160,3 @@ function EnsureExecutable(f)
 endfunction
 
 " }}}
-
-python <<EOF
-import os, sys, vim
-for p in sys.path:
-    if os.path.isdir(p):
-        vim.command(r"set path+=%s" % (p.replace(" ", r"\ ")))
-EOF
-
-set tags+=$HOME/.vim/tags/python.ctags
