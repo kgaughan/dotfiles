@@ -1,1 +1,3 @@
 .netrwhist
+*.zwc
+config/zsh.d/S51.virtualenvwrapper.zsh
