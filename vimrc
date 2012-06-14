@@ -3,6 +3,7 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set textwidth=80
+set nolinebreak
 " }}}
 
 " General Configuration {{{
@@ -15,7 +16,7 @@ set tenc=utf-8
 " UI Configuration {{{
 set ruler        " Show where we are in the file.
 set showmode     " Because I'm stupid and like to know what mode I'm in.
-set history=50
+set history=500
 set visualbell
 set showcmd
 set incsearch
@@ -26,7 +27,9 @@ set statusline=%<%f%h%m%r%=%l,%c%V\ %P\ %{&ff}\
 set number
 set wildmenu
 set wildmode=list:longest,full
+set wildignore=*.o,*~,*.pyc,*.pyo
 set ttyfast
+set mouse=a
 " Both for minime, which as oddly slow scrolling.
 set scrolljump=4
 set ttyscroll=100
@@ -93,6 +96,10 @@ if has("autocmd")
   au BufRead,BufNewFile *.vala,*.vapi 
         \ setfiletype vala |
         \ setlocal cin et
+
+  " Dexy
+  au BufNewFile,BufRead .dexy
+        \ setfiletype javascript
 
   " Settings for various modes.
   au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc
