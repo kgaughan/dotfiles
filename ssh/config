@@ -8,3 +8,17 @@ ControlMaster auto
 ControlPath /tmp/ssh_mux.%h.%p.%r
 # Avoid needless delays
 GSSAPIAuthentication no
+ServerAliveInterval 300
+HashKnownHosts no
+
+Host nineve
+User keith
+HostName nineve.blacknight.ie
+
+Host hegemon
+User keith
+HostName hegemon.blacknight.ie
+
+Host lir
+User keith
+HostName lir.talideon.com
