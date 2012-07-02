@@ -72,6 +72,9 @@ def get_enclosure_filename(enclosure, disposition):
             _, filename = parts
     if filename is None:
         filename = enclosure
+    # If enclosed in quotes, trim them.
+    if filename[0] == '"' and filename[-1] == '"':
+        filename = filename[1:-1]
     return path.basename(filename)
 
 
