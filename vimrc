@@ -29,7 +29,7 @@ set wildmenu
 set wildmode=list:longest,full
 set wildignore=*.o,*~,*.pyc,*.pyo
 set ttyfast
-set mouse=a
+"set mouse=a
 " Both for minime, which as oddly slow scrolling.
 set scrolljump=4
 set ttyscroll=100
