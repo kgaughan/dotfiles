@@ -144,7 +144,7 @@ nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
 " }}}
 
-" Deactivate the arrow keys to help get rid of a bad habit. {{{
+" Deactivate the arrow and page up/down keys to help rid me of a bad habit. {{{
 noremap  <Up> ""
 noremap! <Up> <Esc>
 noremap  <Down> ""
@@ -153,6 +153,8 @@ noremap  <Left> ""
 noremap! <Left> <Esc>
 noremap  <Right> ""
 noremap! <Right> <Esc>
+noremap <PageUp> ""
+noremap <PageDown> ""
 " }}}
 
 " Helpful window navigation {{{
