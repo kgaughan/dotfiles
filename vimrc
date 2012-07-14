@@ -27,9 +27,8 @@ set statusline=%<%f%h%m%r%=%l,%c%V\ %P\ %{&ff}\
 set number
 set wildmenu
 set wildmode=list:longest,full
-set wildignore=*.o,*~,*.pyc,*.pyo
+set wildignore=*.o,*~,*.pyc,*.pyo,*.so
 set ttyfast
-"set mouse=a
 " Both for minime, which as oddly slow scrolling.
 set scrolljump=4
 set ttyscroll=100
@@ -143,6 +142,17 @@ imap <C-n>        <ESC>:tabnew<cr>
 inoremap <F1> <ESC>
 nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
+" }}}
+
+" Deactivate the arrow keys to help get rid of a bad habit. {{{
+noremap  <Up> ""
+noremap! <Up> <Esc>
+noremap  <Down> ""
+noremap! <Down> <Esc>
+noremap  <Left> ""
+noremap! <Left> <Esc>
+noremap  <Right> ""
+noremap! <Right> <Esc>
 " }}}
 
 " Helpful window navigation {{{
