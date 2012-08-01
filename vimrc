@@ -2,7 +2,6 @@
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
-set textwidth=80
 set nolinebreak
 " }}}
 
@@ -34,9 +33,9 @@ set scrolljump=4
 set ttyscroll=100
 " http://stackoverflow.com/questions/235439/vim-80-column-layout-concerns/3765575
 if exists('+colorcolumn')
-  set colorcolumn=80
+  set colorcolumn=79
 else
-  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
+  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>79v.\+', -1)
 endif
 
 " Don't use Ex mode, use Q for formatting. Ex is annoying anyway.
