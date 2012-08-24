@@ -144,14 +144,10 @@ vnoremap <F1> <ESC>
 " }}}
 
 " Deactivate the arrow and page up/down keys to help rid me of a bad habit. {{{
-noremap  <Up> ""
-noremap! <Up> <Esc>
-noremap  <Down> ""
-noremap! <Down> <Esc>
-noremap  <Left> ""
-noremap! <Left> <Esc>
-noremap  <Right> ""
-noremap! <Right> <Esc>
+noremap <Up> ""
+noremap <Down> ""
+noremap <Left> ""
+noremap <Right> ""
 noremap <PageUp> ""
 noremap <PageDown> ""
 " }}}
