@@ -9,7 +9,7 @@ output-format=colorized
 include-ids=yes
 
 [BASIC]
-good-names=n,i,j,k,v,ex,_,kw,db,logger,fh,fd,fn,ns,cc,op,pw,ip,cb,app,by,ts
+good-names=n,i,j,k,v,ex,_,kw,db,logger,fh,fd,fn,ns,cc,op,pw,ip,cb,app,by,ts,GET,POST,s
 
 [DESIGN]
 max-args=7
