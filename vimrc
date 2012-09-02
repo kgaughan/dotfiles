@@ -8,6 +8,7 @@ set nolinebreak
 " General Configuration {{{
 set nocompatible " Get rid of VI-isms.
 set nobackup
+set noswapfile " Stupid, stupid clutter.
 set enc=utf-8
 set tenc=utf-8
 " }}}
@@ -16,7 +17,7 @@ set tenc=utf-8
 set ruler        " Show where we are in the file.
 set showmode     " Because I'm stupid and like to know what mode I'm in.
 set history=500
-set visualbell
+set visualbell t_vb=
 set showcmd
 set incsearch
 set backspace=indent,eol,start
@@ -138,18 +139,18 @@ imap <C-n>        <ESC>:tabnew<cr>
 " }}}
 
 " Deactivate F1 and turn it into Escape {{{
-inoremap <F1> <ESC>
-nnoremap <F1> <ESC>
-vnoremap <F1> <ESC>
+inoremap <F1> <nop>
+nnoremap <F1> <nop>
+vnoremap <F1> <nop>
 " }}}
 
 " Deactivate the arrow and page up/down keys to help rid me of a bad habit. {{{
-noremap <Up> ""
-noremap <Down> ""
-noremap <Left> ""
-noremap <Right> ""
-noremap <PageUp> ""
-noremap <PageDown> ""
+noremap <Up> <nop>
+noremap <Down> <nop>
+noremap <Left> <nop>
+noremap <Right> <nop>
+noremap <PageUp> <nop>
+noremap <PageDown> <nop>
 " }}}
 
 " Helpful window navigation {{{
