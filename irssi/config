@@ -14,17 +14,28 @@ servers = (
     use_ssl = "yes";
     ssl_verify = "no";
     autoconnect = "yes";
+  },
+  {
+    address = "irc.lug.org.uk";
+    chatnet = "UKLUGs";
+    port = "6667";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "yes";
   }
 );
 
 chatnets = {
   LSpace = { type = "IRC"; };
   Freenode = { type = "IRC"; };
+  UKLUGs = { type = "IRC"; };
 };
 
 channels = (
   { name = "#linux"; chatnet = "LSpace"; autojoin = "yes"; },
   { name = "#python.ie"; chatnet = "Freenode"; autojoin = "yes"; }
+  # http://surrey.lug.org.uk/Chat/IRC
+  { name = "#surrey"; chatnet = "UKLUGs"; autojoin = "yes"; }
 );
 
 aliases = {
