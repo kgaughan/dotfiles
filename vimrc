@@ -66,7 +66,7 @@ set listchars=tab:>.,trail:.,nbsp:.
 " }}}
 
 " Fix backspace behaviour under screen. {{{
-if &term == 'screen'
+if &term[:5] == 'screen' || &term == 'tmux'
   set t_kb=
 endif
 " }}}
