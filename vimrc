@@ -96,8 +96,8 @@ if has("autocmd")
         \ setfiletype vala |
         \ setlocal cin et
 
-  " Dexy
-  au BufNewFile,BufRead .dexy
+  " Dexy/JSON
+  au BufNewFile,BufRead *.dexy,*.json
         \ setfiletype javascript
 
   " Settings for various modes.
@@ -105,6 +105,10 @@ if has("autocmd")
         \ setlocal sw=2 ts=2 sts=2 et
   au BufNewFile,BufRead,Syntax *.erl,*.hs
         \ setlocal et ai si sta
+  au BufNewFile,BufRead,Syntax *.py,*.rst
+        \ setlocal et ts=4 sw=4 sts=4 ai
+  au BufWritePre *.py,*.rst
+		\ call ScrubTrailing()
 
   " Automatically give executable permissions
   au BufWritePost *.cgi,*.sh
@@ -163,7 +167,10 @@ map <C-K> <C-W>k<C-W>_
 
 function ScrubTrailing()
   let save_cursor = getpos('.')
+  " Scrub trailing spaces
   %s/\s\+$//e
+  " Scrub trailing lines
+  %s#\($\n\s*\)\+\%$##
   call setpos('.', save_cursor)
 endfunction
 
