@@ -2,14 +2,14 @@
 ignore=.svn
 
 [MESSAGES CONTROL]
-disable-msg=C0103,C0111,R0912,R0201,R0922,R0921,W0142,R0921
+disable-msg=R0921,R0922,W0142
 
 [REPORTS]
 output-format=colorized
 include-ids=yes
 
 [BASIC]
-good-names=n,i,j,k,v,ex,_,kw,db,logger,fh,fd,fn,ns,cc,op,pw,ip,cb,app,by,ts,GET,POST,s
+good-names=n,i,j,k,v,ex,_,kw,db,logger,fh,fd,fn,ns,cc,op,pw,ip,cb,app,by,ts,GET,POST,s,main,mx,pool,cfg,af,sa
 
 [DESIGN]
 max-args=7
@@ -18,6 +18,6 @@ max-args=7
 max-line-length=100
 
 [SIMILARITIES]
-min-similarity-lines=10
+min-similarity-lines=5
 ignore-comments=yes
 ignore-docstrings=yes
