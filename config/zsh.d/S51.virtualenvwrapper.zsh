@@ -1,49 +1,48 @@
+# Dynamically load virtualenvwrapper functions to reduce shell startup
+# time.
+#
+# Copyright 2012 Aron Griffis <aron@arongriffis.com>
+# Released under the GNU GPL v3
+#######################################################################
+#
 # Taken from:
-# https://raw.github.com/robbyrussell/oh-my-zsh/master/plugins/virtualenvwrapper/virtualenvwrapper.plugin.zsh
+# https://gist.github.com/2483204
 
-WRAPPER_FOUND=0
-for wrapsource in "/usr/bin/virtualenvwrapper.sh" "/usr/local/bin/virtualenvwrapper.sh" "/etc/bash_completion.d/virtualenvwrapper" ; do
-  if [[ -e $wrapsource ]] ; then
-    WRAPPER_FOUND=1
-    source $wrapsource
+# Python virtualenvwrapper loads really slowly, so load it on demand.
+if [[ $(type -w workon) != "workon: function" ]]; then
+  virtualenv_funcs=( workon deactivate mkvirtualenv )
 
-    if [[ ! $DISABLE_VENV_CD -eq 1 ]]; then
-      # Automatically activate Git projects' virtual environments based on the
-      # directory name of the project. Virtual environment name can be overridden
-      # by placing a .venv file in the project root with a virtualenv name in it
-      function workon_cwd {
-          # Check that this is a Git repo
-          PROJECT_ROOT=`git rev-parse --show-toplevel 2> /dev/null`
-          if (( $? == 0 )); then
-              # Check for virtualenv name override
-              ENV_NAME=`basename "$PROJECT_ROOT"`
-              if [[ -f "$PROJECT_ROOT/.venv" ]]; then
-                  ENV_NAME=`cat "$PROJECT_ROOT/.venv"`
-              fi
-              # Activate the environment only if it is not already active
-              if [[ "$VIRTUAL_ENV" != "$WORKON_HOME/$ENV_NAME" ]]; then
-                  if [[ -e "$WORKON_HOME/$ENV_NAME/bin/activate" ]]; then
-                      workon "$ENV_NAME" && export CD_VIRTUAL_ENV="$ENV_NAME"
-                  fi
-              fi
-          elif [ $CD_VIRTUAL_ENV ]; then
-              # We've just left the repo, deactivate the environment
-              # Note: this only happens if the virtualenv was activated automatically
-              deactivate && unset CD_VIRTUAL_ENV
-          fi
-          unset PROJECT_ROOT
-      }
+  load_virtualenv() {
+    # If these already exist, then virtualenvwrapper won't override them.
+    unset -f "${virtualenv_funcs[@]}"
 
-      # New cd function that does the virtualenv magic
-      function cd {
-          builtin cd "$@" && workon_cwd
-      }
+    # virtualenvwrapper doesn't load if PYTHONPATH is set, because the
+    # virtualenv python doesn't have the right modules.
+    declare _pp="$PYTHONPATH"
+    unset PYTHONPATH
+
+    # Attempt to load virtualenvwrapper from its many possible sources...
+    _try_source() { [[ -f $1 ]] || return; source "$1"; return 0; }
+    _try_source /usr/local/bin/virtualenvwrapper.sh || \
+    _try_source /etc/bash_completion.d/virtualenvwrapper || \
+    _try_source /usr/bin/virtualenvwrapper.sh
+    return_status=$?
+    unset -f _try_source
+
+    # Restore PYTHONPATH
+    [[ -n $_pp ]] && export PYTHONPATH="$_pp"
+
+    # Did loading work?
+    if [[ $return_status != 0 || $(type -w "$1") != "$1: function" ]]; then
+      echo "Error loading virtualenvwrapper, sorry" >&2
+      return $return_status
     fi
 
-    break
-  fi
-done
+    # Chain-load the appropriate function
+    "$@"
+  }
 
-if [ $WRAPPER_FOUND -eq 0 ] ; then
-  print "zsh virtualenvwrapper plugin: Couldn't activate virtualenvwrapper. Please run \`pip install virtualenvwrapper\`."
+  for v in "${virtualenv_funcs[@]}"; do
+    eval "$v() { load_virtualenv $v \"\$@\"; }"
+  done
 fi
