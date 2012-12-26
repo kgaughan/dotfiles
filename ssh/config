@@ -18,6 +18,8 @@ HostName nineve.blacknight.ie
 Host hegemon
 User keith
 HostName hegemon.blacknight.ie
+# Proxy via nineve using netcat.
+ProxyCommand ssh -q nineve.blacknight.ie nc -q0 %h 22
 
 Host lir
 User keith
