@@ -170,7 +170,7 @@ function ScrubTrailing()
   " Scrub trailing spaces
   %s/\s\+$//e
   " Scrub trailing lines
-  %s#\($\n\s*\)\+\%$##
+  %s/\($\n\s*\)\+\%$//e
   call setpos('.', save_cursor)
 endfunction
 
