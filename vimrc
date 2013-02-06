@@ -76,8 +76,8 @@ if has("autocmd")
 
   " Pathogen {{{
   " Read this: http://tammersaleh.com/posts/the-modern-vim-config-with-pathogen
+  call pathogen#infect() 
   call pathogen#helptags()  
-  call pathogen#runtime_append_all_bundles()  
   " }}}
 
   " Enable file type detection.
