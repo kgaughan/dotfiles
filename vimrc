@@ -1,3 +1,11 @@
+" Pathogen {{{
+" Read this: http://tammersaleh.com/posts/the-modern-vim-config-with-pathogen
+if has("autocmd")
+  call pathogen#infect() 
+  call pathogen#helptags()  
+endif
+" }}}
+
 " Default tab settings {{{
 set tabstop=4
 set softtabstop=4
@@ -53,11 +61,11 @@ endif
 if &t_Co > 2 || has("gui_running")
   set hlsearch
   set background=dark
-  syntax enable
-  if $TERM != "linux"
-    " Enable 256-colour mode (rather than the default 8-colour mode).
-    set t_Co=256
-  endif
+  " Enable 256-colour mode (rather than the default 8-colour mode).
+  set t_Co=256
+  syntax on
+  "let g:solarized_termcolors = 256
+  let g:solarized_termtrans = 1
   colors solarized
 endif
 
@@ -73,12 +81,6 @@ endif
 
 " Autocommands {{{
 if has("autocmd")
-
-  " Pathogen {{{
-  " Read this: http://tammersaleh.com/posts/the-modern-vim-config-with-pathogen
-  call pathogen#infect() 
-  call pathogen#helptags()  
-  " }}}
 
   " Enable file type detection.
   " Use the default filetype settings, so that mail gets 'tw' set to 72,
@@ -107,8 +109,9 @@ if has("autocmd")
         \ setlocal et ai si sta
   au BufNewFile,BufRead,Syntax *.py,*.rst
         \ setlocal et ts=4 sw=4 sts=4 ai
-  au BufWritePre *.py,*.rst
-		\ call ScrubTrailing()
+
+  au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc
+        \ call ScrubTrailing()
 
   " Automatically give executable permissions
   au BufWritePost *.cgi,*.sh
