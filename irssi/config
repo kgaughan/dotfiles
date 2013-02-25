@@ -207,4 +207,4 @@ settings = {
   "perl/core/scripts" = { };
   "fe-common/core" = { theme = "solarish"; };
 };
-logs = { "~/irc-logs/bkdevs" = { level = "ALL"; }; };
+logs = { "~/.irssi/log" = { level = "ALL"; }; };
