@@ -61,12 +61,14 @@ endif
 if &t_Co > 2 || has("gui_running")
   set hlsearch
   set background=dark
-  " Enable 256-colour mode (rather than the default 8-colour mode).
-  set t_Co=256
-  syntax on
+  if $TERM != "linux"
+    " Enable 256-colour mode (rather than the default 8-colour mode).
+    set t_Co=256
+  endif
   "let g:solarized_termcolors = 256
   let g:solarized_termtrans = 1
   colors solarized
+  syntax on
 endif
 
 " For displaying nasty whitespace.
