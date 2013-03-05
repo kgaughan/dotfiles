@@ -51,7 +51,7 @@ endif
 map Q gq
 
 if has("gui_running")
-  set guioptions-=tT
+  set guioptions-=lLbrRtT
   set toolbariconsize=tiny
   set guifont=Inconsolata\ 9
 endif
