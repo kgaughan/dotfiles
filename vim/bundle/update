@@ -3,6 +3,6 @@
 here=$(dirname $0)
 find $here -maxdepth 1 -mindepth 1 -type d -exec rm -rf {} +
 for i in $(cat $here/repos); do
-	git clone --recursive $i
+	(cd $here; git clone --recursive $i)
 done
 find $here -name .git\* -exec rm -rf {} +
