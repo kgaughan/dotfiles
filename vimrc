@@ -1,3 +1,11 @@
+" General Configuration {{{
+set nocompatible " Get rid of VI-isms.
+set nobackup
+set noswapfile " Stupid, stupid clutter.
+set enc=utf-8
+set tenc=utf-8
+" }}}
+
 " Pathogen {{{
 " Read this: http://tammersaleh.com/posts/the-modern-vim-config-with-pathogen
 if has("autocmd")
@@ -13,29 +21,21 @@ set shiftwidth=4
 set nolinebreak
 " }}}
 
-" General Configuration {{{
-set nocompatible " Get rid of VI-isms.
-set nobackup
-set noswapfile " Stupid, stupid clutter.
-set enc=utf-8
-set tenc=utf-8
-" }}}
-
 " UI Configuration {{{
 set ruler        " Show where we are in the file.
 set showmode     " Because I'm stupid and like to know what mode I'm in.
-set history=500
+set history=100
 set visualbell t_vb=
 set showcmd
 set incsearch
 set backspace=indent,eol,start
-set laststatus=2
+set laststatus=2 " Always show the last status
 set foldmethod=marker
-set statusline=%<%f%h%m%r%=%l,%c%V\ %P\ %{&ff}\ 
 set number
+set lazyredraw
 set wildmenu
 set wildmode=list:longest,full
-set wildignore=*.o,*~,*.pyc,*.pyo,*.so
+set wildignore=*.o,*~,*.pyc,*.pyo,*.so,*.sw*,__pycache__
 set ttyfast
 " Both for minime, which as oddly slow scrolling.
 set scrolljump=4
@@ -72,7 +72,7 @@ if &t_Co > 2 || has("gui_running")
 endif
 
 " For displaying nasty whitespace.
-set listchars=tab:>.,trail:.,nbsp:.
+set listchars=tab:↹·,trail:·,nbsp:·
 " }}}
 
 " Fix backspace behaviour under screen. {{{
@@ -93,6 +93,8 @@ if has("autocmd")
   " Put these in an autocmd group, so that we can delete them easily.
   augroup vimrcEx
   au!
+
+  au FileType text setlocal textwidth=78
 
   au BufRead *.vala,*.vapi
         \ set efm=%f:%l.%c-%[%^:]%#:\ %t%[^:]%#:\ %m

@@ -9,3 +9,7 @@ bindkey '\e[1;5C' forward-word
 bindkey '\e[1;5A' beginning-of-line
 # C-DownArrow
 bindkey '\e[1;5B' end-of-line
+
+# For FreeBSD console
+bindkey "\e[H" beginning-of-line
+bindkey "\e[F" end-of-line

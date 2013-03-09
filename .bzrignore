@@ -2,3 +2,4 @@
 *.zwc
 .git*
 *.cache
+vim/bundle/*/doc/tags
