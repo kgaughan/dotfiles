@@ -7,12 +7,12 @@ while read i; do
 	if test -e $here/$name; then
 		echo Updating $name...
 		cd $here/$name
-		git pull --recurse-submodules >/dev/null 2>&1
+		git pull --recurse-submodules
 	else
-		echo Cloning $name...
 		cd $here
-		git clone --recursive $i >/dev/null 2>&1
+		git clone --recursive $i
 	fi
+	echo
 done <<FIN
 https://github.com/davidhalter/jedi-vim.git
 https://github.com/altercation/vim-colors-solarized.git
