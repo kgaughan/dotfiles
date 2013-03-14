@@ -1,8 +1,22 @@
 #!/bin/sh
 
-here=$(dirname $0)
-find $here -maxdepth 1 -mindepth 1 -type d -exec rm -rf {} +
-for i in $(cat $here/repos); do
-	(cd $here; git clone --recursive $i)
-done
-find $here -name .git\* -exec rm -rf {} +
+here=$(readlink -f $(dirname $0))
+
+while read i; do
+	name=$(basename $i .git)
+	if test -e $here/$name; then
+		echo Updating $name...
+		cd $here/$name
+		git pull --recurse-submodules >/dev/null 2>&1
+	else
+		echo Cloning $name...
+		cd $here
+		git clone --recursive $i >/dev/null 2>&1
+	fi
+done <<FIN
+https://github.com/davidhalter/jedi-vim.git
+https://github.com/altercation/vim-colors-solarized.git
+https://github.com/nvie/vim-flake8.git
+https://github.com/Lokaltog/vim-powerline.git
+https://github.com/tpope/vim-fugitive.git
+FIN
