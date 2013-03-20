@@ -1,6 +1,10 @@
 #!/bin/sh
 
-here=$(readlink -f $(dirname $0))
+if which realpath >/dev/null; then
+	here=$(dirname $(realpath -q $0))
+else
+	here=$(dirname $(readlink -f $0))
+fi
 
 while read i; do
 	name=$(basename $i .git)
