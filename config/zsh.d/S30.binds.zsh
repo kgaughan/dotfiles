@@ -10,6 +10,10 @@ bindkey '\e[1;5A' beginning-of-line
 # C-DownArrow
 bindkey '\e[1;5B' end-of-line
 
-# For FreeBSD console
-bindkey "\e[H" beginning-of-line
-bindkey "\e[F" end-of-line
+case `uname` in
+	FreeBSD)
+		# For FreeBSD console
+		bindkey '^[OH' beginning-of-line
+		bindkey '^[OF' end-of-line
+		;;
+esac
