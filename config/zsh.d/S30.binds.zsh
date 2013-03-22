@@ -10,10 +10,7 @@ bindkey '\e[1;5A' beginning-of-line
 # C-DownArrow
 bindkey '\e[1;5B' end-of-line
 
-case `uname` in
-	FreeBSD)
-		# For FreeBSD console
-		bindkey '^[OH' beginning-of-line
-		bindkey '^[OF' end-of-line
-		;;
-esac
+# For FreeBSD console
+# See 'man 5 termcap' for a list of codes passed to echotc
+bindkey $(echotc kh) beginning-of-line
+bindkey $(echotc @7) end-of-line
