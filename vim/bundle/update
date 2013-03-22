@@ -18,6 +18,7 @@ while read i; do
 	fi
 	echo
 done <<FIN
+https://github.com/jceb/vim-orgmode.git
 https://github.com/davidhalter/jedi-vim.git
 https://github.com/altercation/vim-colors-solarized.git
 https://github.com/nvie/vim-flake8.git
