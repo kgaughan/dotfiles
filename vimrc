@@ -106,6 +106,10 @@ if has("autocmd")
   au BufNewFile,BufRead *.dexy,*.json
         \ setfiletype javascript
 
+  " XML
+  au BufNewFile,BufRead,Syntax *.xml
+        \ setlocal sw=2 ts=2 sts=2 et
+
   " Settings for various modes.
   au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc
         \ setlocal sw=2 ts=2 sts=2 et
