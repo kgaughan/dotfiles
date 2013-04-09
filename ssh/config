@@ -11,16 +11,16 @@ GSSAPIAuthentication no
 ServerAliveInterval 300
 HashKnownHosts no
 
-Host nineve
+Host nineve nineve.blacknight.ie
 User keith
 HostName nineve.blacknight.ie
 
-Host hegemon
+Host hegemon hegemon.blacknight.ie
 User keith
 HostName hegemon.blacknight.ie
 # Proxy via nineve using netcat.
 ProxyCommand ssh -q nineve.blacknight.ie nc -q0 %h 22
 
-Host lir
+Host lir lir.talideon.com
 User keith
 HostName lir.talideon.com
