@@ -193,3 +193,5 @@ function EnsureExecutable(f)
 endfunction
 
 " }}}
+
+let g:py_coverage_bin = 'python-coverage'
