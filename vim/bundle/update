@@ -28,4 +28,5 @@ https://github.com/nvie/vim-flake8.git
 https://github.com/terryma/vim-multiple-cursors.git
 https://github.com/tpope/vim-fugitive.git
 https://github.com/vim-scripts/py-coverage.git
+https://github.com/wting/rust.vim.git
 FIN
