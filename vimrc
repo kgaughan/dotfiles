@@ -176,6 +176,14 @@ map <C-K> <C-W>k<C-W>_
 
 " Functions {{{
 
+" Collapse blank lines
+function Collapse()
+  let save_cursor = getpos('.')
+  %s/\s\+$//e
+  %s/\n\{3,}/\r\r/e
+  call setpos('.', save_cursor)
+endfunction
+
 function ScrubTrailing()
   let save_cursor = getpos('.')
   " Scrub trailing spaces
