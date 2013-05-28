@@ -10,6 +10,8 @@
 	uncommit = reset --soft 'HEAD^'
 [credential]
 	helper = cache --timeout=3600
+[diff]
+	algorithm = patience
 [http]
 	sslverify = false
 [push]
