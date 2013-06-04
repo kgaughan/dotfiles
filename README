@@ -1,7 +1,7 @@
 What's the story, like?
 -----------------------
 
-You're currently looking at my public dotfiles BZR repository. I use it to make
+You're currently looking at my public dotfiles repository. I use it to make
 sure I (a) don't bugger up any of these files by making unintended or stupid
 changes to them and (b) so that I can point people towards them for
 inspiration/smugness. :-)
@@ -11,16 +11,16 @@ What's with the lack of dots?
 -----------------------------
 
 I like to keep the files and directories here visible, which means I drop the
-initial dot from any of the files. Machines I use these files on have a
-branch of this repo, and I symlink from the expected locations of the files
-back to the local branch of this repo. See, simple!
+initial dot from any of the files. Machines I use these files on have a branch
+of this repo, and I symlink from the expected locations of the files back to
+the local branch of this repo. See, simple!
 
 
 I want to have my machine set up with your dotfiles, what would I need to do?
 -----------------------------------------------------------------------------
 
-Most of the directories and files are simple: just create symlinks back to
-the copies in this repo, and you're sorted.
+Most of the directories and files are simple: just create symlinks back to the
+copies in this repo, and you're sorted.
 
 The 'config' directory is a little different, mind. In that case, you'll need
 to link the individual files and directories in that into your '.config'
@@ -28,7 +28,7 @@ directory. Using the vim and zsh files, here's what you'll need to do:
 
     % mkdir ~/.config ~/repos
     % cd ~/repos
-    % bzr branch http://projects.talideon.com/repos/dotfiles/
+    % git clone git@github.com:kgaughan/dotfiles.git
     % cd ~/.config
     % ln -s ../repos/dotfiles/config/zsh.d .
     % cd ..
@@ -56,9 +56,5 @@ Anything you're planning to change?
 Move ~/.gpg-agent-info to ~/.cache/gpg-agent-info - anything that doesn't need
 to be in ~ should be in one of ~/.config, ~/.cache, or ~/.local as far as I'm
 concerned. ~/.zshrc may end up moving to ~/.config/zshrc if possible, leaving
-only ~/.zprofile, which would leave me happy. I'd also like to add some kind
-of autoconfiguration script.
-
-
--- 
-Keith Gaughan <http://stereochro.me/>
+only ~/.zprofile, which would leave me happy. I'd also like to add some kind of
+autoconfiguration script.
