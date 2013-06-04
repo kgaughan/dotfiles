@@ -8,6 +8,7 @@
 	co = checkout
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 	uncommit = reset --soft 'HEAD^'
+	aggressive = !"git fsck --unreachable; git reflog expire --expire=0 --all; git repack -a -d -l; git prune; git gc --aggressive"
 [credential]
 	helper = cache --timeout=3600
 [diff]
