@@ -116,7 +116,7 @@ if has("autocmd")
   au BufNewFile,BufRead,Syntax *.erl,*.hs
         \ setlocal et ai si sta
   au BufNewFile,BufRead,Syntax *.py,*.rst
-        \ setlocal et ts=4 sw=4 sts=4 ai
+        \ setlocal sw=4 ts=4 sts=4 et ai sta
 
   au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc
         \ call ScrubTrailing()
