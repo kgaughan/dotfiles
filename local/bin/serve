@@ -41,10 +41,12 @@ def avahi_add_service(group, svc_type, port, name='', txt_records=None):
             txt_records)
 
 def serve(port, title):
-    print "Starting server on port %s..." % port
     httpd = SocketServer.TCPServer(
             ('', port),
             SimpleHTTPServer.SimpleHTTPRequestHandler)
+
+    _, port = httpd.server_address
+    print "Starting server on port %s..." % port
 
     if has_avahi:
         print "Registering with Avahi as '%s'" % title
@@ -77,12 +79,12 @@ def main():
     except getopt.GetoptError, err:
         usage(err)
 
-    port = 8080
+    port = 0
     title = 'Shared directory'
     for opt, val in opts:
         if opt == '-p':
             port = int(val)
-            if 0 >= port >= 65536:
+            if 0 > port >= 65536:
                 usage("Bad port number: %d" % port)
         elif opt == '-t' and len(val) > 0:
             title = val
