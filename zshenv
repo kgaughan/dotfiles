@@ -5,6 +5,10 @@ for dir in /usr/{local,pkg}/{sbin,bin} /usr/games; do
 		PATH="$PATH:$dir"
 	fi
 done
+if test -d $HOME/.pyenv/bin; then
+	PATH="$PATH:$HOME/.pyenv/bin"
+	eval "$(pyenv init -)"
+fi
 export PATH="$PATH:$HOME/.local/bin"
 
 ## Set up $LIBDIRPATH
