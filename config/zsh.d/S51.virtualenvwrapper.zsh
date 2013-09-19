@@ -8,6 +8,8 @@
 # Taken from:
 # https://gist.github.com/2483204
 
+export WORKON_HOME=$HOME/.virtualenvs
+
 # Python virtualenvwrapper loads really slowly, so load it on demand.
 if [[ $(type -w workon) != "workon: function" ]]; then
   virtualenv_funcs=( workon deactivate mkvirtualenv )
