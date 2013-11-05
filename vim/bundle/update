@@ -16,6 +16,10 @@ while read i; do
 		cd $here
 		git clone --recursive $i
 	fi
+	if test -e .gitmodules; then
+		echo "Updating submodules..."
+		git submodule update
+	fi
 	echo
 done <<FIN
 https://github.com/altercation/vim-colors-solarized.git
