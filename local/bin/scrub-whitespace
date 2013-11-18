@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+# Cleans up basic whitespace problems in .rst and .py files. Run before
+# commits.
+#
+
+# Tabs to spaces.
+for i in `fgrep -rl $'\t' --include=\*.py --include=\*.rst .`; do
+	if test -f $i; then
+		tmp=`mktemp`
+		expand --tabs=4 $i >$tmp
+		mv $tmp $i
+	fi
+done
+
+# Spaces to tabs
+for i in `fgrep -rl $'\t' --include=\*.php --include=\*.html --include=\*.js .`; do
+	if test -f $i; then
+		tmp=`mktemp`
+		unexpand --first-only --tabs=4 $i >$tmp
+		mv $tmp $i
+	fi
+done
+
+# Trailing whitespace
+for i in `egrep -rl '[[:space:]]$' --include=\*.py --include=\*.php --include=\*.rst --include=\*.js --include=\*.html .`; do
+	if test -f $i; then
+		sed -i 's/\s\+$//g' $i 2>/dev/null
+	fi
+done
+
+# Trailing and leading lines
+for ext in py rst php js html; do 
+	find . -name \*.$ext -type f -exec sed -i -e :a -e '/./,$!d;/^\n*$/{$d;N;};/\n$/ba' {} \;
+done
