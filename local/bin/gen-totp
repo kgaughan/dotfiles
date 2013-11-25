@@ -1,0 +1,72 @@
+#!/bin/sh
+#
+# Wrapper around oathtool for generating TOTPs.
+# by Keith Gaughan <http://stereochro.me/>
+#
+# I hereby waive all copyright and related or neighboring rights
+# together with all associated claims and causes of action with respect
+# to this work to the extent possible under the law, dedicating this
+# work to the public domain.
+#
+
+CONFIG=$HOME/.gen-totp
+
+help () {
+	cat << LEFIN
+Usage: $(basename $0) [-h] [-l] [-s<name>]
+
+Options:
+  -h  Show this screen
+  -l  List TOTPs
+  -s<name>  Show the current TOTP <name>
+LEFIN
+}
+
+show () {
+	matched="$(grep "^$1	" $CONFIG | cut -f2)"
+	echo -n "PIN: "
+	oathtool --totp --base32 $matched
+}
+
+list () {
+	echo "Available PINs:"
+	cut -f1 $CONFIG | sort
+}
+
+if ! which oathtool >/dev/null 2>&1; then
+	echo "oathtool not installed!" >&2
+fi
+
+if ! test -e $CONFIG; then
+	echo "Creating $(basename $CONFIG)" >&1
+	touch $CONFIG && chmod 600 $CONFIG
+fi
+
+args=$(getopt hls: $*)
+if test $? -ne 0; then
+	help >&2
+	exit 2
+fi
+
+set -- $args
+while true; do
+	case "$1" in
+	-h)
+		help
+		shift
+		;;
+	-s)
+		show $2
+		shift
+		shift
+		;;
+	-l)
+		list
+		shift
+		;;
+	--)
+		shift
+		break
+		;;
+	esac
+done
