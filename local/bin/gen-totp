@@ -24,6 +24,10 @@ LEFIN
 
 show () {
 	matched="$(grep "^$1	" $CONFIG | cut -f2)"
+	if test -z "$matched"; then
+		echo "No such secret." >&2
+		exit 3
+	fi
 	echo -n "PIN: "
 	oathtool --totp --base32 $matched
 }
