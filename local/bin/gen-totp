@@ -17,8 +17,8 @@ Usage: $(basename $0) [-h] [-l] [-s<name>]
 
 Options:
   -h        Show this screen
-  -l        List TOTPs
-  -s<name>  Show the current TOTP <name>
+  -l        List TOTP secret names
+  -s<name>  Show the current TOTP for secret <name>
 LEFIN
 }
 
