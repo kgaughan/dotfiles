@@ -13,7 +13,7 @@ CONFIG=$HOME/.gen-totp
 
 help () {
 	cat << LEFIN
-Usage: $(basename $0) [-h] [-l] [-s<name>]
+Usage: $(basename $0) [-h | -l | -s<name>]
 
 Options:
   -h        Show this screen
@@ -53,21 +53,29 @@ if test $? -ne 0; then
 	exit 2
 fi
 
+ran=0
 set -- $args
 while true; do
+	# Mark that we ran a valid command.
+	if test "$1" != "--"; then
+		ran=1
+	fi
 	case "$1" in
 	-h)
 		help
 		shift
+		break
 		;;
 	-s)
 		show $2
 		shift
 		shift
+		break
 		;;
 	-l)
 		list
 		shift
+		break
 		;;
 	--)
 		shift
@@ -75,3 +83,7 @@ while true; do
 		;;
 	esac
 done
+
+if test "$ran" -eq "0"; then
+	help
+fi
