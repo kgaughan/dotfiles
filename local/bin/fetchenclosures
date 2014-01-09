@@ -109,7 +109,7 @@ def parse_item(item, tags):
 
 
 def fetch_enclosure(url, guid, directory, cache):
-    fsrc = urllib2.urlopen(url)
+    fsrc = open_url(url)
     filename = get_enclosure_filename(
             url, fsrc.info().getheader('content-disposition'))
     cache[guid] = filename
@@ -133,7 +133,7 @@ def fetch(feed_url, directory, cache, patterns):
                 not excluded(item['title'])
 
     try:
-        ffeed = urllib2.urlopen(feed_url)
+        ffeed = open_url(feed_url)
         for elem in minidom.parse(ffeed).getElementsByTagName('item'):
             item = parse_item(elem, ('title', 'guid', 'enclosure'))
             if can_download(item):
@@ -155,6 +155,15 @@ def fetch(feed_url, directory, cache, patterns):
             return
         # Anything else, die loudly.
         raise
+
+
+def open_url(url):
+	"""
+	Open a URL. Mindblowing, I know.
+	"""
+	request = urllib2.Request(url)
+	request.add_header('User-Agent', 'fetchenclosures/1.0')
+	return urllib2.urlopen(request)
 
 
 def usage(message=None):
