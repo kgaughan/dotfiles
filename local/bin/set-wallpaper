@@ -11,7 +11,7 @@
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 #  1. Redistributions of source code must retain the above copyright
 #     notice, this list of conditions and the following disclaimer.
 #
@@ -33,10 +33,11 @@
 # This license is subject to the laws and courts of the Republic of Ireland.
 #
 
-import os, sys
+import os
 from os import path
-from sys import argv
 from pipes import quote
+import sys
+from sys import argv
 from xml.etree import ElementTree as et
 
 
@@ -48,7 +49,9 @@ WP_LINK = path.join(SETTINGS, 'current')
 
 
 def which(name):
-    """Finds the path of some named executable available on PATH."""
+    """
+    Finds the path of some named executable available on PATH.
+    """
     env_path = os.environ.get('PATH')
     if env_path:
         for dirname in env_path.split(os.pathsep):
@@ -59,7 +62,9 @@ def which(name):
 
 
 def get_setters():
-    """Loads the list of all wallpaper setting commands."""
+    """
+    Loads the list of all wallpaper setting commands.
+    """
     setters = []
     setters_path = path.join(SETTINGS, 'setters')
     if path.isfile(setters_path):
@@ -76,7 +81,9 @@ def get_setters():
 
 
 def show_wallpaper():
-    """Gets a wallpaper setter to set the backdrop on the root window."""
+    """
+    Gets a wallpaper setter to set the backdrop on the root window.
+    """
     for setter in get_setters():
         parts = setter.split(' ', 2)
         location = which(parts[0])
@@ -88,14 +95,18 @@ def show_wallpaper():
 
 
 def set_wallpaper(wallpaper):
-    """Records the user's wallpaper selection."""
+    """
+    Records the user's wallpaper selection.
+    """
     if path.isfile(wallpaper) and wallpaper != WP_LINK:
         os.unlink(WP_LINK)
         os.symlink(wallpaper, WP_LINK)
 
 
 def generate_directory_menu(dirname, tree):
-    """Generates the Openbox menuitems for a given directory."""
+    """
+    Generates the Openbox menuitems for a given directory.
+    """
     for name in sorted(os.listdir(dirname)):
         full_path = path.join(dirname, name)
         if path.isfile(full_path):
@@ -115,7 +126,9 @@ def generate_directory_menu(dirname, tree):
 
 
 def generate_pipemenu(dirname):
-    """Generates a pipemenu for a given directory."""
+    """
+    Generates a pipemenu for a given directory.
+    """
     tree = et.TreeBuilder()
     tree.start('openbox_pipe_menu', {})
     generate_directory_menu(dirname, tree)

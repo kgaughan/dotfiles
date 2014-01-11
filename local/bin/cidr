@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-import struct, socket, sys
+import socket
+import struct
+import sys
+
 
 def cidr(addr, sz):
     mask = (0xFFFFFFFF >> sz) ^ 0xFFFFFFFF
@@ -8,8 +11,14 @@ def cidr(addr, sz):
     base = socket.inet_ntoa(struct.pack("!I", addr_n & mask))
     return "%s/%s" % (base, sz)
 
-if __name__ == '__main__':
+
+def main():
     if len(sys.argv) != 3:
         print >> sys.stderr, "Two arguments required, IP and CIDR range."
-        sys.exit(2)
+        return 2
     print cidr(sys.argv[1], int(sys.argv[2]))
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -51,24 +51,28 @@ class CRC(object):
     Wraps up zlib.crc32 to make it suitable for use as a faster but less
     accurate alternative to the hashlib.* classes.
 
-    >>> foo = crc()
+    >>> foo = CRC()
     >>> foo.update('foo').hexdigest()
     '-738C9ADF'
     >>> foo.update('bar').hexdigest()
     '-6109E06B'
-    >>> crc('foobar').hexdigest()
+    >>> CRC('foobar').hexdigest()
     '-6109E06B'
     """
+
     def __init__(self, initial=None):
         self.crc = 0
         if initial is not None:
             self.update(initial)
+
     def update(self, block):
         import zlib
         self.crc = zlib.crc32(block, self.crc)
         return self
+
     def hexdigest(self):
         return "%X" % self.crc
+
     def digest(self):
         # Er...
         return self.crc

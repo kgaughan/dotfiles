@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-
-"""Serves a directory over HTTP and publishes itself via DNS-SD."""
+"""
+Serves a directory over HTTP and publishes itself via DNS-SD.
+"""
 
 
 import getopt
@@ -28,22 +29,25 @@ def avahi_get(obj_path, iface):
     obj = dbus.SystemBus().get_object(avahi.DBUS_NAME, obj_path)
     return dbus.Interface(obj, iface)
 
+
 def avahi_make_entry_group():
     svr = avahi_get('/', avahi.DBUS_INTERFACE_SERVER)
     return avahi_get(svr.EntryGroupNew(), avahi.DBUS_INTERFACE_ENTRY_GROUP)
+
 
 def avahi_add_service(group, svc_type, port, name='', txt_records=None):
     if txt_records is None:
         txt_records = []
     group.AddService(
-            avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, dbus.UInt32(0),
-            name, svc_type, '', '', dbus.UInt16(port),
-            txt_records)
+        avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, dbus.UInt32(0),
+        name, svc_type, '', '', dbus.UInt16(port),
+        txt_records)
+
 
 def serve(port, title):
     httpd = SocketServer.TCPServer(
-            ('', port),
-            SimpleHTTPServer.SimpleHTTPRequestHandler)
+        ('', port),
+        SimpleHTTPServer.SimpleHTTPRequestHandler)
 
     _, port = httpd.server_address
     print "Starting server on port %s..." % port
@@ -59,6 +63,7 @@ def serve(port, title):
     except KeyboardInterrupt:
         print "Shut down."
 
+
 def usage(message=None):
     """
     Prints usage information and possibly an error message.
@@ -72,6 +77,7 @@ def usage(message=None):
     name = path.basename(sys.argv[0])
     print >> fd, USAGE % (name,)
     sys.exit(exit_code)
+
 
 def main():
     try:
@@ -98,6 +104,7 @@ def main():
             usage("Unknown flag: %s" % opt)
 
     serve(port, title)
+
 
 if __name__ == '__main__':
     main()

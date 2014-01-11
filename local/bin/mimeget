@@ -42,6 +42,7 @@ import os.path
 import getopt
 import email
 
+
 USAGE = """
 Usage: %s [options] <path>
 
@@ -79,9 +80,9 @@ def usage(msg=None):
 def main():
     try:
         opts, args = getopt.getopt(
-                sys.argv[1:],
-                'H:FBh',
-                ['header=', 'first-only', 'body', 'help'])
+            sys.argv[1:],
+            'H:FBh',
+            ['header=', 'first-only', 'body', 'help'])
     except getopt.GetoptError, err:
         usage(err)
 
