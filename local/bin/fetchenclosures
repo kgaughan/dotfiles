@@ -104,7 +104,7 @@ def parse_item(item, tags):
                 value = child.attributes['url'].value
             else:
                 value = child.firstChild.data
-            result[child.tagName] = str(value)
+            result[child.tagName] = value.encode('utf8')
     return result
 
 
