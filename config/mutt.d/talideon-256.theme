@@ -1,13 +1,13 @@
 # Basic colours
 
-color normal     color250    default
+color normal     default     default
 color error      red         default
 color message    cyan        default
 color markers    red         default
 color attachment yellow      default
 color search     magenta     default
-color status     white       color238
-color indicator  brightwhite color130
+color status     white       blue
+color indicator  brightwhite red
 color tree       yellow      default
 
 mono  indicator  reverse
@@ -32,9 +32,9 @@ color index      black       red      ~D # Deleted
 
 # Headers
 
-color hdrdefault default     color8
-color header     yellow      color8   "^(From)"
-color header     brightwhite color8   "^(Subject)"
+color hdrdefault default     black
+color header     yellow      black   "^(From)"
+color header     brightwhite black   "^(Subject)"
 
 # Body
 

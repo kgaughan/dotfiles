@@ -1,3 +1,4 @@
-color status gray color14
-color overstrike color2 default
-color underline color4 default
+color normal lightgray black
+color status yellow blue
+color underline brightgreen black
+color overstrike brightred black
