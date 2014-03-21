@@ -27,7 +27,7 @@ alias df='df -h'
 ## I'm prone to typing this by accident.
 alias cd..='cd ..'
 # Make the ocaml repl usable.
-alias ocaml='ledit ocaml'
+which ledit >/dev/null && alias ocaml='ledit ocaml'
  
 ## Be paranoid.
 # alias cp='cp -ip'
