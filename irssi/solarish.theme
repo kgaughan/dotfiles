@@ -138,7 +138,6 @@ abstracts = {
   # public action sent by others
   pubaction = "{action $0-}";
 
-
   ##
   ## other IRC events
   ##
@@ -181,25 +180,26 @@ abstracts = {
   dccmsg = "*%c=$1-%n* ";
   dccquerynick = "$0-";
   dccaction = " (*dcc*) $0- %|";
+
   ##
   ## statusbar
   ##
 
   # default background for all statusbars. You can also give
   # the default foreground color for statusbar items.
-  sb_background = "%7%k";
+  sb_background = "%6%k";
   # background for active window
-  sb_window_bg = "%2%k";
+  sb_window_bg = "%4%k";
 
   # default backround for "default" statusbar group
-  #sb_default_bg = "%4";
+  sb_default_bg = "%6";
   # background for prompt / input line
   sb_prompt_bg = "%n";
   # background for info statusbar
   sb_info_bg = "%5";
   # background for topicbar (same default)
-  sb_topic_bg = "%4%W";
-  #sb_topic_fg = "%k";
+  sb_topic_bg = "%4%k";
+  sb_topic_fg = "%k";
 
   # text at the beginning of statusbars. sb-item already puts
   # space there,so we don't use anything by default.
