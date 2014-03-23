@@ -1,0 +1,2 @@
+#!/bin/sh
+lsof -iTCP -sTCP:LISTEN -P -F 2>/dev/null | grep '^n' | cut -c2- | sort -u
