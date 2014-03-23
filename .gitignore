@@ -2,4 +2,3 @@
 *.zwc
 .git*
 *.cache
-/vim/bundle/*/
