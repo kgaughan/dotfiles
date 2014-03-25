@@ -1,4 +1,4 @@
 source ~/.config/mutt.d/common.rc
 source ~/.muttrc.local
 source ~/.config/mutt.d/common.imap.rc
-source ~/.config/mutt.d/talideon-256.theme
+source ~/.config/mutt.d/mutt-colors-solarized-dark-16.theme
