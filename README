@@ -68,3 +68,7 @@ include the --recursive flag. If worst comes to worst, use the following
 command to ensure everything's checked out:
 
     % git submodule update --init --recursive
+
+When updating, use this:
+
+    % git pull --recurse-submodules
