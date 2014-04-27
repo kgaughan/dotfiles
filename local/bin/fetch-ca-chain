@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# Given an SSL/TLS certificate, walk all its intermediates to construct a CA
+# bundle.
+#
+
+if test "x$1" = "x"; then
+	echo Please provide a certificate. >&2
+	exit 2
+fi
+if test ! -e $1; then
+	echo Certificate $1 not found. >&2
+	exit 2
+fi
+
+fetch_intermediates () {
+	local cert
+	while read url; do
+		cert=$(mktemp intermediate.XXXXXXXXXX)
+		if test "${url##*.}" = "p7c"; then
+			cmd="pkcs7 -print_certs"
+		else
+			cmd="x509 -subject -issuer"
+		fi
+		curl --silent $url | openssl $cmd -outform PEM -inform DER | tee $cert
+		get_issuers $cert | fetch_intermediates
+		rm -f $cert
+	done
+}
+
+get_issuers () {
+	openssl x509 -text -noout -in $1 | grep 'CA Issuers - URI:' | cut -f2- -d:
+}
+
+get_issuers $1 | fetch_intermediates
