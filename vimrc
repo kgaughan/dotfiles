@@ -195,4 +195,7 @@ endfunction
 
 " }}}
 
+inoremap {<CR> {<CR>}<C-o>O
+inoremap [<CR> [<CR>]<C-o>O
+
 let g:py_coverage_bin = 'python-coverage'
