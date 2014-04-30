@@ -1,3 +1,0 @@
-xterm-256color|xterm alias 3:Co#256:tc=xterm-xfree86:
-screen-256color|tmux GNU/screen:\
-    :Co#256:AF=\E[38;5;%dm:AB=\E[48;5;%dm:tc=screen:
