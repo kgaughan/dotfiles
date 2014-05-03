@@ -205,6 +205,6 @@ settings = {
   };
   "fe-text" = { actlist_sort = "refnum"; };
   "perl/core/scripts" = { };
-  "fe-common/core" = { theme = "solarish"; };
+  "fe-common/core" = { theme = "solarized-universal"; };
 };
 logs = { "~/.irssi/log" = { level = "ALL"; }; };
