@@ -102,7 +102,7 @@ if has("autocmd")
         \ setfiletype javascript
 
   " Settings for various modes.
-  au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc,*.ml,*.xml
+  au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc,*.ml,*.xml,*.mll,*.mly
         \ setlocal sw=2 ts=2 sts=2 et
   au BufNewFile,BufRead,Syntax *.erl,*.hs
         \ setlocal et ai si sta
