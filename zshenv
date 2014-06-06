@@ -50,3 +50,8 @@ fi
 
 ## Miscellany
 export BLOCKSIZE=K
+
+# Go.
+export GOPATH=$HOME/Projects/go
+mkdir -p $GOPATH
+export PATH=$PATH:$GOPATH/bin
