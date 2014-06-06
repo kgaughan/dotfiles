@@ -13,13 +13,6 @@ else
 	alias ls='ls -F'
 fi
 
-# This is needed to work around some odd behaviour on KDE whereby if I don't
-# have this set up, SSH will ask for the password in the terminal rather
-# than popping up a window and/or using the wallet.
-if which setsid >/dev/null 2>&1; then
-	alias ssh='setsid ssh'
-fi
-
 ## Some useful aliases.
 alias h='fc -l'
 alias j=jobs
