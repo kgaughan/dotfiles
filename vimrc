@@ -102,7 +102,7 @@ if has("autocmd")
         \ setfiletype javascript
 
   " Settings for various modes.
-  au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc,*.ml,*.xml,*.mll,*.mly
+  au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc,*.ml,*.xml,*.mll,*.mly,*.lsa
         \ setlocal sw=2 ts=2 sts=2 et
   au BufNewFile,BufRead,Syntax *.erl,*.hs
         \ setlocal et ai si sta
@@ -111,7 +111,7 @@ if has("autocmd")
   au FileType python
         \ setlocal sw=4 ts=4 sts=4 et ai sta
 
-  au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc
+  au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc,*.lsa
         \ call ScrubTrailing()
 
   " Automatically give executable permissions
