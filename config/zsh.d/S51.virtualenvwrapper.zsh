@@ -12,6 +12,6 @@ _source_first () {
 	done
 }
 
-_source_first virtualenvwrapper_lazy.sh /usr/local/bin /usr/share/virtualenvwrapper
+_source_first virtualenvwrapper_lazy.sh /usr/local/bin /usr/share/virtualenvwrapper /usr/share/doc/virtualenvwrapper/examples
 
 unset -f _source_first
