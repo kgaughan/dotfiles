@@ -108,6 +108,8 @@ if has("autocmd")
         \ setlocal et ai si sta
   au BufNewFile,BufRead,Syntax *.py,*.rst
         \ setlocal sw=4 ts=4 sts=4 et ai sta
+  au BufNewFile,BufRead,Syntax Makefile
+        \ setlocal sw=8 ts=8 sts=8
   au FileType python
         \ setlocal sw=4 ts=4 sts=4 et ai sta
 
