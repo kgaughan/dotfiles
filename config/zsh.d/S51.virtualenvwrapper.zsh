@@ -1,11 +1,19 @@
 export WORKON_HOME=$HOME/.virtualenvs
 
-export VIRTUALENVWRAPPER_SCRIPT="$(which virtualenvwrapper.sh 2>/dev/null >&2)"
+# Try the relatively sane options first.
+for i in virtualenvwrapper virtualenvwrapper.sh; do
+	if which $i 2>/dev/null >&2; then
+		export VIRTUALENVWRAPPER_SCRIPT="$(which $i)"
+		break
+	fi
+done
+
 if [ -z "$VIRTUALENVWRAPPER_SCRIPT" ]; then
+	# OK, let's give Debian a stab now.
 	if [ -e /etc/bash_completion.d/virtualenvwrapper ]; then
 		export VIRTUALENVWRAPPER_SCRIPT=/etc/bash_completion.d/virtualenvwrapper
 	else
-		echo "ERROR: virtualenvwrapper_quick.sh: Could not find virtualenvwrapper.sh" >&2
+		echo "ERROR: Could not find virtualenvwrapper" >&2
 	fi
 fi
 
