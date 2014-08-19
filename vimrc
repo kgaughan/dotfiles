@@ -113,7 +113,7 @@ if has("autocmd")
   au FileType python
         \ setlocal sw=4 ts=4 sts=4 et ai sta
 
-  au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc,*.lsa
+  au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc,*.lsa,*.ini
         \ call ScrubTrailing()
 
   " Automatically give executable permissions
