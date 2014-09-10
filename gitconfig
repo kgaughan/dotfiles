@@ -15,5 +15,5 @@
 	algorithm = patience
 [http]
 	sslverify = false
-;[push]
-;	default = simple
+[push]
+	default = simple
