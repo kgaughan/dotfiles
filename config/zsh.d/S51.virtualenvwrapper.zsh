@@ -2,14 +2,13 @@ export WORKON_HOME=$HOME/.virtualenvs
 
 # Try the relatively sane options first.
 while read i; do
-	if test ! -z "$i" -a -e "$i"; then
+	if test -e "$i"; then
 		export VIRTUALENVWRAPPER_SCRIPT="$i"
 		break
 	fi
 done <<FIN
 /usr/share/virtualenvwrapper/virtualenvwrapper.sh
-$(which virtualenvwrapper 2>/dev/null >&2)
-$(which virtualenvwrapper.sh 2>/dev/null >&2)
+/usr/local/bin/virtualenvwrapper.sh
 /etc/bash_completion.d/virtualenvwrapper
 FIN
 
