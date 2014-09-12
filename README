@@ -72,3 +72,4 @@ command to ensure everything's checked out:
 When updating, use this:
 
     % git pull --recurse-submodules
+    % git submodule update --recursive
