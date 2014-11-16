@@ -2,10 +2,31 @@
 	name = Keith Gaughan
 	email = k@stereochro.me
 [color]
+	branch = auto
+	diff = auto
+	status = auto
 	ui = true
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = green
+[color "diff"]
+	meta = yellow bold
+	frag = magenta bold
+	old = red
+	new = cyan
+[color "status"]
+	added = yellow
+	changed = green
+	untracked = cyan
 [alias]
 	ci = commit
 	co = checkout
+	df = diff
+	br = branch
+	st = status -sb
+	ready = rebase -i @{u}
+	purr = pull --rebase
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 	uncommit = reset --soft 'HEAD^'
 	aggressive = !"git fsck --unreachable; git reflog expire --expire=0 --all; git repack -a -d -l; git prune; git gc --aggressive"
