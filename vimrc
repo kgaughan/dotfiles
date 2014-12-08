@@ -211,3 +211,13 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 let g:UltiSnipsEditSplit="vertical"
 
 let g:py_coverage_bin = 'python-coverage'
+
+" airline config
+let g:airline_theme='powerlineish'
+let g:airline#extensions#syntastic#enabled = 1
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#whitespace#enabled = 1
+let g:airline_powerline_fonts = 0
+" I don't use the custom fonts.
+let g:airline_left_sep = ''
+let g:airline_right_sep = ''

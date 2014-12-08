@@ -10,9 +10,6 @@
 [submodule "vim/bundle/ctrlp"]
 	path = vim/bundle/ctrlp
 	url = https://github.com/kien/ctrlp.vim.git
-[submodule "vim/bundle/powerline"]
-	path = vim/bundle/powerline
-	url = https://github.com/Lokaltog/vim-powerline.git
 [submodule "vim/bundle/keyboard_cat"]
 	path = vim/bundle/keyboard_cat
 	url = https://github.com/natw/keyboard_cat.vim.git
@@ -46,3 +43,9 @@
 [submodule "vim/bundle/ag"]
 	path = vim/bundle/ag
 	url = https://github.com/rking/ag.vim.git
+[submodule "vim/bundle/riv"]
+	path = vim/bundle/riv
+	url = https://github.com/Rykka/riv.vim
+[submodule "vim/bundle/airline"]
+	path = vim/bundle/airline
+	url = https://github.com/bling/vim-airline.git
