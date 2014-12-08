@@ -9,8 +9,8 @@ set tenc=utf-8
 " Pathogen {{{
 " Read this: http://tammersaleh.com/posts/the-modern-vim-config-with-pathogen
 if has("autocmd")
-  call pathogen#infect() 
-  call pathogen#helptags()  
+  call pathogen#infect()
+  call pathogen#helptags()
 endif
 " }}}
 
@@ -93,7 +93,7 @@ if has("autocmd")
 
   au BufRead *.vala,*.vapi
         \ set efm=%f:%l.%c-%[%^:]%#:\ %t%[^:]%#:\ %m
-  au BufRead,BufNewFile *.vala,*.vapi 
+  au BufRead,BufNewFile *.vala,*.vapi
         \ setfiletype vala |
         \ setlocal cin et
 
