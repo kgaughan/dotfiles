@@ -221,3 +221,6 @@ let g:airline_powerline_fonts = 0
 " I don't use the custom fonts.
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
+
+" riv.vim
+let g:riv_disable_folding = 1
