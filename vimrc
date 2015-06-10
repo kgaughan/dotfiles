@@ -35,7 +35,7 @@ set number
 set lazyredraw
 set wildmenu
 set wildmode=list:longest,full
-set wildignore=*.o,*~,*.pyc,*.pyo,*.so,*.sw*,__pycache__
+set wildignore=*.o,*~,*.pyc,*.pyo,*.so,.*.sw*,__pycache__,*.bak
 set ttyfast
 " Both for minime, which as oddly slow scrolling.
 set scrolljump=4
@@ -48,7 +48,8 @@ else
 endif
 
 " Don't use Ex mode, use Q for formatting. Ex is annoying anyway.
-map Q gq
+vmap Q gq
+nmap Q gqap
 
 if has("gui_running")
   set guioptions-=lLbrRtT
@@ -67,6 +68,7 @@ if &t_Co > 2 || has("gui_running")
 endif
 
 " For displaying nasty whitespace.
+set list
 set listchars=tab:↹·,trail:·,nbsp:·
 " }}}
 
