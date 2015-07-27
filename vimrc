@@ -1,8 +1,6 @@
 " General Configuration {{{
 set nocompatible " Get rid of VI-isms.
 set nobackup
-set noswapfile " Stupid, stupid clutter.
-set nowrap
 set enc=utf-8
 set tenc=utf-8
 " }}}
