@@ -10,6 +10,9 @@ if test -d $HOME/.pyenv/bin; then
 	PATH="$PATH:$HOME/.pyenv/bin"
 	eval "$(pyenv init -)"
 fi
+if test -d $HOME/.opt/PebbleSDK/bin; then
+	PATH="$PATH:$HOME/.opt/PebbleSDK/bin"
+fi
 
 ## Set up $LIBDIRPATH
 if test "x$LIBDIRPATH" = "x"; then
