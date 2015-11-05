@@ -1,7 +1,6 @@
 " General Configuration {{{
 set nocompatible " Get rid of VI-isms.
 set nobackup
-set enc=utf-8
 set tenc=utf-8
 " }}}
 
@@ -21,20 +20,12 @@ set nolinebreak
 " }}}
 
 " UI Configuration {{{
-set ruler        " Show where we are in the file.
 set showmode     " Because I'm stupid and like to know what mode I'm in.
 set title        " Show the filename in the terminal title.
-set history=100
 set visualbell t_vb=
-set scrolloff=3  " Include some context.
-set showcmd
-set incsearch
-set backspace=indent,eol,start
-set laststatus=2 " Always show the last status.
 set foldmethod=marker
 set number
 set lazyredraw
-set wildmenu
 set wildmode=list:longest,full
 set wildignore=*.o,*~,*.pyc,*.pyo,*.so,.*.sw*,__pycache__,*.bak,*.a,*.la,*.mo,.git,.svn,*.so
 set ttyfast
@@ -46,11 +37,6 @@ if exists('+colorcolumn')
   set colorcolumn=79
 else
   au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>79v.\+', -1)
-endif
-
-" Smart joining of comment lines. See 'fo-table' for more options.
-if v:version > 703
-  set formatoptions+=j
 endif
 
 " Don't use Ex mode, use Q for formatting. Ex is annoying anyway.
@@ -76,7 +62,7 @@ endif
 " For displaying nasty whitespace.
 set list
 "set listchars=tab:↹·,trail:·,nbsp:·
-set listchars=tab:\ \ ,trail:·,nbsp:·
+"set listchars=tab:\ \ ,trail:·,nbsp:·
 " }}}
 
 " Fix backspace behaviour under screen. {{{
@@ -87,12 +73,6 @@ endif
 
 " Autocommands {{{
 if has("autocmd")
-
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-  filetype plugin indent on
 
   " Put these in an autocmd group, so that we can delete them easily.
   augroup vimrcEx
@@ -140,10 +120,6 @@ if has("autocmd")
         \ endif
 
   augroup END
-
-else
-
-  set autoindent " Always set autoindenting on
 
 endif " has("autocmd")
 " }}}
