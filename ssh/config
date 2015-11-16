@@ -34,3 +34,7 @@ ProxyCommand ssh -q -W %h:22 nineve.blacknight.ie
 Host lir lir.talideon.com
 User keith
 HostName lir.talideon.com
+
+Host cian cian.talideon.com
+User freebsd
+HostName cian.talideon.com
