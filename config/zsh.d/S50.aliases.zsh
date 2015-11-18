@@ -24,11 +24,16 @@ alias md='mkdir -p'
 alias ff='find . -name $*'
 alias du='du -h'
 alias df='df -h'
-## I'm prone to typing this by accident.
+# I'm prone to typing this by accident.
 alias cd..='cd ..'
 # Make the ocaml repl usable.
 which ledit >/dev/null && alias ocaml='ledit ocaml'
- 
+
+# A good idea from Vish
+smux () {
+	ssh -t $1 tmux attach
+}
+
 ## Be paranoid.
 # alias cp='cp -ip'
 # alias mv='mv -i'

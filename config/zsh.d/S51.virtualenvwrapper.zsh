@@ -3,21 +3,21 @@ export WORKON_HOME=$HOME/.virtualenvs
 # Try the relatively sane options first.
 while read i; do
 	if test -e "$i"; then
-		export VIRTUALENVWRAPPER_SCRIPT="$i"
+		export X_VIRTUALENVWRAPPER_SCRIPT="$i"
 		break
 	fi
 done <<FIN
 /usr/share/virtualenvwrapper/virtualenvwrapper.sh
-/usr/local/bin/virtualenvwrapper.sh
 /etc/bash_completion.d/virtualenvwrapper
+/usr/local/bin/virtualenvwrapper.sh
 FIN
 
-if [ -z "$VIRTUALENVWRAPPER_SCRIPT" ]; then
+if [ -z "$X_VIRTUALENVWRAPPER_SCRIPT" ]; then
 	echo "ERROR: Could not find virtualenvwrapper" >&2
 else
 	# Load the real implementation of the API from virtualenvwrapper.sh
 	function virtualenvwrapper_load {
-		source "$VIRTUALENVWRAPPER_SCRIPT"
+		source "$X_VIRTUALENVWRAPPER_SCRIPT"
 	}
 
 	# Set up "alias" functions based on the API definition.
