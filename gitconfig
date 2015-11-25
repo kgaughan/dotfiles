@@ -32,6 +32,7 @@
 	aggressive = !"git fsck --unreachable; git reflog expire --expire=0 --all; git repack -a -d -l; git prune; git gc --aggressive"
 	pull-all = !"git pull --recurse-submodules --rebase && git submodule update --init --remote"
 	rebase-against-master = !"git checkout master && git pull --rebase && git checkout @{-1} && git rebase master"
+	merge-into-master = !"git checkout master && git merge @{-1}"
 	diff-master = diff -D master...
 [credential]
 	helper = cache --timeout=3600
@@ -46,3 +47,5 @@
 	default = simple
 [core]
 	excludesfile = ~/.gitignore_global
+[status]
+	submoduleSummary = true
