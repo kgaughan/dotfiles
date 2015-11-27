@@ -16,15 +16,12 @@ fi
 fetch_intermediates () {
 	local cert
 	while read url; do
-		cert=$(mktemp intermediate.XXXXXXXXXX)
-		if test "${url##*.}" = "p7c"; then
-			cmd="pkcs7 -print_certs"
-		else
-			cmd="x509 -subject -issuer"
+		if test "${url##*.}" != "p7c"; then
+			cert=$(mktemp intermediate.XXXXXXXXXX)
+			curl --silent $url | openssl x509 -subject -issuer -outform PEM -inform DER | tee $cert
+			get_issuers $cert | fetch_intermediates
+			rm -f $cert
 		fi
-		curl --silent $url | openssl $cmd -outform PEM -inform DER | tee $cert
-		get_issuers $cert | fetch_intermediates
-		rm -f $cert
 	done
 }
 
