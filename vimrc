@@ -25,7 +25,6 @@ set title        " Show the filename in the terminal title.
 set visualbell t_vb=
 set foldmethod=marker
 set number
-set lazyredraw
 set wildmode=list:longest,full
 set wildignore=*.o,*~,*.pyc,*.pyo,*.so,.*.sw*,__pycache__,*.bak,*.a,*.la,*.mo,.git,.svn,*.so
 set ttyfast
@@ -190,19 +189,10 @@ inoremap {<CR> {<CR>}<C-o>O
 inoremap [<CR> [<CR>]<C-o>O
 inoremap (<CR> (<CR>)<C-o>O
 
-" Trigger configuration. Do not use <tab> if you use
-" https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
-
 let g:py_coverage_bin = 'python-coverage'
 
 " airline config
-let g:airline_theme='powerlineish'
+let g:airline_theme = 'dark'
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#whitespace#enabled = 1
@@ -213,3 +203,5 @@ let g:airline_right_sep = ''
 
 " riv.vim
 let g:riv_disable_folding = 1
+
+let python_highlight_all = 1
