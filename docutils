@@ -1,0 +1,7 @@
+; See:
+; http://docutils.sourceforge.net/docs/user/config.html
+
+[restructuredtext parser]
+smart_quotes=yes
+
+; vim:ft=dosini:
