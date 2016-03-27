@@ -189,6 +189,10 @@ inoremap {<CR> {<CR>}<C-o>O
 inoremap [<CR> [<CR>]<C-o>O
 inoremap (<CR> (<CR>)<C-o>O
 
+" Insert timestamp
+nmap <F3> A<C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR><Esc>
+imap <F3> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
+
 let g:py_coverage_bin = 'python-coverage'
 
 " airline config
