@@ -4,24 +4,6 @@ set nobackup
 set tenc=utf-8
 " }}}
 
-" Register plugins {{{
-" See: https://github.com/junegunn/vim-plug
-call plug#begin()
-Plug 'bling/vim-airline'
-Plug 'fatih/vim-go'
-Plug 'kien/ctrlp.vim'
-Plug 'natw/keyboard_cat.vim'
-Plug 'nvie/vim-flake8'
-Plug 'Rykka/riv.vim'
-Plug 'scrooloose/syntastic'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-sensible'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
-Plug 'vim-scripts/py-coverage'
-Plug 'wting/rust.vim'
-call plug#end()
-" }}}
-
 " Default tab settings {{{
 set tabstop=4
 set softtabstop=4
@@ -219,3 +201,21 @@ let g:airline_right_sep = ''
 let g:riv_disable_folding = 1
 
 let python_highlight_all = 1
+
+" Register and load plugins {{{
+" See: https://github.com/junegunn/vim-plug
+call plug#begin()
+Plug 'bling/vim-airline'
+Plug 'fatih/vim-go'
+Plug 'kien/ctrlp.vim'
+Plug 'natw/keyboard_cat.vim'
+Plug 'nvie/vim-flake8'
+Plug 'Rykka/riv.vim'
+Plug 'scrooloose/syntastic'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-sensible'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+Plug 'vim-scripts/py-coverage'
+Plug 'wting/rust.vim'
+call plug#end()
+" }}}
