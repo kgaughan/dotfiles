@@ -24,7 +24,7 @@ copies in this repo, and you're sorted.
 
 The 'config' directory is a little different, mind. In that case, you'll need
 to link the individual files and directories in that into your '.config'
-directory. Using the vim and zsh files, here's what you'll need to do:
+directory. Using the vim and zsh files, here's what you'll need to do::
 
     % mkdir ~/.config ~/repos
     % cd ~/repos
@@ -60,16 +60,20 @@ only ~/.zprofile, which would leave me happy. I'd also like to add some kind of
 autoconfiguration script.
 
 
-Submodules
-----------
+Vim plugins
+-----------
 
-Some Vim bundles are pulled in using submodules. When cloning, be sure to
-include the --recursive flag. If worst comes to worst, use the following
-command to ensure everything's checked out:
+I now use vim-plug__ as my Vim plugin manager, so there's no submodule
+jiggery-pokery to worry about anymore.
 
-    % git submodule update --init --recursive
+.. __: https://github.com/junegunn/vim-plug
 
-When updating, use this:
+To install plugins within Vim: run::
 
-    % git pull --recurse-submodules
-    % git submodule update --init --recursive
+     :PlugInstall
+
+To update installed plugins, run:
+
+    :PlugUpdate
+
+.. vim:set ft=rst:

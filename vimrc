@@ -4,12 +4,22 @@ set nobackup
 set tenc=utf-8
 " }}}
 
-" Pathogen {{{
-" Read this: http://tammersaleh.com/posts/the-modern-vim-config-with-pathogen
-if has("autocmd")
-  call pathogen#infect()
-  call pathogen#helptags()
-endif
+" Register plugins {{{
+" See: https://github.com/junegunn/vim-plug
+call plug#begin()
+Plug 'bling/vim-airline'
+Plug 'fatih/vim-go'
+Plug 'kien/ctrlp.vim'
+Plug 'natw/keyboard_cat.vim'
+Plug 'nvie/vim-flake8'
+Plug 'Rykka/riv.vim'
+Plug 'scrooloose/syntastic'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-sensible'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+Plug 'vim-scripts/py-coverage'
+Plug 'wting/rust.vim'
+call plug#end()
 " }}}
 
 " Default tab settings {{{
