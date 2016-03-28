@@ -17,8 +17,10 @@ set title        " Show the filename in the terminal title.
 set visualbell t_vb=
 set foldmethod=marker
 set number
+set wildmenu
 set wildmode=list:longest,full
 set wildignore=*.o,*~,*.pyc,*.pyo,*.so,.*.sw*,__pycache__,*.bak,*.a,*.la,*.mo,.git,.svn,*.so
+set backspace=indent,eol,start
 set ttyfast
 " Both for minime, which as oddly slow scrolling.
 set scrolljump=4
@@ -29,6 +31,8 @@ if exists('+colorcolumn')
 else
   au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>79v.\+', -1)
 endif
+
+filetype indent plugin on
 
 " Don't use Ex mode, use Q for formatting. Ex is annoying anyway.
 vmap Q gq
@@ -63,56 +67,52 @@ endif
 " }}}
 
 " Autocommands {{{
-if has("autocmd")
+" Put these in an autocmd group, so that we can delete them easily.
+augroup vimrcEx
+au!
 
-  " Put these in an autocmd group, so that we can delete them easily.
-  augroup vimrcEx
-  au!
+au FileType text setlocal textwidth=78
 
-  au FileType text setlocal textwidth=78
+au BufRead *.vala,*.vapi
+	\ set efm=%f:%l.%c-%[%^:]%#:\ %t%[^:]%#:\ %m
+au BufRead,BufNewFile *.vala,*.vapi
+	\ setfiletype vala |
+	\ setlocal cin et
 
-  au BufRead *.vala,*.vapi
-        \ set efm=%f:%l.%c-%[%^:]%#:\ %t%[^:]%#:\ %m
-  au BufRead,BufNewFile *.vala,*.vapi
-        \ setfiletype vala |
-        \ setlocal cin et
+" Dexy/JSON
+au BufNewFile,BufRead *.dexy,*.json
+	\ setfiletype javascript
 
-  " Dexy/JSON
-  au BufNewFile,BufRead *.dexy,*.json
-        \ setfiletype javascript
+" Settings for various modes.
+au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc,*.ml,*.xml,*.mll,*.mly,*.lsa,*.xsd
+	\ setlocal sw=2 ts=2 sts=2 et
+au BufNewFile,BufRead,Syntax *.erl,*.hs
+	\ setlocal et ai si sta
+au BufNewFile,BufRead,Syntax *.py,*.rst
+	\ setlocal sw=4 ts=4 sts=4 et ai sta
+au BufNewFile,BufRead,Syntax *.rnc
+	\ setlocal et ts=2 sts=2 sw=2 ai
+au BufNewFile,BufRead,Syntax Makefile
+	\ setlocal sw=8 ts=8 sts=8
+au FileType python
+	\ setlocal sw=4 ts=4 sts=4 et ai sta
 
-  " Settings for various modes.
-  au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc,*.ml,*.xml,*.mll,*.mly,*.lsa,*.xsd
-        \ setlocal sw=2 ts=2 sts=2 et
-  au BufNewFile,BufRead,Syntax *.erl,*.hs
-        \ setlocal et ai si sta
-  au BufNewFile,BufRead,Syntax *.py,*.rst
-        \ setlocal sw=4 ts=4 sts=4 et ai sta
-  au BufNewFile,BufRead,Syntax *.rnc
-        \ setlocal et ts=2 sts=2 sw=2 ai
-  au BufNewFile,BufRead,Syntax Makefile
-        \ setlocal sw=8 ts=8 sts=8
-  au FileType python
-        \ setlocal sw=4 ts=4 sts=4 et ai sta
+au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc,*.lsa,*.ini,*.rnc
+	\ call ScrubTrailing()
 
-  au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc,*.lsa,*.ini,*.rnc
-        \ call ScrubTrailing()
+" Automatically give executable permissions
+au BufWritePost *.cgi,*.sh
+	\ call EnsureExecutable(expand("<afile>"))
 
-  " Automatically give executable permissions
-  au BufWritePost *.cgi,*.sh
-        \ call EnsureExecutable(expand("<afile>"))
+" When editing a file, always jump to the last known cursor position.
+" Don't do it when the position is invalid or when inside an event handler
+" (happens when dropping a file on gvim).
+au BufReadPost *
+	\ if line("'\"") > 0 && line("'\"") <= line("$") |
+	\   exe "normal g`\"" |
+	\ endif
 
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it when the position is invalid or when inside an event handler
-  " (happens when dropping a file on gvim).
-  au BufReadPost *
-        \ if line("'\"") > 0 && line("'\"") <= line("$") |
-        \   exe "normal g`\"" |
-        \ endif
-
-  augroup END
-
-endif " has("autocmd")
+augroup END
 " }}}
 
 " Sane tab navigation {{{
@@ -175,7 +175,7 @@ endfunction
 
 " }}}
 
-set pastetoggle=<F2>
+set pastetoggle=<F11>
 
 inoremap {<CR> {<CR>}<C-o>O
 inoremap [<CR> [<CR>]<C-o>O
