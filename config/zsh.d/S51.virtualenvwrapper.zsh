@@ -1,5 +1,3 @@
-export WORKON_HOME=$HOME/.virtualenvs
-
 # Try the relatively sane options first.
 while read i; do
 	if test -e "$i"; then
@@ -12,9 +10,9 @@ done <<FIN
 /usr/local/bin/virtualenvwrapper.sh
 FIN
 
-if [ -z "$X_VIRTUALENVWRAPPER_SCRIPT" ]; then
-	echo "ERROR: Could not find virtualenvwrapper" >&2
-else
+if [ ! -z "$X_VIRTUALENVWRAPPER_SCRIPT" ]; then
+	export WORKON_HOME=$HOME/.virtualenvs
+
 	# Load the real implementation of the API from virtualenvwrapper.sh
 	function virtualenvwrapper_load {
 		source "$X_VIRTUALENVWRAPPER_SCRIPT"
