@@ -63,6 +63,10 @@ autoconfiguration script.
 Vim plugins
 -----------
 
+.. note::
+
+   YouCompleteMe requires CMake be installed!
+
 I now use vim-plug__ as my Vim plugin manager, so there's no submodule
 jiggery-pokery to worry about anymore.
 

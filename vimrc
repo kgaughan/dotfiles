@@ -214,7 +214,11 @@ Plug 'Rykka/riv.vim'
 Plug 'scrooloose/syntastic'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+if hostname() != 'cian.talideon.com'
+  " cian runs vim-lite, which has no Python support, so YCM needs to be
+  " disabled on it.
+  Plug 'Valloric/YouCompleteMe', { 'do': './install.py --gocode-completer' }
+endif
 Plug 'vim-scripts/py-coverage'
 Plug 'wting/rust.vim'
 call plug#end()
