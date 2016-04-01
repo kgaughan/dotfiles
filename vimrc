@@ -206,6 +206,7 @@ let python_highlight_all = 1
 " See: https://github.com/junegunn/vim-plug
 call plug#begin()
 Plug 'bling/vim-airline'
+Plug 'ervandew/supertab'
 Plug 'fatih/vim-go'
 Plug 'kien/ctrlp.vim'
 Plug 'natw/keyboard_cat.vim'
