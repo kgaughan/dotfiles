@@ -177,10 +177,6 @@ endfunction
 
 set pastetoggle=<F11>
 
-inoremap {<CR> {<CR>}<C-o>O
-inoremap [<CR> [<CR>]<C-o>O
-inoremap (<CR> (<CR>)<C-o>O
-
 " Insert timestamp
 nmap <F3> A<C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR><Esc>
 imap <F3> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
@@ -206,21 +202,24 @@ let python_highlight_all = 1
 " See: https://github.com/junegunn/vim-plug
 call plug#begin()
 Plug 'bling/vim-airline'
-Plug 'ervandew/supertab'
 Plug 'fatih/vim-go'
 Plug 'kien/ctrlp.vim'
-Plug 'natw/keyboard_cat.vim'
 Plug 'nvie/vim-flake8'
+Plug 'Raimondi/delimitMate'
 Plug 'Rykka/riv.vim'
 Plug 'scrooloose/syntastic'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
-if hostname() != 'cian.talideon.com'
-  " cian runs vim-lite, which has no Python support, so YCM needs to be
-  " disabled on it.
-  Plug 'Valloric/YouCompleteMe', { 'do': './install.py --gocode-completer' }
-endif
+Plug 'jmcantrell/vim-virtualenv'
 Plug 'vim-scripts/py-coverage'
 Plug 'wting/rust.vim'
+" cian runs vim-lite, which has no Python support, so YCM needs to be disabled
+" on it. Use just jedi instead, which is all that's useful there anyway.
+if hostname() == 'cian.talideon.com'
+  Plug 'natw/keyboard_cat.vim'
+  Plug 'davidhalter/jedi-vim'
+else
+  Plug 'Valloric/YouCompleteMe', { 'do': './install.py --gocode-completer' }
+endif
 call plug#end()
 " }}}
