@@ -203,6 +203,7 @@ let python_highlight_all = 1
 call plug#begin()
 Plug 'bling/vim-airline'
 Plug 'fatih/vim-go'
+Plug 'jmcantrell/vim-virtualenv'
 Plug 'kien/ctrlp.vim'
 Plug 'natw/keyboard_cat.vim'
 Plug 'nvie/vim-flake8'
@@ -211,7 +212,6 @@ Plug 'Rykka/riv.vim'
 Plug 'scrooloose/syntastic'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
-Plug 'jmcantrell/vim-virtualenv'
 Plug 'vim-scripts/py-coverage'
 Plug 'wting/rust.vim'
 " cian runs vim-lite, which has no Python support, so YCM needs to be disabled
