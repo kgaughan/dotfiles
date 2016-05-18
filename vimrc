@@ -204,6 +204,7 @@ call plug#begin()
 Plug 'bling/vim-airline'
 Plug 'fatih/vim-go'
 Plug 'kien/ctrlp.vim'
+Plug 'natw/keyboard_cat.vim'
 Plug 'nvie/vim-flake8'
 Plug 'Raimondi/delimitMate'
 Plug 'Rykka/riv.vim'
@@ -216,7 +217,7 @@ Plug 'wting/rust.vim'
 " cian runs vim-lite, which has no Python support, so YCM needs to be disabled
 " on it. Use just jedi instead, which is all that's useful there anyway.
 if hostname() == 'cian.talideon.com'
-  Plug 'natw/keyboard_cat.vim'
+  Plug 'ervandew/supertab'
   Plug 'davidhalter/jedi-vim'
 else
   Plug 'Valloric/YouCompleteMe', { 'do': './install.py --gocode-completer' }
