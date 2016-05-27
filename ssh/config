@@ -41,3 +41,7 @@ HostName cian.talideon.com
 # In case something goes horribly wrong with DNSSEC:
 # cian.talideon.com has address 45.55.149.240
 # cian.talideon.com has IPv6 address 2604:a880:800:10::716:6001
+
+Host foltor foltor.talideon.com
+User keith
+HostName foltor.talideon.com
