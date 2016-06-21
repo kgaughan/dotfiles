@@ -31,6 +31,12 @@ HostName hegemon.blacknight.ie
 # Proxy via nineve
 ProxyCommand ssh -q -W %h:22 nineve.blacknight.ie
 
+Host repos.blacknight.ie
+User git
+HostName repos.blacknight.ie
+# Proxy via nineve
+ProxyCommand ssh -q -W %h:22 nineve.blacknight.ie
+
 Host lir lir.talideon.com
 User keith
 HostName lir.talideon.com

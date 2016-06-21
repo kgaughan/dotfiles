@@ -13,3 +13,8 @@ done
 function history-all {
 	history -E 1
 }
+
+# OPAM configuration
+if test -e ~/.opam/opam-init/init.zsh; then
+	. ~/.opam/opam-init/init.zsh >/dev/null 2>&1 || true
+fi
