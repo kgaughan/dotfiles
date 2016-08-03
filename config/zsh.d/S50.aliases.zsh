@@ -32,7 +32,11 @@ alias weather='curl wttr.in/carlow'
 
 # A good idea from Vish
 smux () {
-	ssh -t $1 tmux attach
+	if test -z "$1"; then
+		echo "Usage: smux <hostname>" >/dev/stderr
+		return 1
+	fi
+	ssh -t "$1" tmux attach
 }
 
 ## Be paranoid.
