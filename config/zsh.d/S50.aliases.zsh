@@ -39,6 +39,15 @@ smux () {
 	ssh -t "$1" tmux attach
 }
 
+# Tunnel an x11vnc session over SSH
+tunnel-vnc () {
+	if test -z "$1"; then
+		echo "Usage: tunnel-vnc <hostname>" >/dev/stderr
+		return 1
+	fi
+	ssh -t -L 5900:localhost:5900 "$1" 'x11vnc -localhost -display :0'
+}
+
 ## Be paranoid.
 # alias cp='cp -ip'
 # alias mv='mv -i'
