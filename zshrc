@@ -2,11 +2,15 @@
 autoload -U compinit zrecompile zmv
 compinit -d ~/.cache/zcompdump
 for f in ~/.zshrc ~/.cache/zcompdump; do
-	zrecompile -p $f >/dev/null 2>&1 && rm -f $f.zwc.old
+	if test ! -e $f.zwc -o $f -nt $f.zwc; then
+		zrecompile -p $f >/dev/null 2>&1 && rm -f $f.zwc.old
+	fi
 done
 for f in ~/.config/zsh.d/S??.*.zsh ~/.zshrc.local; do
 	if test -e $f; then
-		zrecompile -p $f >/dev/null 2>&1 && rm -f $f.zwc.old
+		if test ! -e $f.zwc -o $f -nt $f.zwc; then
+			zrecompile -p $f >/dev/null 2>&1 && rm -f $f.zwc.old
+		fi
 		source $f
 	fi
 done

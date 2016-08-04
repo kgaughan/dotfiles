@@ -56,5 +56,5 @@ export BLOCKSIZE=K
 
 # Go.
 export GOPATH=$HOME/projects/go
-mkdir -p $GOPATH
+test -d $GOPATH || mkdir -p $GOPATH
 export PATH=$PATH:$GOPATH/bin
