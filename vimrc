@@ -215,13 +215,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'vim-scripts/py-coverage'
 Plug 'wting/rust.vim'
-" cian runs vim-lite, which has no Python support, so YCM needs to be disabled
-" on it. Use just jedi instead, which is all that's useful there anyway.
-if hostname() == 'cian.talideon.com'
-  Plug 'ervandew/supertab'
-  Plug 'davidhalter/jedi-vim'
-else
-  Plug 'Valloric/YouCompleteMe', { 'do': './install.py --gocode-completer' }
-endif
+
+Plug 'ervandew/supertab'
+Plug 'davidhalter/jedi-vim'
 call plug#end()
 " }}}
