@@ -83,6 +83,9 @@ au BufRead,BufNewFile *.vala,*.vapi
 au BufNewFile,BufRead *.dexy,*.json
 	\ setfiletype javascript
 
+au BufNewFile,BufRead *.fth
+	\ setfiletype forth
+
 " Settings for various modes.
 au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc,*.ml,*.xml,*.mll,*.mly,*.lsa,*.xsd
 	\ setlocal sw=2 ts=2 sts=2 et
