@@ -51,3 +51,6 @@ HostName cian.talideon.com
 Host foltor foltor.talideon.com
 User keith
 HostName foltor.talideon.com
+
+Host nas4free
+User keith
