@@ -87,7 +87,7 @@ au BufNewFile,BufRead *.fth
 	\ setfiletype forth
 
 " Settings for various modes.
-au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc,*.ml,*.xml,*.mll,*.mly,*.lsa,*.xsd
+au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc,*.ml,*.xml,*.mll,*.mly,*.lsa,*.xsd,*.css,*.scss
 	\ setlocal sw=2 ts=2 sts=2 et
 au BufNewFile,BufRead,Syntax *.erl,*.hs
 	\ setlocal et ai si sta
