@@ -5,3 +5,4 @@
 .*.sw?
 *.orig
 /vim/plugged
+/vim/autoload/*.old
