@@ -4,4 +4,7 @@
 [restructuredtext parser]
 smart_quotes=yes
 
+[html5 writer]
+table_style=colwidths-auto
+
 ; vim:ft=dosini:
