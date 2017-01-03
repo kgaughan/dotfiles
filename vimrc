@@ -218,6 +218,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'vim-scripts/py-coverage'
 Plug 'wting/rust.vim'
+Plug 'rgrinberg/vim-ocaml'
 
 Plug 'ervandew/supertab'
 Plug 'davidhalter/jedi-vim'
