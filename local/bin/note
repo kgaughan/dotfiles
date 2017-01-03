@@ -1,0 +1,83 @@
+#!/bin/sh
+#
+# Simple note taking.
+#
+#
+
+: ${PAGER:=/bin/more}
+
+test -d "${NOTES_DIR:=$HOME/.notes}" || mkdir -p "$NOTES_DIR"
+
+usage () {
+	if [ "x$1" != "x" ]; then
+		echo "Error: $1"
+		echo
+	fi
+	cat <<FIN
+Usage: ${0##*/} [-l|-r|-h] [YYYY-MM-DD]
+
+Arguments:
+  -l  List notes
+  -r  Read note for given date (defaults to today)
+
+If no date is provided, today is used. By default, the file will be opened
+in edit mode.
+FIN
+}
+
+list_notes () {
+	echo "Notes:"
+	ls -A "$NOTES_DIR" | $PAGER
+}
+
+read_note () {
+	if [ ! -f "$NOTES_DIR/$1" ]; then
+		usage "No such note: $1" >/dev/stderr
+		exit 1
+	fi
+	$PAGER "$NOTES_DIR/$1"
+}
+
+edit_note () {
+	${EDITOR:-/usr/bin/vi} "$NOTES_DIR/$1"
+}
+
+args=$(getopt lrhd: $*)
+if [ $? -ne 0 ]; then
+	usage >/dev/stderr
+	exit 2
+fi
+set -- $args
+
+cmd=edit_note
+while :; do
+	case "$1" in
+	-l)
+		cmd=list_notes
+		shift
+		;;
+	-r)
+		cmd=read_note
+		shift
+		;;
+	-h)
+		usage
+		exit 0
+		;;
+	--)
+		shift
+		break
+		;;
+	esac
+done
+
+if [ "x$1" = "x" ]; then
+	dt=$(date +%Y-%m-%d)
+elif echo "$1" | grep '^[1-9][0-9]\{3\}-[012][0-9]-[0-3][0-9]' >/dev/null; then
+	dt=$1
+else
+	usage "Error: date must be in the format YYYY-MM-DD" >/dev/stderr
+	exit 2
+fi
+
+$cmd $dt
