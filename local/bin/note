@@ -42,7 +42,7 @@ edit_note () {
 	${EDITOR:-/usr/bin/vi} "$NOTES_DIR/$1"
 }
 
-args=$(getopt lrhd: $*)
+args=$(getopt lrh: $*)
 if [ $? -ne 0 ]; then
 	usage >/dev/stderr
 	exit 2
