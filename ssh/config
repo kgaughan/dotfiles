@@ -4,12 +4,10 @@
 Host *
 IdentityFile ~/.ssh/id_rsa
 # The following two lines turn on connection sharing
-ControlMaster auto
-ControlPath /tmp/ssh_mux.%h.%p.%r
+#ControlMaster auto
+#ControlPath /tmp/ssh_mux.%h.%p.%r
 # Keep connections open in the background. Can speed up git pulls.
 #ControlPersist yes
-# Avoid needless delays
-GSSAPIAuthentication no
 ServerAliveInterval 300
 HashKnownHosts no
 # Sane security defaults for SSH clients. Disables everything old and nasty.
