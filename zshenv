@@ -5,14 +5,19 @@ for dir in /usr/{local,pkg}/{sbin,bin} /usr/games; do
 		PATH="$PATH:$dir"
 	fi
 done
-export PATH="$HOME/.local/bin:$PATH"
-if test -d $HOME/.pyenv/bin; then
-	PATH="$PATH:$HOME/.pyenv/bin"
-	eval "$(pyenv init -)"
-fi
-if test -d $HOME/.opt/PebbleSDK/bin; then
-	PATH="$PATH:$HOME/.opt/PebbleSDK/bin"
-fi
+
+while read bin_path; do
+	if test -d "$bin_path"; then
+		export PATH="$bin_path:$PATH"
+	fi
+done <<-FIN
+$HOME/.local/bin
+$HOME/.pyenv/bin
+$HOME/.opt/PebbleSDK/bin
+/usr/local/opt/sphinx-doc/bin
+FIN
+
+which pyenv >/dev/null 2>&1 && eval "$(pyenv init -)"
 
 ## Set up $LIBDIRPATH
 if test "x$LIBDIRPATH" = "x"; then
