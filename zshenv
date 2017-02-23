@@ -31,18 +31,19 @@ export HISTFILE=~/.zhistfile
 export HISTSIZE=500000
 export SAVEHIST=100000
 
-## Default editor
-which vim >/dev/null && EDITOR=vim || EDITOR=vi; export EDITOR
-
-## ...and default page.
-if test "x$PAGER" = "x"; then
-	for pager in most less more; do
-		if which $pager 2>&1 >/dev/null; then
-			export PAGER=`which $pager`
+_assign_first_cmd () {
+	var=$1
+	shift
+	for cmd in $*; do
+		if which $cmd 2>&1 >/dev/null; then
+			export $var=$(which $cmd)
 			break
 		fi
 	done
-fi
+}
+
+_assign_first_cmd EDITOR vim vi
+_assign_first_cmd PAGER most less more
 
 ## This dance makes sure that if if TERM is 'blah' or 'blah-256color', it
 ## always ends up 'blah-256color'. This is necessary to get tmux and vim
