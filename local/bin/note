@@ -1,7 +1,12 @@
 #!/bin/sh
 #
 # Simple note taking.
+# by Keith Gaughan
 #
+# Ideas:
+#
+# * Search interface.
+# * Version control via RCS and/or git.
 #
 
 : ${PAGER:=/bin/more}
@@ -35,11 +40,11 @@ read_note () {
 		usage "No such note: $1" >/dev/stderr
 		exit 1
 	fi
-	$PAGER "$NOTES_DIR/$1"
+	exec $PAGER "$NOTES_DIR/$1"
 }
 
 edit_note () {
-	${EDITOR:-/usr/bin/vi} "$NOTES_DIR/$1"
+	exec ${EDITOR:-/usr/bin/vi} "$NOTES_DIR/$1"
 }
 
 args=$(getopt lrh: $*)
