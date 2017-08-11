@@ -41,7 +41,7 @@ nmap Q gqap
 if has("gui_running")
   set guioptions-=lLbrRtT
   set toolbariconsize=tiny
-  set guifont=Inconsolata\ 9
+  set guifont=Inconsolata:h10
 endif
 
 " Switch syntax highlighting on, when the terminal has colors
@@ -153,14 +153,14 @@ map <C-K> <C-W>k<C-W>_
 " Functions {{{
 
 " Collapse blank lines
-function Collapse()
+function! Collapse()
   let save_cursor = getpos('.')
   %s/\s\+$//e
   %s/\n\{3,}/\r\r/e
   call setpos('.', save_cursor)
 endfunction
 
-function ScrubTrailing()
+function! ScrubTrailing()
   let save_cursor = getpos('.')
   " Scrub trailing spaces
   %s/\s\+$//e
@@ -169,7 +169,7 @@ function ScrubTrailing()
   call setpos('.', save_cursor)
 endfunction
 
-function EnsureExecutable(f)
+function! EnsureExecutable(f)
   if filewritable(a:f) && !executable(a:f)
     " This is horribly inadequate.
     call system("chmod a+x " . escape(a:f, ' \'))
@@ -222,5 +222,6 @@ Plug 'rgrinberg/vim-ocaml'
 
 Plug 'ervandew/supertab'
 Plug 'davidhalter/jedi-vim'
+"Plug 'Valloric/YouCompleteMe', { 'do': './install.py --gocode-completer' }
 call plug#end()
 " }}}

@@ -15,6 +15,7 @@ $HOME/.local/bin
 $HOME/.pyenv/bin
 $HOME/.opt/PebbleSDK/bin
 /usr/local/opt/sphinx-doc/bin
+$HOME/Library/Python/2.7/bin
 FIN
 
 which pyenv >/dev/null 2>&1 && eval "$(pyenv init -)"
@@ -47,7 +48,7 @@ _assign_first_cmd () {
 	done
 }
 
-_assign_first_cmd EDITOR vim vi
+_assign_first_cmd EDITOR mvim vim vi
 _assign_first_cmd PAGER most less more
 
 ## This dance makes sure that if if TERM is 'blah' or 'blah-256color', it
@@ -59,3 +60,5 @@ fi
 
 ## Miscellany
 export BLOCKSIZE=K
+
+test -e ~/.zshenv.local && source ~/.zshenv.local
