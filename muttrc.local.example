@@ -1,0 +1,11 @@
+#
+# Customise as needed.
+#
+
+set imap_user="username"
+set imap_pass="p455w0rd"
+
+set spoolfile="imap://mail.example.com/"
+set folder=$spoolfile
+set from="me@example.com"
+set hostname="mail.example.com"
