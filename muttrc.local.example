@@ -9,3 +9,5 @@ set spoolfile="imap://mail.example.com/"
 set folder=$spoolfile
 set from="me@example.com"
 set hostname="mail.example.com"
+
+set signature="quicksig -q ~/.dotfiles/misc/fortunes -s ~/.dotfiles/misc/signature|"
