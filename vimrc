@@ -86,6 +86,9 @@ au BufNewFile,BufRead *.dexy,*.json
 au BufNewFile,BufRead *.fth
 	\ setfiletype forth
 
+au BufNewFile,BufRead *.genshi
+	\ setfiletype genshi
+
 " Settings for various modes.
 au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc,*.ml,*.xml,*.mll,*.mly,*.lsa,*.xsd,*.css,*.scss
 	\ setlocal sw=2 ts=2 sts=2 et
@@ -219,6 +222,7 @@ Plug 'tpope/vim-sensible'
 Plug 'vim-scripts/py-coverage'
 Plug 'wting/rust.vim'
 Plug 'rgrinberg/vim-ocaml'
+Plug 'dag/genshi.vim'
 
 Plug 'ervandew/supertab'
 Plug 'davidhalter/jedi-vim'
