@@ -22,13 +22,19 @@ MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-
 Host cian cian.talideon.com
 User freebsd
 HostName cian.talideon.com
-# In case something goes horribly wrong with DNSSEC:
-# cian.talideon.com has address 45.55.149.240
-# cian.talideon.com has IPv6 address 2604:a880:800:10::716:6001
+# IPv4: 45.55.149.240; IPv6: 2604:a880:800:10::716:6001
 
-Host foltor foltor.talideon.com
+Host lir lir.talideon.com
 User keith
-HostName foltor.talideon.com
+HostName lir.talideon.com
+# IPv4: 78.153.202.217; IPv6: 2a01:a8:201::217
+
+Host manann manann.talideon.com
+User keith
+HostName manann.talideon.com
+# IPv4: 5.9.82.71; IPv6: 2a01:4f8:162:4e::1:1
 
 Host nas4free
 User keith
+HostName nas4free.local
+# IPv4: 192.168.1.160
