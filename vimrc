@@ -41,7 +41,11 @@ nmap Q gqap
 if has("gui_running")
   set guioptions-=lLbrRtT
   set toolbariconsize=tiny
-  set guifont=Inconsolata:h10
+  if has("gui_macvim")
+    set guifont=Inconsolata:h10
+  else
+    set guifont=Inconsolata\ 10
+  endif
 endif
 
 " Switch syntax highlighting on, when the terminal has colors
