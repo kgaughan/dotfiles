@@ -11,11 +11,11 @@ while read bin_path; do
 		export PATH="$bin_path:$PATH"
 	fi
 done <<-FIN
-$HOME/.local/bin
-$HOME/.pyenv/bin
 $HOME/.opt/PebbleSDK/bin
-/usr/local/opt/sphinx-doc/bin
 $HOME/Library/Python/2.7/bin
+$HOME/Library/Python/3.6/bin
+$HOME/.pyenv/bin
+$HOME/.local/bin
 FIN
 
 which pyenv >/dev/null 2>&1 && eval "$(pyenv init -)"
