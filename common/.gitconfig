@@ -27,11 +27,17 @@
 	st = status -sb
 	ready = rebase -i @{u}
 	purr = pull --rebase
+	last = log -1 --stat
+	cp = cherry-pick
+	cl = clone
+	unstage = reset HEAD --
+	dc = diff --cached
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 	uncommit = reset --soft 'HEAD^'
 	aggressive = !"git fsck --unreachable; git reflog expire --expire=0 --all; git repack -a -d -l; git prune; git gc --aggressive"
 	pull-all = !"git pull --recurse-submodules --rebase && git submodule update --init --remote"
 	rebase-against-master = !"git checkout master && git pull --rebase && git checkout @{-1} && git rebase master"
+	rebase-against-root = !"git rebase -i $(git merge-base --all master HEAD)"
 	merge-into-master = !"git checkout master && git merge @{-1}"
 	diff-master = diff -D master...
 [credential]
@@ -41,14 +47,20 @@
 	conflictstyle = diff3
 [mergetool]
 	prompt = false
+	keeptemporaries = false
+	keepbackups = false
+
 [diff]
 	tool = vimdiff
 	algorithm = patience
+[difftool]
+	prompt = false
 [http]
 	sslverify = false
 [push]
 	default = simple
 [core]
 	excludesfile = ~/.gitignore_global
+	editor = /usr/local/bin/vim
 [status]
 	submoduleSummary = true
