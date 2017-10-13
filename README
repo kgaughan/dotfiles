@@ -1,83 +1,27 @@
-What's the story, like?
------------------------
+========
+dotfiles
+========
 
-You're currently looking at my public dotfiles repository. I use it to make
-sure I (a) don't bugger up any of these files by making unintended or stupid
-changes to them and (b) so that I can point people towards them for
-inspiration/smugness. :-)
+To install::
 
+    make install
 
-What's with the lack of dots?
------------------------------
+To uninstall::
 
-I like to keep the files and directories here visible, which means I drop the
-initial dot from any of the files. Machines I use these files on have a branch
-of this repo, and I symlink from the expected locations of the files back to
-the local branch of this repo. See, simple!
+    make uninstall
 
+To reinstall::
 
-I want to have my machine set up with your dotfiles, what would I need to do?
------------------------------------------------------------------------------
+    make reinstall
 
-Most of the directories and files are simple: just create symlinks back to the
-copies in this repo, and you're sorted.
-
-The 'config' directory is a little different, mind. In that case, you'll need
-to link the individual files and directories in that into your '.config'
-directory. Using the vim and zsh files, here's what you'll need to do::
-
-    % mkdir ~/.config ~/repos
-    % cd ~/repos
-    % git clone git@github.com:kgaughan/dotfiles.git
-    % cd ~/.config
-    % ln -s ../repos/dotfiles/config/zsh.d .
-    % cd ..
-    % for i in vim vimrc zprofile zshrc; do ln -s repos/dotfiles/$i .$i; done
-
-
-Anything interesting here?
---------------------------
-
-Little that I can think of. I guess zshrc and config/zsh.d/* are clever, but
-the basic idea behind that isn't mine.
-
-There's some cleverness in zprofile to set up PATH appropriately so that only
-paths that haven't already been added to PATH are added and all the paths
-exist.
-
-Another thing I do is that I don't like having a ~/bin directory and instead
-put everything like that under .local, which I use as a user-specific version
-of /usr/local.
-
-
-Anything you're planning to change?
------------------------------------
-
-Move ~/.gpg-agent-info to ~/.cache/gpg-agent-info - anything that doesn't need
-to be in ~ should be in one of ~/.config, ~/.cache, or ~/.local as far as I'm
-concerned. ~/.zshrc may end up moving to ~/.config/zshrc if possible, leaving
-only ~/.zprofile, which would leave me happy. I'd also like to add some kind of
-autoconfiguration script.
-
+Simple!
 
 Vim plugins
------------
+===========
 
-.. note::
-
-   YouCompleteMe requires CMake be installed!
-
-I now use vim-plug__ as my Vim plugin manager, so there's no submodule
-jiggery-pokery to worry about anymore.
+I use vim-plug__, a fantastic plugin manager for Vim. See the instructions
+there if you want instructions on how to use it.
 
 .. __: https://github.com/junegunn/vim-plug
-
-To install plugins within Vim: run::
-
-     :PlugInstall
-
-To update installed plugins, run:
-
-    :PlugUpdate
 
 .. vim:set ft=rst:
