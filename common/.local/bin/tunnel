@@ -1,6 +1,0 @@
-#!/bin/sh
-
-HOST=lir.talideon.com
-PORT=${1:-8080}
-echo "Tunnelling via port $HOST:$PORT..."
-exec ssh -D $PORT -f -C -q -N $HOST

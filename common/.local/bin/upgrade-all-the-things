@@ -1,4 +1,0 @@
-#!/bin/sh
-for cmd in update autoclean dist-upgrade autoremove; do
-	apt-get $cmd
-done

@@ -23,7 +23,7 @@ kill_existing () {
 
 play () {
 	kill_existing
-	for i in mplayer mpg321 mpg123 plaympeg; do
+	for i in mplayer mpg321 mpg123 plaympeg afplay; do
 		if which $i >/dev/null; then
 			$i "$@" 2>&1 >/dev/null &
 			PID=$!
