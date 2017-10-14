@@ -1,5 +1,5 @@
 STOW=./common/.local/bin/stowage --exclude '.*.sw?' --exclude '.DS_Store'
-PACKAGE=stowed
+PACKAGE=common
 
 install:
 	$(STOW) -t "${HOME}" $(PACKAGE)
