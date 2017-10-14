@@ -23,7 +23,7 @@ def install(args, is_excluded):
             rest = root[len(package)+1:]
             dest = path.join(args.target, rest)
             if rest != '':
-                if not args.dry_run:
+                if not args.dry_run and not os.path.exists(dest):
                     os.makedirs(dest, mode=0o755)
                 if args.verbose:
                     print("DIR", dest)
