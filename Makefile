@@ -1,8 +1,11 @@
+STOW=./common/.local/bin/stowage --exclude '.*.sw?' \
+				 --exclude '.DS_Store'
+
 install:
-	./stowsh -s -t "${HOME}" common || true
+	$(STOW) -t "${HOME}" common
 
 uninstall:
-	./stowsh -s -D -t "${HOME}" common || true
+	$(STOW) -D -t "${HOME}" common
 
 reinstall: uninstall install
 
