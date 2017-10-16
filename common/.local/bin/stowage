@@ -37,6 +37,10 @@ import re
 
 def install(args, is_excluded):
     for package in args.packages:
+        if not path.isdir(package):
+            print('no such package: {}; skipping'.format(package),
+                  file=sys.stderr)
+            continue
         for root, _, files in os.walk(package):
             files = [filename
                      for filename in files
@@ -46,10 +50,10 @@ def install(args, is_excluded):
             rest = root[len(package)+1:]
             dest = path.join(args.target, rest)
             if rest != '':
-                if not args.dry_run and not os.path.exists(dest):
-                    os.makedirs(dest, mode=0o755)
                 if args.verbose:
                     print("DIR", dest)
+                if not args.dry_run and not os.path.exists(dest):
+                    os.makedirs(dest, mode=0o755)
             for filename in files:
                 dest_path = path.join(dest, filename)
                 if path.exists(dest_path):
@@ -57,15 +61,23 @@ def install(args, is_excluded):
                         print("SKIP", dest_path)
                     continue
                 rel_path = path.relpath(path.join(root, filename), dest)
-                if not args.dry_run:
-                    os.symlink(rel_path, dest_path)
                 if args.verbose:
                     print("LINK", rel_path, dest_path)
+                if not args.dry_run:
+                    if path.islink(dest_path):
+                        if args.verbose:
+                            print("DANGLE", dest_path)
+                        os.unlink(dest_path)
+                    os.symlink(rel_path, dest_path)
 
 
 def uninstall(args, is_excluded):
     dirs = []
     for package in args.packages:
+        if not path.isdir(package):
+            print('no such package: {}; skipping'.format(package),
+                  file=sys.stderr)
+            continue
         for root, _, files in os.walk(package):
             files = [filename
                      for filename in files
@@ -81,10 +93,10 @@ def uninstall(args, is_excluded):
                 if path.islink(dest_path):
                     src_path = path.realpath(path.join(root, filename))
                     if path.realpath(dest_path) == src_path:
-                        if not args.dry_run:
-                            os.unlink(dest_path)
                         if args.verbose:
                             print("UNLINK", dest_path)
+                        if not args.dry_run:
+                            os.unlink(dest_path)
                     elif args.verbose:
                         print("SKIP", dest_path)
                 elif args.verbose:
@@ -93,10 +105,10 @@ def uninstall(args, is_excluded):
     # Delete the directories if empty.
     for dir_path in sorted(dirs, key=len, reverse=True):
         try:
-            if not args.dry_run:
-                os.rmdir(dir_path)
             if args.verbose:
                 print("RMDIR", dir_path)
+            if not args.dry_run:
+                os.rmdir(dir_path)
         except OSError:
             pass
 
