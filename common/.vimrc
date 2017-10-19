@@ -195,7 +195,7 @@ let g:py_coverage_bin = 'python-coverage'
 
 " airline config
 let g:airline_theme = 'dark'
-let g:airline#extensions#syntastic#enabled = 1
+let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#whitespace#enabled = 1
 let g:airline_powerline_fonts = 0
@@ -208,28 +208,30 @@ let g:riv_disable_folding = 1
 
 let python_highlight_all = 1
 
+let g:ale_completion_enabled = 1
+
 " Register and load plugins {{{
 " See: https://github.com/junegunn/vim-plug
 call plug#begin()
 Plug 'bling/vim-airline'
-Plug 'fatih/vim-go'
+Plug 'dag/genshi.vim'
+Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 Plug 'jmcantrell/vim-virtualenv'
 Plug 'kien/ctrlp.vim'
 Plug 'mrk21/yaml-vim'
 Plug 'natw/keyboard_cat.vim'
+Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 Plug 'nvie/vim-flake8'
 Plug 'Raimondi/delimitMate'
+Plug 'rgrinberg/vim-ocaml'
 Plug 'Rykka/riv.vim'
-Plug 'scrooloose/syntastic'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'vim-scripts/py-coverage'
+Plug 'w0rp/ale'
 Plug 'wting/rust.vim'
-Plug 'rgrinberg/vim-ocaml'
-Plug 'dag/genshi.vim'
 
 Plug 'ervandew/supertab'
 Plug 'davidhalter/jedi-vim'
-"Plug 'Valloric/YouCompleteMe', { 'do': './install.py --gocode-completer' }
 call plug#end()
 " }}}
