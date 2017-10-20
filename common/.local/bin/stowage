@@ -85,7 +85,7 @@ def install(args, is_excluded):
                     if args.verbose:
                         print("SKIP", dest_path)
                     continue
-                src_path = path.join(root, filename)
+                src_path = path.realpath(path.join(root, filename))
                 if args.verbose:
                     print("LINK", src_path, dest_path)
                 if not args.dry_run:
