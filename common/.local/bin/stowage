@@ -33,6 +33,31 @@ import fnmatch
 import os
 from os import path
 import re
+import shutil
+import sys
+
+
+def add(args):
+    target = path.realpath(args.target)
+    file_path = path.realpath(args.add)
+    package = path.realpath(args.packages[0])
+    if path.commonprefix([target, file_path]) != target:
+        print('error: "{}" not under "{}"'.format(args.add, args.target),
+              file=sys.stderr)
+        sys.exit(1)
+    rest = file_path[len(target)+1:]
+    dest_path = path.join(package, rest)
+    dest = path.dirname(dest_path)
+    if not path.exists(dest):
+        if args.verbose:
+            print("DIR", dest)
+        os.makedirs(dest, mode=0o755)
+    if args.verbose:
+        print("SWAP", dest_path, file_path)
+    if not args.dry_run:
+        shutil.move(file_path, dest)
+        # XXX Should really check if the symlink fails here.
+        os.symlink(dest_path, file_path)
 
 
 def install(args, is_excluded):
@@ -60,15 +85,15 @@ def install(args, is_excluded):
                     if args.verbose:
                         print("SKIP", dest_path)
                     continue
-                rel_path = path.relpath(path.join(root, filename), dest)
+                src_path = path.join(root, filename)
                 if args.verbose:
-                    print("LINK", rel_path, dest_path)
+                    print("LINK", src_path, dest_path)
                 if not args.dry_run:
                     if path.islink(dest_path):
                         if args.verbose:
                             print("DANGLE", dest_path)
                         os.unlink(dest_path)
-                    os.symlink(rel_path, dest_path)
+                    os.symlink(src_path, dest_path)
 
 
 def uninstall(args, is_excluded):
@@ -123,27 +148,41 @@ def make_argparser():
                         help='Target directory in which to place symlinks')
     parser.add_argument('--exclude', '-x',
                         action='append', default=[],
+                        metavar='GLOB',
                         help="Glob pattern of files to exclude")
     parser.add_argument('--dry-run', '-n',
                         action='store_true',
                         help='Dry run.')
-    parser.add_argument('--uninstall', '-D',
-                        action='store_false', dest='install',
-                        help='Uninstall symlinks')
+
+    group = parser.add_mutually_exclusive_group(required=False)
+    group.add_argument('--uninstall', '-D',
+                       action='store_false', dest='install',
+                       help='Uninstall symlinks')
+    group.add_argument('--add', '-a',
+                       metavar='FILE',
+                       help='Stow files in a particular package')
+
     parser.add_argument('packages', metavar='PACKAGE', nargs='+',
                         help='Packages to install')
     return parser
 
 
 def main():
-    args = make_argparser().parse_args()
+    parser = make_argparser()
+    args = parser.parse_args()
     exclude = [re.compile(fnmatch.translate(pattern))
                for pattern in args.exclude]
 
     def is_excluded(filename):
         return any(pattern.match(filename) for pattern in exclude)
 
-    if args.install:
+    if args.add:
+        if len(args.packages) > 1:
+            parser.error('--add only works with a single package')
+        if not path.isfile(args.add):
+            parser.error('no such file: {}'.format(args.add))
+        add(args)
+    elif args.install:
         install(args, is_excluded)
     else:
         uninstall(args, is_excluded)
