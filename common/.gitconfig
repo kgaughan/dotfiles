@@ -1,6 +1,5 @@
-[user]
-	name = Keith Gaughan
-	email = k@stereochro.me
+[include]
+	path = ~/.gitconfig.local
 [color]
 	branch = auto
 	diff = auto
