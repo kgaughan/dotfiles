@@ -1,5 +1,3 @@
-[include]
-	path = ~/.gitconfig.local
 [color]
 	branch = auto
 	diff = auto
@@ -48,7 +46,6 @@
 	prompt = false
 	keeptemporaries = false
 	keepbackups = false
-
 [diff]
 	tool = vimdiff
 	algorithm = patience
@@ -60,6 +57,9 @@
 	default = simple
 [core]
 	excludesfile = ~/.gitignore_global
+	trustctime = false
 	editor = /usr/local/bin/vim
 [status]
 	submoduleSummary = true
+[include]
+	path = ~/.gitconfig.local
