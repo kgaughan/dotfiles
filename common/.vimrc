@@ -210,6 +210,9 @@ let python_highlight_all = 1
 
 let g:ale_completion_enabled = 1
 
+" Needed for some work stuff. *shrug*
+let g:go_version_warning = 0
+
 " Register and load plugins {{{
 " See: https://github.com/junegunn/vim-plug
 call plug#begin()
