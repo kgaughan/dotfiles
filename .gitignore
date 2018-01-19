@@ -1,4 +1,5 @@
 *~
 .*.sw?
+*.old
 *.orig
 .DS_Store

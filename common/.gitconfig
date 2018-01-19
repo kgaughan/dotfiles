@@ -61,7 +61,7 @@
 [core]
 	excludesfile = ~/.gitignore_global
 	trustctime = false
-	editor = /usr/local/bin/vim
+	editor = vim
 [status]
 	submoduleSummary = true
 [include]
