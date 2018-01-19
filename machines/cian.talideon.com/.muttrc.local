@@ -1,0 +1,11 @@
+set realname="Keith Gaughan"
+set from="k@stereochro.me"
+
+set spoolfile="imap://freebsd@mail.talideon.com/INBOX"
+set folder="imap://freebsd@mail.talideon.com/"
+set imap_pass=""
+set signature="quicksig -q ~/.dotfiles/misc/fortunes -s ~/.dotfiles/misc/signature|"
+set hostname="cian.talideon.com"
+
+#set pgp_sign_as=0xCF9F6473
+#source ~/.config/mutt.d/pgp.rc

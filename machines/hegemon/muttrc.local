@@ -1,8 +1,0 @@
-set realname="Keith Gaughan"
-set from="keith@blacknight.com"
-
-set spoolfile="imap://keith@merlin.blacknight.ie/INBOX"
-set folder="imap://keith@merlin.blacknight.ie"
-
-set pgp_sign_as=0x82AC3634
-source ~/.config/mutt.d/pgp.rc
