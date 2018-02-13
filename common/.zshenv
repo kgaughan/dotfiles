@@ -2,7 +2,7 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 for dir in /usr/{local,pkg}/{sbin,bin} /usr/games; do
 	if test -d "$dir"; then
-		PATH="$PATH:$dir"
+		PATH="$dir:$PATH"
 	fi
 done
 
@@ -48,7 +48,7 @@ _assign_first_cmd () {
 	done
 }
 
-_assign_first_cmd EDITOR mvim vim vi
+_assign_first_cmd EDITOR vim vi
 _assign_first_cmd PAGER most less more
 
 ## This dance makes sure that if if TERM is 'blah' or 'blah-256color', it
