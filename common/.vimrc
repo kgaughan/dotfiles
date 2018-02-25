@@ -17,6 +17,7 @@ set title        " Show the filename in the terminal title.
 set visualbell t_vb=
 set foldmethod=marker
 set number
+set lazyredraw
 set wildmenu
 set wildmode=list:longest,full
 set wildignore=*.o,*~,*.pyc,*.pyo,*.so,.*.sw*,__pycache__,*.bak,*.a,*.la,*.mo,.git,.svn,*.so
@@ -58,12 +59,6 @@ if &t_Co > 2 || has("gui_running")
   syntax on
 endif
 
-" For displaying nasty whitespace.
-set list
-"set listchars=tab:↹·,trail:·,nbsp:·
-set listchars=tab:\ \ ,trail:·,nbsp:·
-" }}}
-
 " Fix backspace behaviour under screen. {{{
 if &term[:5] == 'screen' || &term == 'tmux'
   set t_kb=
@@ -78,37 +73,37 @@ au!
 au FileType text setlocal textwidth=78
 
 au BufRead *.vala,*.vapi
-	\ set efm=%f:%l.%c-%[%^:]%#:\ %t%[^:]%#:\ %m
+  \ set efm=%f:%l.%c-%[%^:]%#:\ %t%[^:]%#:\ %m
 au BufRead,BufNewFile *.vala,*.vapi
-	\ setfiletype vala |
-	\ setlocal cin et
+  \ setfiletype vala |
+  \ setlocal cin et
 
 " Dexy/JSON
 au BufNewFile,BufRead *.dexy,*.json
-	\ setfiletype javascript
+  \ setfiletype javascript
 
 au BufNewFile,BufRead *.fth
-	\ setfiletype forth
+  \ setfiletype forth
 
 au BufNewFile,BufRead *.genshi
-	\ setfiletype genshi
+  \ setfiletype genshi
 
 " Settings for various modes.
 au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc,*.ml,*.xml,*.mll,*.mly,*.lsa,*.xsd,*.css,*.scss
-	\ setlocal sw=2 ts=2 sts=2 et
+  \ setlocal sw=2 ts=2 sts=2 et
 au BufNewFile,BufRead,Syntax *.erl,*.hs
-	\ setlocal et ai si sta
+  \ setlocal et ai si sta
 au BufNewFile,BufRead,Syntax *.py,*.rst
-	\ setlocal sw=4 ts=4 sts=4 et ai sta
+  \ setlocal sw=4 ts=4 sts=4 et ai sta
 au BufNewFile,BufRead,Syntax *.rnc
-	\ setlocal et ts=2 sts=2 sw=2 ai
+  \ setlocal et ts=2 sts=2 sw=2 ai
 au BufNewFile,BufRead,Syntax Makefile
-	\ setlocal sw=8 ts=8 sts=8
+  \ setlocal sw=8 ts=8 sts=8
 au FileType python
-	\ setlocal sw=4 ts=4 sts=4 et ai sta
+  \ setlocal sw=4 ts=4 sts=4 et ai sta
 
 au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc,*.lsa,*.ini,*.rnc
-	\ call ScrubTrailing()
+  \ call ScrubTrailing()
 
 " Automatically give executable permissions
 au BufWritePost *.cgi,*.sh
@@ -118,9 +113,9 @@ au BufWritePost *.cgi,*.sh
 " Don't do it when the position is invalid or when inside an event handler
 " (happens when dropping a file on gvim).
 au BufReadPost *
-	\ if line("'\"") > 0 && line("'\"") <= line("$") |
-	\   exe "normal g`\"" |
-	\ endif
+  \ if line("'\"") > 0 && line("'\"") <= line("$") |
+  \   exe "normal g`\"" |
+  \ endif
 
 augroup END
 " }}}
@@ -150,6 +145,10 @@ noremap <Right> <nop>
 noremap <PageUp> <nop>
 noremap <PageDown> <nop>
 " }}}
+
+inoremap {<CR> {<CR>}<C-o>O
+inoremap [<CR> [<CR>]<C-o>O
+inoremap (<CR> (<CR>)<C-o>O
 
 " Helpful window navigation {{{
 " moves up and down between windows and maximises the focused window.
