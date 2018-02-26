@@ -28,7 +28,7 @@ alias df='df -h'
 alias cd..='cd ..'
 # Make the ocaml repl usable.
 which ledit >/dev/null && alias ocaml='ledit ocaml'
-alias weather='curl wttr.in/carlow'
+alias weather='curl wttr.in/dublin'
 
 # A good idea from Vish
 smux () {
