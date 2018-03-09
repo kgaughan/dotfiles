@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # find-duplicates
 # by Keith Gaughan <http://talideon.com/>
@@ -35,12 +35,13 @@ Finds an lists any duplicate files in the given directories.
 """
 
 from __future__ import with_statement
-import sys
-import os
-import hashlib
-import getopt
+import collections
 import filecmp
+import getopt
+import hashlib
+import os
 import re
+import sys
 
 
 USAGE = "Usage: %s [-h] [-t] [-e] [-m<crc|md5>] [-x<glob>] <dir>*"
@@ -82,7 +83,8 @@ def all_files(tops, exclusions, ignore_empties):
     """Lists all files in the given directories."""
     for top in tops:
         for dirname, _, filenames in os.walk(top):
-            if any(pattern.search(dirname) is not None for pattern in exclusions):
+            if any(pattern.search(dirname) is not None
+                   for pattern in exclusions):
                 continue
             for f in filenames:
                 path = os.path.join(dirname, f)
@@ -91,7 +93,7 @@ def all_files(tops, exclusions, ignore_empties):
 
 
 def digest(name, method=hashlib.md5):
-    with open(name) as hdl:
+    with open(name, 'rb') as hdl:
         result = method(hdl.read()).digest()
     return result
 
@@ -120,13 +122,11 @@ def true_duplicates(items, compare=filecmp.cmp):
 def group_by(groups, grouper, min_size=1):
     """Breaks each of the groups into smaller subgroups."""
     for group in groups:
-        subgroups = {}
+        subgroups = collections.defaultdict(list)
         for item in group:
             g = grouper(item)
-            if not subgroups.has_key(g):
-                subgroups[g] = []
             subgroups[g].append(item)
-        for g in subgroups.itervalues():
+        for g in subgroups.values():
             if len(g) >= min_size:
                 yield g
 
@@ -137,16 +137,16 @@ def usage(message=None):
     if message:
         fh = sys.stderr
         exit_code = 2
-        print >> fh, str(message)
+        print(message, file=fh)
     name = os.path.basename(sys.argv[0])
-    print >> fh, USAGE % (name,)
+    print(USAGE % (name,), file=fh)
     sys.exit(exit_code)
 
 
 def main():
     try:
         opts, paths = getopt.getopt(sys.argv[1:], "ehm:x:t")
-    except getopt.GetoptError, err:
+    except getopt.GetoptError as err:
         usage(err)
     method = CRC
     exclusions = []
@@ -188,7 +188,7 @@ def main():
             else:
                 print
             for name in sorted(files):
-                print name
+                print(name)
 
 
 if __name__ == "__main__":
