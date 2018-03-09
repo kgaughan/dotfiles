@@ -58,6 +58,7 @@ if &t_Co > 2 || has("gui_running")
   colors solarized
   syntax on
 endif
+" }}}
 
 " Fix backspace behaviour under screen. {{{
 if &term[:5] == 'screen' || &term == 'tmux'
@@ -209,6 +210,9 @@ let python_highlight_all = 1
 
 let g:ale_completion_enabled = 1
 
+let g:terraform_align = 1
+let g:terraform_fmt_on_save = 1
+
 " Needed for some work stuff. *shrug*
 let g:go_version_warning = 0
 
@@ -218,6 +222,7 @@ call plug#begin()
 Plug 'bling/vim-airline'
 Plug 'dag/genshi.vim'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+Plug 'hashivim/vim-terraform'
 Plug 'jmcantrell/vim-virtualenv'
 Plug 'kien/ctrlp.vim'
 Plug 'mrk21/yaml-vim'
