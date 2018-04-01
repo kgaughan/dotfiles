@@ -213,6 +213,8 @@ let g:ale_completion_enabled = 1
 let g:terraform_align = 1
 let g:terraform_fmt_on_save = 1
 
+let g:rustfmt_autosave = 1
+
 " Needed for some work stuff. *shrug*
 let g:go_version_warning = 0
 
@@ -236,7 +238,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'vim-scripts/py-coverage'
 Plug 'w0rp/ale'
-Plug 'wting/rust.vim'
+Plug 'rust-lang/rust.vim'
 
 Plug 'ervandew/supertab'
 Plug 'davidhalter/jedi-vim'
