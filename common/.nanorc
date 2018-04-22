@@ -1,0 +1,8 @@
+# For when I'm stuck needing nano somewhere.
+set autoindent
+set constantshow
+set linenumbers
+set morespace
+set multibuffer
+set nohelp
+set suspend
