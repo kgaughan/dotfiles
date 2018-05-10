@@ -55,7 +55,7 @@
 [difftool]
 	prompt = false
 [http]
-	sslverify = false
+	sslVerify = true
 [push]
 	default = simple
 [core]
