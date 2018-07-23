@@ -1,2 +1,0 @@
-setopt appendhistory autocd extendedglob hist_ignore_dups hist_save_no_dups
-setopt sharehistory
