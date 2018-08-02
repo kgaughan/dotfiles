@@ -84,6 +84,8 @@ if status is-interactive
 	else
 		alias ls "ls -F"
 	end
+
+	set -q SSH_AUTH_SOCK; or eval (ssh-agent -c)
 end
 
 # Local config not necessarily under version control.
