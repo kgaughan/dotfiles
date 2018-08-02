@@ -6,15 +6,15 @@ set fish_help_browser w3m
 umask 022
 
 for dir in /usr/{local,pkg}/{sbin,bin} \
-		   $HOME/Library/Python/{2.7,3.6}/bin \
-		   $HOME/.local/bin
+		   ~/Library/Python/{2.7,3.6}/bin \
+		   ~/.local/bin
 	if not contains $dir $PATH; and test -d $dir
 		set -x PATH $dir $PATH
 	end
 end
 
 set -q LIBDIRPATH; or set -x LIBDIRPATH /usr/local/lib /usr/lib /lib
-set -x LIBDIRPATH $LIBDIRPATH $HOME/.local/lib
+set -x LIBDIRPATH $LIBDIRPATH ~/.local/lib
 
 for i in most less more
 	if which $i >/dev/null
@@ -31,22 +31,22 @@ for i in vim vi
 end
 
 # golang
-set -x GOPATH $HOME/projects/go
+set -x GOPATH ~/projects/go
 test -d $GOPATH/bin; or mkdir -p $GOPATH/bin
 set -x PATH $PATH $GOPATH/bin
 
 if not set -q XDG_CACHE_HOME
-	set -x XDG_CACHE_HOME $HOME/.cache
+	set -x XDG_CACHE_HOME ~/.cache
 end
 
 # python completion
-if test -e $HOME/.local/share/python/pythonstartup.py
-	set -x PYTHONSTARTUP $HOME/.local/share/python/pythonstartup.py
+if test -e ~/.local/share/python/pythonstartup.py
+	set -x PYTHONSTARTUP ~/.local/share/python/pythonstartup.py
 	set -x PYTHON_HISTORY_FILE $XDG_CACHE_HOME/python_history
 end
 
 # lynx style sheet
-test -e $HOME/.lynx.lss; and set -x LYNX_LSS $HOME/.lynx.lss
+test -e ~/.lynx.lss; and set -x LYNX_LSS ~/.lynx.lss
 
 if status is-interactive
 	alias m $PAGER
@@ -71,8 +71,8 @@ if status is-interactive
 
 	# csh syntax is compatible enough with fish for this to work
 	if test -x /usr/bin/dircolors
-		if test -r $HOME/.dircolours
-			eval (dircolors -c $HOME/.dircolors)
+		if test -r ~/.dircolours
+			eval (dircolors -c ~/.dircolors)
 		else
 			eval (dircolors -c)
 		end
@@ -87,4 +87,4 @@ if status is-interactive
 end
 
 # Local config not necessarily under version control.
-test -e $HOME/.fish.local; and source $HOME/.fish.local
+test -e ~/.fish.local; and source ~/.fish.local
