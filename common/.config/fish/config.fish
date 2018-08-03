@@ -85,7 +85,9 @@ if status is-interactive
 		alias ls "ls -F"
 	end
 
-	set -q SSH_AUTH_SOCK; or eval (ssh-agent -c)
+	if not set -q ANDROID_ROOT; and not set -q SSH_AUTH_SOCK
+		eval (ssh-agent -c >/dev/null)
+	end
 end
 
 # Local config not necessarily under version control.
