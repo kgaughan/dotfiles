@@ -39,16 +39,8 @@ play () {
 	return 1
 }
 
-randomise_files () {
-	for i in "$@"/*; do
-		# jot is *BSD specific and generates numbers, much like seq. However,
-		# it's also able to generate sequences of *random* numbers.
-		echo "`jot -rn 1 1 100000`	$i"
-	done | sort -n | cut -f2
-}
-
 play_dir () {
-	randomise_files "$@" | while read j; do
+	find "$1" -type f -maxdepth 1 | sort -R | while read j; do
 		play "$j" || exit
 	done
 }
