@@ -33,6 +33,10 @@ else
   au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>79v.\+', -1)
 endif
 
+" Further enhance filename completion by searching subfolders.
+set path+=**
+
+
 filetype indent plugin on
 
 " Don't use Ex mode, use Q for formatting. Ex is annoying anyway.
@@ -119,17 +123,6 @@ au BufReadPost *
   \ endif
 
 augroup END
-" }}}
-
-" Sane tab navigation {{{
-nmap <A-PageUp>   :tabprevious<cr>
-nmap <A-PageDown> :tabnext<cr>
-map  <A-PageUp>   :tabprevious<cr>
-map  <A-PageDown> :tabnext<cr>
-imap <A-PageUp>   <ESC>:tabprevious<cr>i
-imap <A-PageDown> <ESC>:tabnext<cr>i
-nmap <C-n>        :tabnew<cr>
-imap <C-n>        <ESC>:tabnew<cr>
 " }}}
 
 " Deactivate F1 and turn it into Escape {{{
