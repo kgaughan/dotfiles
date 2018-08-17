@@ -17,14 +17,14 @@ set -q LIBDIRPATH; or set -x LIBDIRPATH /usr/local/lib /usr/lib /lib
 set -x LIBDIRPATH $LIBDIRPATH ~/.local/lib
 
 for i in most less more
-	if which $i >/dev/null
+	if which $i >/dev/null 2>&1
 		set -x PAGER (which $i)
 		break
 	end
 end
 
 for i in vim vi
-	if which $i >/dev/null
+	if which $i >/dev/null 2>&1
 		set -x EDITOR (which $i)
 		break
 	end
@@ -48,7 +48,7 @@ end
 # lynx style sheet
 test -e ~/.lynx.lss; and set -x LYNX_LSS ~/.lynx.lss
 
-if status is-interactive
+if status is-interactive >/dev/null
 	alias m $PAGER
 	alias h "fc -l"
 	alias j jobs
@@ -65,9 +65,9 @@ if status is-interactive
 	# a common typo of mine
 	alias cd.. "cd .."
 	# make the ocaml repl usable
-	which ledit >/dev/null; and alias ocaml 'ledit ocaml'
+	which ledit >/dev/null 2>&1; and alias ocaml 'ledit ocaml'
 	# fun stuff
-	which curl >/dev/null; and alias weather 'curl wttr.in/dublin'
+	which curl >/dev/null 2>&1; and alias weather 'curl wttr.in/dublin'
 
 	# csh syntax is compatible enough with fish for this to work
 	if test -x /usr/bin/dircolors
