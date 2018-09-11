@@ -65,7 +65,9 @@ if status is-interactive >/dev/null
 	# a common typo of mine
 	alias cd.. "cd .."
 	# make the ocaml repl usable
-	which ledit >/dev/null 2>&1; and alias ocaml 'ledit ocaml'
+	if which ocaml >/dev/null 2>&1
+		which ledit >/dev/null 2>&1; and alias ocaml 'ledit ocaml'
+	end
 	# fun stuff
 	which curl >/dev/null 2>&1; and alias weather 'curl wttr.in/dublin'
 

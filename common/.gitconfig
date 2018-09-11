@@ -62,6 +62,7 @@
 	excludesfile = ~/.gitignore_global
 	trustctime = false
 	editor = vim
+	pager = less -F
 [status]
 	submoduleSummary = true
 [include]
