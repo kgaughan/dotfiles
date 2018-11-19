@@ -106,6 +106,8 @@ au BufNewFile,BufRead,Syntax Makefile
   \ setlocal sw=8 ts=8 sts=8
 au FileType python
   \ setlocal sw=4 ts=4 sts=4 et ai sta
+au FileType groovy
+  \ setlocal sw=4 ts=4 sts=4 et ai sta
 
 au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc,*.lsa,*.ini,*.rnc
   \ call ScrubTrailing()
