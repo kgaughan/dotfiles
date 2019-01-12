@@ -35,11 +35,12 @@
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 	uncommit = reset --soft 'HEAD^'
 	aggressive = !"git fsck --unreachable; git reflog expire --expire=0 --all; git repack -a -d -l; git prune; git gc --aggressive"
-	pull-all = !"git pull --recurse-submodules --rebase && git submodule update --init --remote"
+	pull-all = !"git pull --recurse-submodules --rebase && git submodule update --init --recursive"
 	rebase-against-master = !"git checkout master && git pull --rebase && git checkout @{-1} && git rebase master"
 	rebase-against-root = !"git rebase -i $(git merge-base --all master HEAD)"
 	merge-into-master = !"git checkout master && git merge @{-1}"
 	diff-master = diff -D master...
+	sync-submodules = submodule update --init --recursive
 [credential]
 	helper = cache --timeout=3600
 [merge]
