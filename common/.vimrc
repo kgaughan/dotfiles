@@ -16,7 +16,6 @@ set showmode     " Because I'm stupid and like to know what mode I'm in.
 set title        " Show the filename in the terminal title.
 set visualbell t_vb=
 set foldmethod=marker
-set number
 set lazyredraw
 set wildmenu
 set wildmode=list:longest,full
@@ -35,7 +34,6 @@ endif
 
 " Further enhance filename completion by searching subfolders.
 set path+=**
-
 
 filetype indent plugin on
 
@@ -62,6 +60,17 @@ if &t_Co > 2 || has("gui_running")
   colors solarized
   syntax on
 endif
+" }}}
+
+" Fancy linenumbers {{{
+" For details, see https://jeffkreeftmeijer.com/vim-number/
+set number         " show line numbers
+set relativenumber " make line numbers above and below relative
+augroup numbertoggle
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+augroup END
 " }}}
 
 " Fix backspace behaviour under screen. {{{
