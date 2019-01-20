@@ -49,6 +49,7 @@ end
 test -e ~/.lynx.lss; and set -x LYNX_LSS ~/.lynx.lss
 
 if status is-interactive >/dev/null
+	alias ed "ed -v -p '> '"
 	alias m $PAGER
 	alias h "fc -l"
 	alias j jobs
