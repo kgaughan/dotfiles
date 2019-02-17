@@ -11,11 +11,11 @@ USAGE = "Usage: %s [-q<quips-file>] [-s<sig-file>]"
 
 
 def read_quip(quips_file):
-    with open(quips_file, 'r+b') as fh:
+    with open(quips_file, "r+b") as fh:
         map = mmap.mmap(fh.fileno(), 0)
         middle = random.randint(0, max(map.size() - 2, 0))
-        start = map.rfind(b'%', 0, middle) + 1
-        end = map.find(b'%', middle + 1) - 1
+        start = map.rfind(b"%", 0, middle) + 1
+        end = map.find(b"%", middle + 1) - 1
         return map[start:end].decode().strip()
 
 
@@ -41,11 +41,11 @@ def main():
         usage(err)
 
     for opt, arg in opts:
-        if opt == '-s':
+        if opt == "-s":
             if not os.path.isfile(arg):
                 usage("No such signature file: %s" % (arg,))
             signature_path = arg
-        elif opt == '-q':
+        elif opt == "-q":
             if not os.path.isfile(arg):
                 usage("No such quip file: %s" % (arg,))
             quips_path = arg
@@ -54,12 +54,12 @@ def main():
         usage()
 
     if signature_path is not None:
-        with open(signature_path, 'rb') as fh:
+        with open(signature_path, "rb") as fh:
             for line in fh:
                 print(line.rstrip())
     if quips_path is not None:
         print(read_quip(quips_path))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

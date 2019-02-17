@@ -41,18 +41,16 @@ from sys import argv
 from xml.etree import ElementTree as et
 
 
-FALLBACK_SETTERS = [
-    'hsetroot -center'
-]
-SETTINGS = path.expanduser('~/.config/wallpaper')
-WP_LINK = path.join(SETTINGS, 'current')
+FALLBACK_SETTERS = ["hsetroot -center"]
+SETTINGS = path.expanduser("~/.config/wallpaper")
+WP_LINK = path.join(SETTINGS, "current")
 
 
 def which(name):
     """
     Finds the path of some named executable available on PATH.
     """
-    env_path = os.environ.get('PATH')
+    env_path = os.environ.get("PATH")
     if env_path:
         for dirname in env_path.split(os.pathsep):
             executable = path.join(dirname, name)
@@ -66,13 +64,13 @@ def get_setters():
     Loads the list of all wallpaper setting commands.
     """
     setters = []
-    setters_path = path.join(SETTINGS, 'setters')
+    setters_path = path.join(SETTINGS, "setters")
     if path.isfile(setters_path):
         try:
-            handle = open(setters_path, 'r')
+            handle = open(setters_path, "r")
             for line in handle:
                 line = line.strip()
-                if line != '' and line[0] != '#':
+                if line != "" and line[0] != "#":
                     setters.append(line)
         finally:
             handle.close()
@@ -85,7 +83,7 @@ def show_wallpaper():
     Gets a wallpaper setter to set the backdrop on the root window.
     """
     for setter in get_setters():
-        parts = setter.split(' ', 2)
+        parts = setter.split(" ", 2)
         location = which(parts[0])
         if location is not None:
             parts[0] = location
@@ -110,19 +108,23 @@ def generate_directory_menu(dirname, tree):
     for name in sorted(os.listdir(dirname)):
         full_path = path.join(dirname, name)
         if path.isfile(full_path):
-            tree.start('item', {'label': name[:name.rfind('.')]})
-            tree.start('action', {'name': 'Execute'})
-            tree.start('execute', {})
+            tree.start("item", {"label": name[: name.rfind(".")]})
+            tree.start("action", {"name": "Execute"})
+            tree.start("execute", {})
             tree.data("%s %s" % (argv[0], quote(full_path)))
-            tree.end('execute')
-            tree.end('action')
-            tree.end('item')
+            tree.end("execute")
+            tree.end("action")
+            tree.end("item")
         elif path.isdir(full_path):
-            tree.start('menu', {
-                'label': name,
-                'id': 'dir:' + name,
-                'execute': "%s %s" % (argv[0], quote(full_path))})
-            tree.end('menu')
+            tree.start(
+                "menu",
+                {
+                    "label": name,
+                    "id": "dir:" + name,
+                    "execute": "%s %s" % (argv[0], quote(full_path)),
+                },
+            )
+            tree.end("menu")
 
 
 def generate_pipemenu(dirname):
@@ -130,10 +132,10 @@ def generate_pipemenu(dirname):
     Generates a pipemenu for a given directory.
     """
     tree = et.TreeBuilder()
-    tree.start('openbox_pipe_menu', {})
+    tree.start("openbox_pipe_menu", {})
     generate_directory_menu(dirname, tree)
-    tree.end('openbox_pipe_menu')
-    return et.tostring(tree.close(), 'UTF-8')
+    tree.end("openbox_pipe_menu")
+    return et.tostring(tree.close(), "UTF-8")
 
 
 def bad_path():
@@ -141,13 +143,13 @@ def bad_path():
     Generates a pipemenu indicating that the path given was not a valid one.
     """
     tree = et.TreeBuilder()
-    tree.start('openbox_pipe_menu', {})
-    tree.start('item', {'label': 'Bad path'})
-    tree.end('openbox_pipe_menu')
-    return et.tostring(tree.close(), 'UTF-8')
+    tree.start("openbox_pipe_menu", {})
+    tree.start("item", {"label": "Bad path"})
+    tree.end("openbox_pipe_menu")
+    return et.tostring(tree.close(), "UTF-8")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     if not path.exists(SETTINGS):
         os.makedirs(SETTINGS)
     if len(argv) == 1:
@@ -165,6 +167,6 @@ if __name__ == '__main__':
             show_wallpaper()
         else:
             print(bad_path())
-            print('Bad path.', file=sys.stderr)
+            print("Bad path.", file=sys.stderr)
 
 # ex:et sts=4 ts=4 sw=4:

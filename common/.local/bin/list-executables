@@ -4,7 +4,7 @@ import os
 
 
 executables = []
-for dir_name in os.getenv('PATH').split(':'):
+for dir_name in os.getenv("PATH").split(":"):
     if os.path.exists(dir_name):
         for name in os.listdir(dir_name):
             executables.append(name)

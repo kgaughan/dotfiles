@@ -36,11 +36,12 @@ import sys
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--host', help="Host to connect to", required=True)
-    parser.add_argument('--port', help="Host port to connect to", type=int,
-                        default=nntplib.NNTP_PORT)
-    parser.add_argument('group', help="Newsgroup to fetch")
-    parser.add_argument('mbox', help="Mailbox to write to", type=mailbox.mbox)
+    parser.add_argument("--host", help="Host to connect to", required=True)
+    parser.add_argument(
+        "--port", help="Host port to connect to", type=int, default=nntplib.NNTP_PORT
+    )
+    parser.add_argument("group", help="Newsgroup to fetch")
+    parser.add_argument("mbox", help="Mailbox to write to", type=mailbox.mbox)
     args = parser.parse_args()
 
     with contextlib.closing(args.mbox) as mbox:
@@ -56,5 +57,5 @@ def main():
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())
