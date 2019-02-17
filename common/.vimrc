@@ -246,6 +246,8 @@ Plug 'rust-lang/rust.vim'
 Plug 'dag/vim-fish'
 
 Plug 'ervandew/supertab'
-Plug 'davidhalter/jedi-vim'
+if has('python')
+  Plug 'davidhalter/jedi-vim'
+endif
 call plug#end()
 " }}}
