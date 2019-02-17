@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # set-wallpaper
 # by Keith Gaughan <http://talideon.com/>
@@ -157,14 +157,14 @@ if __name__ == '__main__':
         if path.isdir(argv[1]):
             # With one arg that' a directory, a pipemenu of that directory's
             # contents is generated.
-            print generate_pipemenu(argv[1])
+            print(generate_pipemenu(argv[1]))
         elif path.isfile(argv[1]):
             # With one arg that's a file, that file is make the current
             # wallpaper.
             set_wallpaper(path.realpath(argv[1]))
             show_wallpaper()
         else:
-            print bad_path()
-            print >> sys.stderr, 'Bad path.'
+            print(bad_path())
+            print('Bad path.', file=sys.stderr)
 
 # ex:et sts=4 ts=4 sw=4:

@@ -1,7 +1,13 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 
 
-for i in sorted(j for k in os.getenv('PATH').split(':') for j in os.listdir(k)):
-    print i
+executables = []
+for dir_name in os.getenv('PATH').split(':'):
+    if os.path.exists(dir_name):
+        for name in os.listdir(dir_name):
+            executables.append(name)
+
+for name in sorted(executables):
+    print(name)

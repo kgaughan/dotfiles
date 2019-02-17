@@ -49,6 +49,7 @@ end
 test -e ~/.lynx.lss; and set -x LYNX_LSS ~/.lynx.lss
 
 if status is-interactive >/dev/null
+	alias dummy-mailer "python3 -m smtpd -n --class=DebuggingServer localhost:1025"
 	alias ed "ed -v -p '> '"
 	alias m $PAGER
 	alias h "fc -l"

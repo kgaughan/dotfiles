@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 nntp-pull
 
@@ -26,40 +26,31 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
+import argparse
 import contextlib
 import email
 import mailbox
 import nntplib
 import sys
 
-import docopt
-
-
-USAGE = """Usage:
-  nntp-pull --host=HOST [--port=PORT] GROUP MBOX
-  nntp-pull -h | --help
-  nntp-pull --version
-
-Options:
-  -h, --help   Show this screen.
-  --version    Show version
-  --host=HOST  NNTP host to connect to.
-  --port=PORT  NNTP host port to connect to.
-               [default: %d]
-""" % (nntplib.NNTP_PORT,)
-
 
 def main():
-    args = docopt.docopt(USAGE, sys.argv[1:], version='0.1.0')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--host', help="Host to connect to", required=True)
+    parser.add_argument('--port', help="Host port to connect to", type=int,
+                        default=nntplib.NNTP_PORT)
+    parser.add_argument('group', help="Newsgroup to fetch")
+    parser.add_argument('mbox', help="Mailbox to write to", type=mailbox.mbox)
+    args = parser.parse_args()
 
-    with contextlib.closing(mailbox.mbox(args['MBOX'])) as mbox:
-        conn = nntplib.NNTP(args['--host'], port=int(args['--port']))
+    with contextlib.closing(args.mbox) as mbox:
+        conn = nntplib.NNTP(args.host, port=args.port)
         try:
-            _, _, first, last, _ = conn.group(args['GROUP'])
-            for i in xrange(int(first), int(last) + 1):
-                _, _, _, lines = conn.article(str(i))
-                msg = email.message_from_string(nntplib.CRLF.join(lines))
-                mbox.add(msg)
+            _, count, _, _, _ = conn.group(args.group)
+            for _ in range(count):
+                _, article = conn.article()
+                msg = b"\r\n".join(article.lines).decode()
+                mbox.add(email.message_from_string(msg))
         finally:
             conn.quit()
     return 0
