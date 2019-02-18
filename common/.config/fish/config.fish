@@ -6,7 +6,7 @@ set fish_help_browser w3m
 umask 022
 
 for dir in /usr/{local,pkg}/{sbin,bin} \
-		   ~/Library/Python/{2.7,3.6}/bin \
+		   ~/Library/Python/3.*/bin \
 		   ~/.local/bin
 	if not contains $dir $PATH; and test -d $dir
 		set -x PATH $dir $PATH
