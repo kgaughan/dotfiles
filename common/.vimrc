@@ -247,8 +247,8 @@ Plug 'dag/vim-fish'
 Plug 'vimscript/toml'
 
 Plug 'ervandew/supertab'
-if has('python')
-  Plug 'davidhalter/jedi-vim'
+if has('python') || has('python3')
+  "Plug 'davidhalter/jedi-vim'
 endif
 call plug#end()
 " }}}
