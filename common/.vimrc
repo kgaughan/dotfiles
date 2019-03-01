@@ -244,6 +244,7 @@ Plug 'vim-scripts/py-coverage'
 Plug 'w0rp/ale'
 Plug 'rust-lang/rust.vim'
 Plug 'dag/vim-fish'
+Plug 'vimscript/toml'
 
 Plug 'ervandew/supertab'
 if has('python')
