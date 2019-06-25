@@ -94,5 +94,8 @@ if status is-interactive >/dev/null
 	end
 end
 
-# Local config not necessarily under version control.
+# Local config under version control.
 test -e ~/.fish.local; and source ~/.fish.local
+
+# Local config *not* under version control.
+test -e ~/.fish.pvt; and source ~/.fish.pvt
