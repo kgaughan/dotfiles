@@ -92,6 +92,11 @@ if status is-interactive >/dev/null
 	if not set -q ANDROID_ROOT; and not set -q SSH_AUTH_SOCK
 		eval (ssh-agent -c >/dev/null)
 	end
+
+	if command -sq brew
+		# Commented out as this is so... very... slow...
+		#brew command command-not-found-init >/dev/null; and source (brew command-not-found-init)
+	end
 end
 
 # Local config under version control.
