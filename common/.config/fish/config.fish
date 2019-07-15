@@ -17,15 +17,15 @@ set -q LIBDIRPATH; or set -x LIBDIRPATH /usr/local/lib /usr/lib /lib
 set -x LIBDIRPATH $LIBDIRPATH ~/.local/lib
 
 for i in most less more
-	if which $i >/dev/null 2>&1
-		set -x PAGER (which $i)
+	if command -sq $i
+		set -x PAGER (command -s $i)
 		break
 	end
 end
 
 for i in vim vi
-	if which $i >/dev/null 2>&1
-		set -x EDITOR (which $i)
+	if command -sq $i
+		set -x EDITOR (command -s $i)
 		break
 	end
 end
@@ -67,11 +67,11 @@ if status is-interactive >/dev/null
 	# a common typo of mine
 	alias cd.. "cd .."
 	# make the ocaml repl usable
-	if which ocaml >/dev/null 2>&1
-		which ledit >/dev/null 2>&1; and alias ocaml 'ledit ocaml'
+	if command -sq ocaml; and command -sq ledit
+		alias ocaml 'ledit ocaml'
 	end
 	# fun stuff
-	which curl >/dev/null 2>&1; and alias weather 'curl wttr.in/dublin'
+	command -sq curl; and alias weather 'curl wttr.in/dublin'
 
 	# csh syntax is compatible enough with fish for this to work
 	if test -x /usr/bin/dircolors
