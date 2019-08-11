@@ -224,12 +224,19 @@ let g:go_version_warning = 0
 
 let g:deoplete#enable_at_startup = 1
 
+" Completion {{{
+set completeopt=menuone,longest
+let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
+let g:SuperTabDefaultCompletionType = "context"
+" }}}
+
 " Register and load plugins {{{
 " See: https://github.com/junegunn/vim-plug
 call plug#begin()
 Plug 'bling/vim-airline'
 Plug 'dag/genshi.vim'
 Plug 'dag/vim-fish'
+Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 Plug 'hashivim/vim-terraform'
 Plug 'mrk21/yaml-vim'
