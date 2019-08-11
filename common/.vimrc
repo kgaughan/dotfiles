@@ -214,8 +214,6 @@ let g:riv_disable_folding = 1
 
 let python_highlight_all = 1
 
-let g:ale_completion_enabled = 1
-
 let g:terraform_align = 1
 let g:terraform_fmt_on_save = 1
 
@@ -224,33 +222,36 @@ let g:rustfmt_autosave = 1
 " Needed for some work stuff. *shrug*
 let g:go_version_warning = 0
 
+let g:deoplete#enable_at_startup = 1
+
 " Register and load plugins {{{
 " See: https://github.com/junegunn/vim-plug
 call plug#begin()
 Plug 'bling/vim-airline'
 Plug 'dag/genshi.vim'
+Plug 'dag/vim-fish'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 Plug 'hashivim/vim-terraform'
-Plug 'kien/ctrlp.vim'
 Plug 'mrk21/yaml-vim'
-Plug 'natw/keyboard_cat.vim'
-Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
+Plug 'mdempsky/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 Plug 'nvie/vim-flake8'
 Plug 'Raimondi/delimitMate'
 Plug 'rgrinberg/vim-ocaml'
-Plug 'Rykka/riv.vim'
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-surround'
 Plug 'vim-scripts/py-coverage'
-Plug 'w0rp/ale'
 Plug 'rust-lang/rust.vim'
-Plug 'dag/vim-fish'
 Plug 'vimscript/toml'
-
-Plug 'ervandew/supertab'
-if has('python') || has('python3')
-  "Plug 'davidhalter/jedi-vim'
-endif
 call plug#end()
+" }}}
+
+" Final configuration of plugins {{{
+call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })
 " }}}
