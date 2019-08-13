@@ -222,8 +222,6 @@ let g:rustfmt_autosave = 1
 " Needed for some work stuff. *shrug*
 let g:go_version_warning = 0
 
-let g:deoplete#enable_at_startup = 1
-
 " Completion {{{
 set completeopt=menuone,longest
 let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
@@ -239,26 +237,16 @@ Plug 'dag/vim-fish'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 Plug 'hashivim/vim-terraform'
-Plug 'mrk21/yaml-vim'
 Plug 'mdempsky/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
+Plug 'mrk21/yaml-vim'
 Plug 'nvie/vim-flake8'
+Plug 'psf/black'
 Plug 'Raimondi/delimitMate'
 Plug 'rgrinberg/vim-ocaml'
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
+Plug 'rust-lang/rust.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'vim-scripts/py-coverage'
-Plug 'rust-lang/rust.vim'
 Plug 'vimscript/toml'
 call plug#end()
-" }}}
-
-" Final configuration of plugins {{{
-call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })
 " }}}
