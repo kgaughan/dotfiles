@@ -240,7 +240,9 @@ Plug 'hashivim/vim-terraform'
 Plug 'mdempsky/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 Plug 'mrk21/yaml-vim'
 Plug 'nvie/vim-flake8'
-Plug 'psf/black'
+if has('python3')
+  Plug 'psf/black'
+endif
 Plug 'Raimondi/delimitMate'
 Plug 'rgrinberg/vim-ocaml'
 Plug 'rust-lang/rust.vim'
