@@ -123,6 +123,11 @@ au FileType groovy
 au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc,*.lsa,*.ini,*.rnc
   \ call ScrubTrailing()
 
+if has('python3')
+  autocmd BufWritePre *.py
+    \ execute ':Black'
+endif
+
 " Automatically give executable permissions
 au BufWritePost *.cgi,*.sh
 	\ call EnsureExecutable(expand("<afile>"))
