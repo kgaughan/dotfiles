@@ -50,7 +50,12 @@ test -e ~/.lynx.lss; and set -x LYNX_LSS ~/.lynx.lss
 
 if status is-interactive >/dev/null
 	alias dummy-mailer "python3 -m smtpd -n --class=DebuggingServer localhost:1025"
-	alias ed "ed -v -p '> '"
+	if command -sq ged
+		# On MacOS, the ed is so old that it lacks -v support, so use ged.
+		alias ed "ged -v -p '> '"
+	else
+		alias ed "ed -v -p '> '"
+	end
 	alias m $PAGER
 	alias h "fc -l"
 	alias j jobs
