@@ -24,4 +24,13 @@ there if you want instructions on how to use it.
 
 .. __: https://github.com/junegunn/vim-plug
 
+Notes
+=====
+
+I used to have a script called `findduplicates` here. I recommend either
+fdupes_ or duff_ these days instead, if you happend to use it.
+
+.. _fdupes: https://github.com/adrianlopezroche/fdupes
+.. _duff: http://duff.dreda.org/
+
 .. vim:set ft=rst:
