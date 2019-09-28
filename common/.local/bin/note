@@ -14,14 +14,15 @@
 test -d "${NOTES_DIR:=$HOME/.notes}" || mkdir -p "$NOTES_DIR"
 
 usage () {
-	if [ "x$1" != "x" ]; then
+	if test "x$1" != "x"; then
 		echo "Error: $1"
 		echo
 	fi
 	cat <<FIN
 Usage: ${0##*/} [-l|-r|-h] [YYYY-MM-DD]
 
-Arguments:
+Options:
+
   -l  List notes
   -r  Read note for given date (defaults to today)
 
@@ -36,8 +37,8 @@ list_notes () {
 }
 
 read_note () {
-	if [ ! -f "$NOTES_DIR/$1" ]; then
-		usage "No such note: $1" >/dev/stderr
+	if test ! -f "$NOTES_DIR/$1"; then
+		usage "No such note: $1" >&2
 		exit 1
 	fi
 	exec $PAGER "$NOTES_DIR/$1"
@@ -47,41 +48,34 @@ edit_note () {
 	exec ${EDITOR:-/usr/bin/vi} "$NOTES_DIR/$1"
 }
 
-args=$(getopt lrh: $*)
-if [ $? -ne 0 ]; then
-	usage >/dev/stderr
-	exit 2
-fi
-set -- $args
-
 cmd=edit_note
-while :; do
-	case "$1" in
-	-l)
+while getopts lrh flag; do
+	case "$flag" in
+	l)
 		cmd=list_notes
-		shift
 		;;
-	-r)
+	r)
 		cmd=read_note
-		shift
 		;;
-	-h)
+	h)
 		usage
-		exit 0
+		exit 2
 		;;
-	--)
-		shift
-		break
+	?)
+		usage "Bad option" >&2
+		exit 2
 		;;
 	esac
 done
 
-if [ "x$1" = "x" ]; then
+shift "$(($OPTIND - 1))"
+
+if test "x$1" = "x"; then
 	dt=$(date +%Y-%m-%d)
 elif echo "$1" | grep '^[1-9][0-9]\{3\}-[012][0-9]-[0-3][0-9]' >/dev/null; then
 	dt=$1
 else
-	usage "Error: date must be in the format YYYY-MM-DD" >/dev/stderr
+	usage "Error: date must be in the format YYYY-MM-DD" >&2
 	exit 2
 fi
 
