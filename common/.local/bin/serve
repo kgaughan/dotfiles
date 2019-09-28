@@ -24,6 +24,11 @@ __version__ = '0.1.2'
 
 USAGE = 'Usage: %s [-p<port>] [-d<dir>] [-t<title>]'
 
+# Hack to force it to serve UTF-8.
+m = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map
+m[''] = 'text/plain'
+m.update(dict((k, v + ';charset=UTF-8') for k, v in m.items()))
+
 
 def avahi_get(obj_path, iface):
     obj = dbus.SystemBus().get_object(avahi.DBUS_NAME, obj_path)
