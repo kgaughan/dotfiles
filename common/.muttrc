@@ -1,4 +1,0 @@
-source ~/.config/mutt.d/common.rc
-source ~/.muttrc.local
-source ~/.config/mutt.d/common.imap.rc
-source ~/.config/mutt.d/talideon-256.theme
