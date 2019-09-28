@@ -1,8 +1,0 @@
-#!/bin/sh
-
-setxkbmap ie &
-xcompmgr -c &
-conky &
-set-wallpaper &
-xrdb ~/.Xdefaults
-exec openbox
