@@ -179,6 +179,7 @@ def main():
     if args.add:
         if len(args.packages) > 1:
             parser.error('--add only works with a single package')
+        args.add = path.normpath(path.join(args.target, args.add))
         if not path.isfile(args.add):
             parser.error('no such file: {}'.format(args.add))
         add(args)
