@@ -17,18 +17,18 @@ set -q LIBDIRPATH; or set -x LIBDIRPATH /usr/local/lib /usr/lib /lib
 set -x LIBDIRPATH $LIBDIRPATH ~/.local/lib
 
 for i in most less more
-	if command -sq $i
+	if command -s $i
 		set -x PAGER (command -s $i)
 		break
 	end
-end
+end >/dev/null
 
 for i in vim vi
-	if command -sq $i
+	if command -s $i
 		set -x EDITOR (command -s $i)
 		break
 	end
-end
+end >/dev/null
 
 # golang
 set -x GOPATH ~/projects/go
@@ -50,12 +50,12 @@ test -e ~/.lynx.lss; and set -x LYNX_LSS ~/.lynx.lss
 
 if status is-interactive >/dev/null
 	alias dummy-mailer "python3 -m smtpd -n --class=DebuggingServer localhost:1025"
-	if command -sq ged
+	if command -s ged
 		# On MacOS, the ed is so old that it lacks -v support, so use ged.
 		alias ed "ged -v -p '> '"
 	else
 		alias ed "ed -v -p '> '"
-	end
+	end >/dev/null
 	alias m $PAGER
 	alias h "fc -l"
 	alias j jobs
@@ -72,11 +72,11 @@ if status is-interactive >/dev/null
 	# a common typo of mine
 	alias cd.. "cd .."
 	# make the ocaml repl usable
-	if command -sq ocaml; and command -sq ledit
+	if command -s ocaml; and command -s ledit
 		alias ocaml 'ledit ocaml'
-	end
+	end >/dev/null
 	# fun stuff
-	command -sq curl; and alias weather 'curl wttr.in/dublin'
+	command -s curl >/dev/null; and alias weather 'curl wttr.in/dublin'
 
 	# csh syntax is compatible enough with fish for this to work
 	if test -x /usr/bin/dircolors
@@ -96,11 +96,6 @@ if status is-interactive >/dev/null
 
 	if not set -q ANDROID_ROOT; and not set -q SSH_AUTH_SOCK
 		eval (ssh-agent -c >/dev/null)
-	end
-
-	if command -sq brew
-		# Commented out as this is so... very... slow...
-		#brew command command-not-found-init >/dev/null; and source (brew command-not-found-init)
 	end
 end
 
