@@ -99,6 +99,7 @@ if status is-interactive >/dev/null
 		alias $host "ssh -t $host.talideon.com s"
 	end
 	alias tilde "ssh -t tilde.host s"
+	alias sdf "ssh -t talideon@sdfeu.org"
 
 	if not set -q ANDROID_ROOT; and not set -q SSH_AUTH_SOCK
 		eval (ssh-agent -c >/dev/null)
