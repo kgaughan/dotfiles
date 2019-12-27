@@ -43,11 +43,11 @@ def main():
     for opt, arg in opts:
         if opt == "-s":
             if not os.path.isfile(arg):
-                usage("No such signature file: %s" % (arg,))
+                usage(f"No such signature file: {arg}")
             signature_path = arg
         elif opt == "-q":
             if not os.path.isfile(arg):
-                usage("No such quip file: %s" % (arg,))
+                usage(f"No such quip file: {arg}")
             quips_path = arg
 
     if signature_path is None and quips_path is None:

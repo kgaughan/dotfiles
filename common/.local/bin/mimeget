@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # mimeget
 # by Keith Gaughan <http://stereochro.me/>
@@ -72,8 +72,8 @@ Options:
 def usage(msg=None):
     hdl = sys.stdout if msg is None else sys.stderr
     if msg is not None:
-        print >> hdl, "Error: %s\n" % str(msg)
-    print >> hdl, USAGE.strip() % os.path.basename(sys.argv[0])
+        print("Error: %s\n" % str(msg), file=hdl)
+    print(USAGE.strip() % os.path.basename(sys.argv[0]), file=hdl)
     sys.exit(2)
 
 
@@ -83,7 +83,7 @@ def main():
             sys.argv[1:],
             'H:FBh',
             ['header=', 'first-only', 'body', 'help'])
-    except getopt.GetoptError, err:
+    except getopt.GetoptError as err:
         usage(err)
 
     headers = set()
@@ -100,7 +100,7 @@ def main():
         elif opt in ('-B', '--body'):
             body = True
         else:
-            usage('Unknown argument: "%s"' % opt)
+            usage(f'Unknown argument: "{opt}"')
 
     if len(args) != 1:
         usage('Specify one and only one message path.')
@@ -121,13 +121,13 @@ def main():
         dumped_header[canon_name] = True
 
         if body:
-            print "%s: %s" % (name, value)
+            print(f"{name}: {value}")
         else:
-            print value
+            print(value)
 
     if body:
         if len(headers) > 0:
-            print
+            print()
         # We use this because we don't want the trailing newline Python
         # shoves in with 'print'.
         sys.stdout.write(msg.get_payload())

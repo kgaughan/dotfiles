@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # fetchenclosures
 # by Keith Gaughan <http://stereochro.me/>
@@ -38,17 +38,16 @@ Fetches an RSS feed and saves its enclosures to a directory. Feed items
 can be excluded if they've already been fetched and/or by the item title.
 """
 
-from __future__ import with_statement
 from xml.dom import minidom
 from os import path
-import anydbm
+import dbm
 import errno
 import getopt
 import re
 import shutil
 import socket
 import sys
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 
 __all__ = ['fetch']
@@ -99,7 +98,7 @@ def parse_item(item, tags):
             if child.tagName == 'enclosure':
                 # Retro! NameNodeMap doesn't support 'in' properly, it
                 # seems.
-                if not child.attributes.has_key('url'):
+                if 'url' not in child.attributes:
                     continue
                 value = child.attributes['url'].value
             else:
@@ -139,13 +138,13 @@ def fetch(feed_url, directory, cache, patterns):
             if can_download(item):
                 fetch_enclosure(item['enclosure'], item['guid'],
                                 directory, cache)
-    except urllib2.HTTPError as err:
+    except urllib.error.HTTPError as err:
         # The server isn't happy, so don't bother.
         if err.code in (500, 502, 503, 504):
             return
         # Anything else, die loudly.
         raise
-    except urllib2.URLError as err:
+    except urllib.error.URLError as err:
         err_code, _ = err.reason
         # If it times out or is unreachable, we don't care: we just try again
         # later.
@@ -159,9 +158,9 @@ def open_url(url):
     """
     Open a URL. Mindblowing, I know.
     """
-    request = urllib2.Request(url)
+    request = urllib.request.Request(url)
     request.add_header('User-Agent', 'fetchenclosures/1.0')
-    return urllib2.urlopen(request)
+    return urllib.request.urlopen(request)
 
 
 def usage(message=None):
@@ -173,9 +172,9 @@ def usage(message=None):
     if message:
         fd = sys.stderr
         exit_code = 2
-        print >> fd, str(message)
+        print(str(message), file=fd)
     name = path.basename(sys.argv[0])
-    print >> fd, USAGE % (name,)
+    print(USAGE % (name,), file=fd)
     sys.exit(exit_code)
 
 
@@ -201,7 +200,7 @@ def main():
         elif opt == '-h':
             usage()
         else:
-            usage('Unknown flag: %s' % opt)
+            usage(f'Unknown flag: {opt}')
 
     if feed_url is None:
         usage('No feed url (-f) supplied.')
@@ -209,9 +208,9 @@ def main():
     if directory is None:
         usage('No destination directory (-d) supplied.')
     if not path.isdir(directory):
-        usage('Bad destination directory path: %s' % directory)
+        usage(f'Bad destination directory path: {directory}')
 
-    cache = {} if cache_path is None else anydbm.open(cache_path, 'c')
+    cache = {} if cache_path is None else dbm.open(cache_path, 'c')
 
     fetch(feed_url, directory, cache, exclusion_patterns)
 

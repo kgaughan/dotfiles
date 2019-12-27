@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Serves a directory over HTTP and publishes itself via DNS-SD.
 """
@@ -6,8 +6,8 @@ Serves a directory over HTTP and publishes itself via DNS-SD.
 
 import getopt
 import os
-import SimpleHTTPServer
-import SocketServer
+import http.server
+import socketserver
 import sys
 from os import path
 
@@ -25,7 +25,7 @@ __version__ = '0.1.2'
 USAGE = 'Usage: %s [-p<port>] [-d<dir>] [-t<title>]'
 
 # Hack to force it to serve UTF-8.
-m = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map
+m = http.server.SimpleHTTPRequestHandler.extensions_map
 m[''] = 'text/plain'
 m.update(dict((k, v + ';charset=UTF-8') for k, v in m.items()))
 
@@ -50,15 +50,15 @@ def avahi_add_service(group, svc_type, port, name='', txt_records=None):
 
 
 def serve(port, title):
-    httpd = SocketServer.TCPServer(
+    httpd = socketserver.TCPServer(
         ('', port),
-        SimpleHTTPServer.SimpleHTTPRequestHandler)
+        http.server.SimpleHTTPRequestHandler)
 
     _, port = httpd.server_address
-    print "Starting server on port %s..." % port
+    print(f"Starting server on port {port}...")
 
     if has_avahi:
-        print "Registering with Avahi as '%s'" % title
+        print(f"Registering with Avahi as '{title}'")
         group = avahi_make_entry_group()
         avahi_add_service(group, '_http._tcp', port, title)
         group.Commit()
@@ -66,7 +66,7 @@ def serve(port, title):
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
-        print "Shut down."
+        print("Shut down.")
 
 
 def usage(message=None):
@@ -78,16 +78,16 @@ def usage(message=None):
     if message:
         fd = sys.stderr
         exit_code = 2
-        print >> fd, str(message)
+        print(str(message), file=fd)
     name = path.basename(sys.argv[0])
-    print >> fd, USAGE % (name,)
+    print(USAGE % (name,), file=fd)
     sys.exit(exit_code)
 
 
 def main():
     try:
         opts, _ = getopt.getopt(sys.argv[1:], 'p:d:t:h')
-    except getopt.GetoptError, err:
+    except getopt.GetoptError as err:
         usage(err)
 
     port = 0
@@ -96,17 +96,17 @@ def main():
         if opt == '-p':
             port = int(val)
             if 0 > port >= 65536:
-                usage("Bad port number: %d" % port)
+                usage(f"Bad port number: {port}")
         elif opt == '-t' and len(val) > 0:
             title = val
         elif opt == '-d':
             if not path.isdir(val):
-                usage("Bad directory path: '%s'" % val)
+                usage(f"Bad directory path: '{val}'")
             os.chdir(val)
         elif opt == '-h':
             usage()
         else:
-            usage("Unknown flag: %s" % opt)
+            usage(f"Unknown flag: {opt}")
 
     serve(port, title)
 
