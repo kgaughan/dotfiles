@@ -38,25 +38,22 @@ Fetches an RSS feed and saves its enclosures to a directory. Feed items
 can be excluded if they've already been fetched and/or by the item title.
 """
 
-from xml.dom import minidom
-from os import path
 import dbm
 import errno
 import getopt
+from os import path
 import re
 import shutil
 import socket
 import sys
-import urllib.request, urllib.error, urllib.parse
+from urllib import request, error, parse
+from xml.dom import minidom
 
 
-__all__ = ['fetch']
+__version__ = "0.1.1"
 
 
-__version__ = '0.1.1'
-
-
-USAGE = 'Usage: %s [-h] -f<url> -f<dir> [-c<cachedb>] [-e<regex>]*'
+USAGE = "Usage: %s [-h] -f<url> -f<dir> [-c<cachedb>] [-e<regex>]*"
 
 
 def get_enclosure_filename(enclosure, disposition):
@@ -66,7 +63,7 @@ def get_enclosure_filename(enclosure, disposition):
     """
     filename = None
     if disposition is not None:
-        parts = disposition.split('=', 1)
+        parts = disposition.split("=", 1)
         if len(parts) == 2:
             _, filename = parts
     if filename is None:
@@ -95,24 +92,23 @@ def parse_item(item, tags):
     result = {}
     for child in children(item, (item.ELEMENT_NODE,)):
         if child.tagName in tags:
-            if child.tagName == 'enclosure':
+            if child.tagName == "enclosure":
                 # Retro! NameNodeMap doesn't support 'in' properly, it
                 # seems.
-                if 'url' not in child.attributes:
+                if "url" not in child.attributes:
                     continue
-                value = child.attributes['url'].value
+                value = child.attributes["url"].value
             else:
                 value = child.firstChild.data
-            result[child.tagName] = value.encode('utf8')
+            result[child.tagName] = value.encode("utf8")
     return result
 
 
 def fetch_enclosure(url, guid, directory, cache):
     fsrc = open_url(url)
-    filename = get_enclosure_filename(
-        url, fsrc.info().getheader('content-disposition'))
+    filename = get_enclosure_filename(url, fsrc.info().getheader("content-disposition"))
     cache[guid] = filename
-    with open(path.join(directory, filename), 'w') as fdst:
+    with open(path.join(directory, filename), "w") as fdst:
         shutil.copyfileobj(fsrc, fdst)
 
 
@@ -123,28 +119,30 @@ def fetch(feed_url, directory, cache, patterns):
     pattern.
     """
     compiled_patterns = [re.compile(pattern) for pattern in patterns]
+
     def excluded(title):
         return any(pattern.search(title) for pattern in compiled_patterns)
 
     def can_download(item):
-        return 'enclosure' in item and \
-            item['guid'] not in cache and \
-            not excluded(item['title'])
+        return (
+            "enclosure" in item
+            and item["guid"] not in cache
+            and not excluded(item["title"])
+        )
 
     try:
         ffeed = open_url(feed_url)
-        for elem in minidom.parse(ffeed).getElementsByTagName('item'):
-            item = parse_item(elem, ('title', 'guid', 'enclosure'))
+        for elem in minidom.parse(ffeed).getElementsByTagName("item"):
+            item = parse_item(elem, ("title", "guid", "enclosure"))
             if can_download(item):
-                fetch_enclosure(item['enclosure'], item['guid'],
-                                directory, cache)
-    except urllib.error.HTTPError as err:
+                fetch_enclosure(item["enclosure"], item["guid"], directory, cache)
+    except error.HTTPError as err:
         # The server isn't happy, so don't bother.
         if err.code in (500, 502, 503, 504):
             return
         # Anything else, die loudly.
         raise
-    except urllib.error.URLError as err:
+    except error.URLError as err:
         err_code, _ = err.reason
         # If it times out or is unreachable, we don't care: we just try again
         # later.
@@ -158,9 +156,9 @@ def open_url(url):
     """
     Open a URL. Mindblowing, I know.
     """
-    request = urllib.request.Request(url)
-    request.add_header('User-Agent', 'fetchenclosures/1.0')
-    return urllib.request.urlopen(request)
+    request = request.Request(url)
+    request.add_header("User-Agent", "fetchenclosures/1.0")
+    return request.urlopen(request)
 
 
 def usage(message=None):
@@ -180,7 +178,7 @@ def usage(message=None):
 
 def main():
     try:
-        opts, _ = getopt.getopt(sys.argv[1:], 'f:d:c:e:h')
+        opts, _ = getopt.getopt(sys.argv[1:], "f:d:c:e:h")
     except getopt.GetoptError as err:
         usage(err)
 
@@ -189,31 +187,31 @@ def main():
     cache_path = None
     exclusion_patterns = []
     for opt, val in opts:
-        if opt == '-f':
+        if opt == "-f":
             feed_url = val
-        elif opt == '-d':
+        elif opt == "-d":
             directory = val
-        elif opt == '-c':
+        elif opt == "-c":
             cache_path = val
-        elif opt == '-e':
+        elif opt == "-e":
             exclusion_patterns.append(val)
-        elif opt == '-h':
+        elif opt == "-h":
             usage()
         else:
-            usage(f'Unknown flag: {opt}')
+            usage(f"Unknown flag: {opt}")
 
     if feed_url is None:
-        usage('No feed url (-f) supplied.')
+        usage("No feed url (-f) supplied.")
 
     if directory is None:
-        usage('No destination directory (-d) supplied.')
+        usage("No destination directory (-d) supplied.")
     if not path.isdir(directory):
-        usage(f'Bad destination directory path: {directory}')
+        usage(f"Bad destination directory path: {directory}")
 
-    cache = {} if cache_path is None else dbm.open(cache_path, 'c')
+    cache = {} if cache_path is None else dbm.open(cache_path, "c")
 
     fetch(feed_url, directory, cache, exclusion_patterns)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

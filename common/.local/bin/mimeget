@@ -37,10 +37,10 @@
 Extracts information from MIME messages.
 """
 
-import sys
-import os.path
-import getopt
 import email
+import getopt
+import os.path
+import sys
 
 
 USAGE = """
@@ -80,9 +80,8 @@ def usage(msg=None):
 def main():
     try:
         opts, args = getopt.getopt(
-            sys.argv[1:],
-            'H:FBh',
-            ['header=', 'first-only', 'body', 'help'])
+            sys.argv[1:], "H:FBh", ["header=", "first-only", "body", "help"]
+        )
     except getopt.GetoptError as err:
         usage(err)
 
@@ -91,24 +90,24 @@ def main():
     first_only = False
 
     for opt, arg in opts:
-        if opt in ('-h', '--help'):
+        if opt in ("-h", "--help"):
             usage()
-        elif opt in ('-H', '--header'):
+        elif opt in ("-H", "--header"):
             headers.add(arg.lower())
-        elif opt in ('-F', '--first-only'):
+        elif opt in ("-F", "--first-only"):
             first_only = True
-        elif opt in ('-B', '--body'):
+        elif opt in ("-B", "--body"):
             body = True
         else:
             usage(f'Unknown argument: "{opt}"')
 
     if len(args) != 1:
-        usage('Specify one and only one message path.')
+        usage("Specify one and only one message path.")
 
     if not os.path.isfile(args[0]):
-        usage('You must provide a valid file path.')
+        usage("You must provide a valid file path.")
 
-    with open(args[0], 'r') as fh:
+    with open(args[0], "r") as fh:
         msg = email.message_from_file(fh)
 
     dumped_header = {}
@@ -133,5 +132,5 @@ def main():
         sys.stdout.write(msg.get_payload())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

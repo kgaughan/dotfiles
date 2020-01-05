@@ -26,8 +26,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-
-
 import argparse
 import fnmatch
 import os
@@ -42,10 +40,9 @@ def add(args):
     file_path = path.realpath(args.add)
     package = path.realpath(args.packages[0])
     if path.commonprefix([target, file_path]) != target:
-        print('error: "{}" not under "{}"'.format(args.add, args.target),
-              file=sys.stderr)
+        print(f"error: '{args.add}' not under '{args.target}'", file=sys.stderr)
         sys.exit(1)
-    rest = file_path[len(target)+1:]
+    rest = file_path[len(target) + 1:]
     dest_path = path.join(package, rest)
     dest = path.dirname(dest_path)
     if not path.exists(dest):
@@ -63,18 +60,15 @@ def add(args):
 def install(args, is_excluded):
     for package in args.packages:
         if not path.isdir(package):
-            print('no such package: {}; skipping'.format(package),
-                  file=sys.stderr)
+            print(f"no such package: {package}; skipping", file=sys.stderr)
             continue
         for root, _, files in os.walk(package):
-            files = [filename
-                     for filename in files
-                     if not is_excluded(filename)]
+            files = [filename for filename in files if not is_excluded(filename)]
             if len(files) == 0:
                 continue
-            rest = root[len(package)+1:]
+            rest = root[len(package) + 1:]
             dest = path.join(args.target, rest)
-            if rest != '':
+            if rest != "":
                 if args.verbose:
                     print("DIR", dest)
                 if not args.dry_run and not os.path.exists(dest):
@@ -100,18 +94,15 @@ def uninstall(args, is_excluded):
     dirs = []
     for package in args.packages:
         if not path.isdir(package):
-            print('no such package: {}; skipping'.format(package),
-                  file=sys.stderr)
+            print(f"no such package: {package}; skipping", file=sys.stderr)
             continue
         for root, _, files in os.walk(package):
-            files = [filename
-                     for filename in files
-                     if not is_excluded(filename)]
+            files = [filename for filename in files if not is_excluded(filename)]
             if len(files) == 0:
                 continue
-            rest = root[len(package)+1:]
+            rest = root[len(package) + 1:]
             dest = path.join(args.target, rest)
-            if rest != '':
+            if rest != "":
                 dirs.append(dest)
             for filename in files:
                 dest_path = path.join(dest, filename)
@@ -139,49 +130,56 @@ def uninstall(args, is_excluded):
 
 
 def make_argparser():
-    parser = argparse.ArgumentParser(description='A symlink farm manager.')
-    parser.add_argument('--verbose', '-v',
-                        action='store_true',
-                        help='Verbose output')
-    parser.add_argument('--target', '-t',
-                        default=os.curdir,
-                        help='Target directory in which to place symlinks')
-    parser.add_argument('--exclude', '-x',
-                        action='append', default=[],
-                        metavar='GLOB',
-                        help="Glob pattern of files to exclude")
-    parser.add_argument('--dry-run', '-n',
-                        action='store_true',
-                        help='Dry run.')
+    parser = argparse.ArgumentParser(description="A symlink farm manager.")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
+    parser.add_argument(
+        "--target",
+        "-t",
+        default=os.curdir,
+        help="Target directory in which to place symlinks",
+    )
+    parser.add_argument(
+        "--exclude",
+        "-x",
+        action="append",
+        default=[],
+        metavar="GLOB",
+        help="Glob pattern of files to exclude",
+    )
+    parser.add_argument("--dry-run", "-n", action="store_true", help="Dry run.")
 
     group = parser.add_mutually_exclusive_group(required=False)
-    group.add_argument('--uninstall', '-D',
-                       action='store_false', dest='install',
-                       help='Uninstall symlinks')
-    group.add_argument('--add', '-a',
-                       metavar='FILE',
-                       help='Stow files in a particular package')
+    group.add_argument(
+        "--uninstall",
+        "-D",
+        action="store_false",
+        dest="install",
+        help="Uninstall symlinks",
+    )
+    group.add_argument(
+        "--add", "-a", metavar="FILE", help="Stow files in a particular package"
+    )
 
-    parser.add_argument('packages', metavar='PACKAGE', nargs='+',
-                        help='Packages to install')
+    parser.add_argument(
+        "packages", metavar="PACKAGE", nargs="+", help="Packages to install"
+    )
     return parser
 
 
 def main():
     parser = make_argparser()
     args = parser.parse_args()
-    exclude = [re.compile(fnmatch.translate(pattern))
-               for pattern in args.exclude]
+    exclude = [re.compile(fnmatch.translate(pattern)) for pattern in args.exclude]
 
     def is_excluded(filename):
         return any(pattern.match(filename) for pattern in exclude)
 
     if args.add:
         if len(args.packages) > 1:
-            parser.error('--add only works with a single package')
+            parser.error("--add only works with a single package")
         args.add = path.normpath(path.join(args.target, args.add))
         if not path.isfile(args.add):
-            parser.error('no such file: {}'.format(args.add))
+            parser.error(f"no such file: {args.add}")
         add(args)
     elif args.install:
         install(args, is_excluded)
@@ -189,5 +187,5 @@ def main():
         uninstall(args, is_excluded)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

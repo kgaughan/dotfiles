@@ -9,7 +9,6 @@ import os
 import http.server
 import socketserver
 import sys
-from os import path
 
 try:
     import avahi
@@ -19,15 +18,15 @@ except:
     has_avahi = False
 
 
-__version__ = '0.1.2'
+__version__ = "0.1.2"
 
 
-USAGE = 'Usage: %s [-p<port>] [-d<dir>] [-t<title>]'
+USAGE = "Usage: %s [-p<port>] [-d<dir>] [-t<title>]"
 
 # Hack to force it to serve UTF-8.
 m = http.server.SimpleHTTPRequestHandler.extensions_map
-m[''] = 'text/plain'
-m.update(dict((k, v + ';charset=UTF-8') for k, v in m.items()))
+m[""] = "text/plain"
+m.update(dict((k, v + ";charset=UTF-8") for k, v in list(m.items())))
 
 
 def avahi_get(obj_path, iface):
@@ -36,23 +35,28 @@ def avahi_get(obj_path, iface):
 
 
 def avahi_make_entry_group():
-    svr = avahi_get('/', avahi.DBUS_INTERFACE_SERVER)
+    svr = avahi_get("/", avahi.DBUS_INTERFACE_SERVER)
     return avahi_get(svr.EntryGroupNew(), avahi.DBUS_INTERFACE_ENTRY_GROUP)
 
 
-def avahi_add_service(group, svc_type, port, name='', txt_records=None):
+def avahi_add_service(group, svc_type, port, name="", txt_records=None):
     if txt_records is None:
         txt_records = []
     group.AddService(
-        avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, dbus.UInt32(0),
-        name, svc_type, '', '', dbus.UInt16(port),
-        txt_records)
+        avahi.IF_UNSPEC,
+        avahi.PROTO_UNSPEC,
+        dbus.UInt32(0),
+        name,
+        svc_type,
+        "",
+        "",
+        dbus.UInt16(port),
+        txt_records,
+    )
 
 
 def serve(port, title):
-    httpd = socketserver.TCPServer(
-        ('', port),
-        http.server.SimpleHTTPRequestHandler)
+    httpd = socketserver.TCPServer(("", port), http.server.SimpleHTTPRequestHandler)
 
     _, port = httpd.server_address
     print(f"Starting server on port {port}...")
@@ -60,7 +64,7 @@ def serve(port, title):
     if has_avahi:
         print(f"Registering with Avahi as '{title}'")
         group = avahi_make_entry_group()
-        avahi_add_service(group, '_http._tcp', port, title)
+        avahi_add_service(group, "_http._tcp", port, title)
         group.Commit()
 
     try:
@@ -78,32 +82,32 @@ def usage(message=None):
     if message:
         fd = sys.stderr
         exit_code = 2
-        print(str(message), file=fd)
-    name = path.basename(sys.argv[0])
+        print(message, file=fd)
+    name = os.path.basename(sys.argv[0])
     print(USAGE % (name,), file=fd)
     sys.exit(exit_code)
 
 
 def main():
     try:
-        opts, _ = getopt.getopt(sys.argv[1:], 'p:d:t:h')
+        opts, _ = getopt.getopt(sys.argv[1:], "p:d:t:h")
     except getopt.GetoptError as err:
         usage(err)
 
     port = 0
-    title = 'Shared directory'
+    title = "Shared directory"
     for opt, val in opts:
-        if opt == '-p':
+        if opt == "-p":
             port = int(val)
             if 0 > port >= 65536:
                 usage(f"Bad port number: {port}")
-        elif opt == '-t' and len(val) > 0:
+        elif opt == "-t" and len(val) > 0:
             title = val
-        elif opt == '-d':
-            if not path.isdir(val):
+        elif opt == "-d":
+            if not os.path.isdir(val):
                 usage(f"Bad directory path: '{val}'")
             os.chdir(val)
-        elif opt == '-h':
+        elif opt == "-h":
             usage()
         else:
             usage(f"Unknown flag: {opt}")
@@ -111,5 +115,5 @@ def main():
     serve(port, title)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
