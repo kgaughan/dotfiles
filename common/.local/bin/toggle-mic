@@ -1,0 +1,5 @@
+#!/bin/sh
+#
+# Gross script for toggling the default sound source.
+#
+pactl set-source-mute $(pactl info | grep "Default Source" | cut -f2 -d:) toggle

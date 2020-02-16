@@ -24,6 +24,21 @@ there if you want instructions on how to use it.
 
 .. __: https://github.com/junegunn/vim-plug
 
+Fish plugins
+============
+
+I use fisher__ for managing fish plugins.
+
+.. __: https://raw.githubusercontent.com/jorgebucaran/fisher/
+
+To fetch the most recent version of fisher::
+
+    make fetch-fisher
+
+To fetch the plugins::
+
+    fisher add evanlucas/fish-kubectl-completions
+
 Notes
 =====
 

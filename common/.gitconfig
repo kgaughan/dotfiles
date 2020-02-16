@@ -64,6 +64,7 @@
 	trustctime = false
 	editor = vim
 	pager = less -F
+	autocrlf = input
 [status]
 	submoduleSummary = true
 [include]

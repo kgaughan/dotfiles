@@ -7,6 +7,10 @@ install:
 uninstall:
 	$(STOW) -D -t "${HOME}" $(PACKAGE)
 
+fetch-fisher:
+	curl https://raw.githubusercontent.com/jorgebucaran/fisher/master/fisher.fish -o common/.config/fish/functions/fisher.fish
+
 reinstall: uninstall install
 
 .PHONY: install uninstall reinstall
+.PHONY: fetch-fisher
