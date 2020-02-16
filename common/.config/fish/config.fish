@@ -104,6 +104,8 @@ if status is-interactive >/dev/null
 	if not set -q ANDROID_ROOT; and not set -q SSH_AUTH_SOCK
 		eval (ssh-agent -c)
 	end >/dev/null
+
+	command -s opam >/dev/null; and eval (opam env)
 end
 
 # Local config under version control.
