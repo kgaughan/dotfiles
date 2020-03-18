@@ -42,12 +42,12 @@ vmap Q gq
 nmap Q gqap
 
 if has("gui_running")
-  set guioptions-=lLbrRtT
-  set toolbariconsize=tiny
+  set guioptions-=m
+  set guioptions-=T
   if has("gui_macvim")
-    set guifont=Inconsolata:h10
+    set guifont=Inconsolata:h9
   else
-    set guifont=Inconsolata\ 10
+    set guifont=Inconsolata\ 9
   endif
 endif
 
