@@ -62,7 +62,7 @@ def install(args, is_excluded):
         if not path.isdir(package):
             print(f"no such package: {package}; skipping", file=sys.stderr)
             continue
-        for root, _, files in os.walk(package):
+        for root, _, files in os.walk(package, followlinks=True):
             files = [filename for filename in files if not is_excluded(filename)]
             if len(files) == 0:
                 continue
@@ -96,7 +96,7 @@ def uninstall(args, is_excluded):
         if not path.isdir(package):
             print(f"no such package: {package}; skipping", file=sys.stderr)
             continue
-        for root, _, files in os.walk(package):
+        for root, _, files in os.walk(package, followlinks=True):
             files = [filename for filename in files if not is_excluded(filename)]
             if len(files) == 0:
                 continue
