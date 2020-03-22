@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -e
+
+if ! command -v apt >/dev/null && ! command -v pkg >/dev/null; then
+	echo "Can't find a package manager" >&2
+	exit 2
+fi
+
+if test "$(id -u)" -eq 0; then
+	if command -v apt >/dev/null; then
+		apt update && apt upgrade && apt autoremove
+	elif command -v pkg >/dev/null && command -v freebsd-version >/dev/null; then
+		pkg update && pkg upgrade && pkg autoremove && pkg clean
+	fi
+else
+	echo Switching to root... >&2
+	exec sudo $0 "$@"
+fi
