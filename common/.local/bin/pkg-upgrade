@@ -2,9 +2,21 @@
 
 set -e
 
-if ! command -v apt >/dev/null && ! command -v pkg >/dev/null; then
+has_pkg_manager () {
+	for name in apt pkg brew; do
+		command -v $name >/dev/null && return 0
+	done
+	return 1
+}
+
+if ! has_pkg_manager; then
 	echo "Can't find a package manager" >&2
 	exit 2
+fi
+
+if command -v brew >/dev/null; then
+	brew update && brew upgrade && brew cask upgrade && brew cleanup
+	exit 0
 fi
 
 if test "$(id -u)" -eq 0; then
