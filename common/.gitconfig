@@ -5,7 +5,7 @@
 	branch = auto
 	diff = auto
 	status = auto
-	ui = true
+	ui = auto
 [color "branch"]
 	current = yellow reverse
 	local = yellow
@@ -19,6 +19,9 @@
 	added = yellow
 	changed = green
 	untracked = cyan
+[color "grep"]
+	filename = bold green
+	match = black yellow
 [alias]
 	ci = commit
 	co = checkout
@@ -33,7 +36,7 @@
 	unstage = reset HEAD --
 	dc = diff --cached
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
-	uncommit = reset --soft 'HEAD^'
+	uncommit = !"!f () { git reset --soft \"HEAD~${1:-1}\"; }; f"
 	aggressive = !"git fsck --unreachable; git reflog expire --expire=0 --all; git repack -a -d -l; git prune; git gc --aggressive"
 	pull-all = !"git pull --recurse-submodules --rebase && git submodule update --init --recursive"
 	rebase-against-master = !"git checkout master && git pull --rebase && git checkout @{-1} && git rebase master"
@@ -41,18 +44,24 @@
 	merge-into-master = !"git checkout master && git merge @{-1}"
 	diff-master = diff -D master...
 	sync-submodules = submodule update --init --recursive
+	show-last = log -n 1 -p
+	# List remote branches
+	lrb = !"f () { git ls-remote --heads \"${1:-origin}\"; }; f"
 [credential]
 	helper = cache --timeout=3600
 [merge]
 	tool = vimdiff
 	conflictstyle = diff3
+	ff = only
 [mergetool]
 	prompt = false
 	keeptemporaries = false
 	keepbackups = false
 [diff]
 	tool = vimdiff
-	algorithm = patience
+	algorithm = histogram
+	renames = copies
+	colorMoved = dimmed-zebra
 [difftool]
 	prompt = false
 [http]
@@ -65,7 +74,18 @@
 	editor = vim
 	pager = less -F
 	autocrlf = input
+[branch]
+	autoSetupMerge = always
+[rebase]
+	autoStash = true
+[rerere]
+	enabled = true
 [status]
+	showStash = true
+	showUntrackedFiles = all
 	submoduleSummary = true
+[fetch]
+	prune = true
+	pruneTags = true
 [include]
 	path = ~/.gitconfig.local
