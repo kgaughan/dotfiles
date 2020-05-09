@@ -5,9 +5,7 @@ set fish_help_browser w3m
 # file permissions: rwxr-xr-x
 umask 022
 
-for dir in /usr/{local,pkg}/{sbin,bin} \
-		   ~/Library/Python/3.7/bin \
-		   ~/.local/bin
+for dir in /usr/{local,pkg}/{sbin,bin} ~/.local/bin
 	if not contains $dir $PATH; and test -d $dir
 		set -x PATH $dir $PATH
 	end
@@ -93,13 +91,6 @@ if status is-interactive >/dev/null
 	else
 		alias ls "ls -F"
 	end
-
-	# Quickly SSH into an a server.
-	for host in eimhir lir manann
-		alias $host "ssh -t $host.talideon.com s"
-	end
-	alias tilde "ssh -t tilde.host s"
-	alias sdf "ssh -t talideon@sdfeu.org"
 
 	if not set -q ANDROID_ROOT; and not set -q SSH_AUTH_SOCK
 		eval (ssh-agent -c)
