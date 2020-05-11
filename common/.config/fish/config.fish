@@ -37,12 +37,6 @@ if not set -q XDG_CACHE_HOME
 	set -x XDG_CACHE_HOME ~/.cache
 end
 
-# python completion
-if test -e ~/.local/share/python/pythonstartup.py
-	set -x PYTHONSTARTUP ~/.local/share/python/pythonstartup.py
-	set -x PYTHON_HISTORY_FILE $XDG_CACHE_HOME/python_history
-end
-
 # lynx style sheet
 test -e ~/.lynx.lss; and set -x LYNX_LSS ~/.lynx.lss
 
