@@ -61,7 +61,7 @@
 	tool = vimdiff
 	algorithm = histogram
 	renames = copies
-	colorMoved = dimmed-zebra
+	colorMoved = dimmed_zebra
 [difftool]
 	prompt = false
 [http]
