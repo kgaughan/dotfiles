@@ -38,7 +38,7 @@ if not set -q XDG_CACHE_HOME
 end
 
 # lynx style sheet
-test -e ~/.lynx.lss; and set -x LYNX_LSS ~/.lynx.lss
+set -x LYNX_LSS ~/.config/lynx.lss
 
 if status is-interactive >/dev/null
 	alias dummy-mailer "python3 -m smtpd -n --class=DebuggingServer localhost:1025"

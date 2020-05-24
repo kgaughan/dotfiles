@@ -10,14 +10,12 @@ URxvt.depth:                32
 URxvt.transparent:          false
 URxvt.saveLines:            50
 URxvt.internalBorder:       1
-URxvt.lineSpace:            0
+URxvt.lineSpace:            1
 
 ! Fonts
-URxvt.allow_bold:           true
-URxvt*font:                 -*-clean-medium-r-*-*-12-*-*-*-*-*-*-*
-URxvt*boldFont:             -*-clean-bold-r-*-*-12-*-*-*-*-*-*-*
-!URxvt*font:                 xft:Inconsolata:pixelsize=11
-!URxvt*boldFont:             xft:Inconsolata Bold:pixelsize=11
+URxvt.allow_bold:           false
+URxvt*font:                 -*-terminus-medium-r-*-*-*-*-*-*-*-*-iso10646-1
+URxvt*boldFont:             -*-terminus-bold-r-*-*-*-*-*-*-*-*-iso10646-1
 
 URxvt*letterSpace: 0
 
@@ -38,7 +36,6 @@ URxvt.pointerBlank:         true
 *background: #002b36
 *foreground: #657b83
 *fadeColor: #002b36
-*cursorColor: #93a1a1
 
 !! black dark/light
 *color0: #073642
