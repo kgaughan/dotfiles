@@ -90,9 +90,9 @@ if status is-interactive >/dev/null
 		eval (ssh-agent -c)
 	end >/dev/null
 
-	# Opam sets MANPATH, which prevents man from working properly without this
-	# fix. By prepending ':', it ensures the global manfiles are still searched.
-	command -s opam >/dev/null; and eval (opam env | sed "s/MANPATH '\//MANPATH ':\//")
+	if command -s opam >/dev/null; and test -e ~/.opam/opam-init/init.fish
+		source ~/.opam/opam-init/init.fish >/dev/null 2>&1
+	end
 end
 
 # Local config under version control.
