@@ -3,6 +3,7 @@ Xft.antialias: true
 Xft.rgba:      rgb
 Xft.hinting:   true
 Xft.hintstyle: hintslight
+Xft.autohint:  false
 
 ! XTerm settings
 
@@ -10,6 +11,16 @@ UXTerm.termName: xterm-256color
 UXTerm*locale:   true
 UXTerm*faceName: xft:Inconsolata
 UXTerm*faceSize: 9
+
+URxvt.termName: xterm-256color
+URxvt*locale:   true
+URxvt*font:     -*-terminus-medium-r-*-*-*-*-*-*-*-*-iso10646-1
+URxvt*boldFont: -*-terminus-bold-r-*-*-*-*-*-*-*-*-iso10646-1
+!URxvt*font:     xft:Inconsolata:pixelsize=11
+!URxvt*boldFont: xft:Inconsolata Bold:pixelsize=11
+
+URxvt*scrollStyle: rxvt
+URxvt*scrollBar:   false
 
 ! Source http://github.com/altercation/solarized
 
