@@ -89,3 +89,5 @@
 	pruneTags = true
 [include]
 	path = ~/.gitconfig.local
+[pull]
+	ff = only
