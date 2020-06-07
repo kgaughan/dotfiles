@@ -1,6 +1,7 @@
 " General Configuration {{{
 set nocompatible " Get rid of VI-isms.
 set nobackup
+set noswapfile
 set tenc=utf-8
 " }}}
 
@@ -41,10 +42,10 @@ filetype indent plugin on
 vmap Q gq
 nmap Q gqap
 
-if has("gui_running")
+if has('gui_running')
   set guioptions-=m
   set guioptions-=T
-  if has("gui_macvim")
+  if has('gui_macvim')
     set guifont=Inconsolata:h9
   else
     set guifont=Inconsolata\ 9
@@ -53,7 +54,7 @@ endif
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
+if &t_Co > 2 || has('gui_running')
   set hlsearch
   set background=dark
   let g:solarized_termtrans = 1
@@ -132,14 +133,14 @@ endif
 
 " Automatically give executable permissions
 au BufWritePost *.cgi,*.sh
-	\ call EnsureExecutable(expand("<afile>"))
+  \ call EnsureExecutable(expand('<afile>'))
 
 " When editing a file, always jump to the last known cursor position.
 " Don't do it when the position is invalid or when inside an event handler
 " (happens when dropping a file on gvim).
 au BufReadPost *
-  \ if line("'\"") > 0 && line("'\"") <= line("$") |
-  \   exe "normal g`\"" |
+  \ if line("'\"") > 0 && line("'\"") <= line('$') |
+  \   exe 'normal g`"' |
   \ endif
 
 augroup END
@@ -192,7 +193,7 @@ endfunction
 function! EnsureExecutable(f)
   if filewritable(a:f) && !executable(a:f)
     " This is horribly inadequate.
-    call system("chmod a+x " . escape(a:f, ' \'))
+    call system('chmod a+x ' . escape(a:f, ' \'))
   endif
 endfunction
 
@@ -201,10 +202,8 @@ endfunction
 set pastetoggle=<F11>
 
 " Insert timestamp
-nmap <F3> A<C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR><Esc>
-imap <F3> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
-
-let g:py_coverage_bin = 'python-coverage'
+nmap <F3> A<C-R>=strftime('%Y-%m-%d %H:%M:%S')<CR><Esc>
+imap <F3> <C-R>=strftime('%Y-%m-%d %H:%M:%S')<CR>
 
 " airline config
 let g:airline_theme = 'dark'
@@ -230,21 +229,19 @@ let g:rustfmt_autosave = 1
 let g:go_version_warning = 0
 
 " Completion {{{
-set completeopt=menuone,longest
-let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
-let g:SuperTabDefaultCompletionType = "context"
+set completeopt=preview,menuone,longest
+let g:SuperTabDefaultCompletionType = '<C-X><C-O>'
+let g:SuperTabDefaultCompletionType = 'context'
 " }}}
 
 " Register and load plugins {{{
 " See: https://github.com/junegunn/vim-plug
 call plug#begin()
 Plug 'bling/vim-airline'
-Plug 'dag/genshi.vim'
 Plug 'dag/vim-fish'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 Plug 'hashivim/vim-terraform'
-Plug 'mdempsky/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 Plug 'mrk21/yaml-vim'
 Plug 'nvie/vim-flake8'
 if has('python3')
@@ -255,7 +252,6 @@ Plug 'rgrinberg/vim-ocaml'
 Plug 'rust-lang/rust.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
-Plug 'vim-scripts/py-coverage'
 Plug 'vimscript/toml'
 call plug#end()
 " }}}

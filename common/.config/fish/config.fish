@@ -5,7 +5,7 @@ set fish_help_browser w3m
 # file permissions: rwxr-xr-x
 umask 022
 
-for dir in /usr/{local,pkg}/{sbin,bin} ~/.local/bin
+for dir in /usr/local/go/bin /usr/{local,pkg}/{sbin,bin} ~/.local/bin
 	if not contains $dir $PATH; and test -d $dir
 		set -x PATH $dir $PATH
 	end
@@ -29,9 +29,11 @@ for i in vim vi
 end >/dev/null
 
 # golang
-set -x GOPATH ~/projects/go
-test -d $GOPATH/bin; or mkdir -p $GOPATH/bin
-set -x PATH $PATH $GOPATH/bin
+if command -s go
+	set -x GOPATH ~/projects/go
+	test -d $GOPATH/bin; or mkdir -p $GOPATH/bin
+	set -x PATH $PATH $GOPATH/bin
+end >/dev/null
 
 if not set -q XDG_CACHE_HOME
 	set -x XDG_CACHE_HOME ~/.cache

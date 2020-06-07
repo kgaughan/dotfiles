@@ -1,0 +1,46 @@
+# General
+set envelope_from=yes
+set pager_context=1
+set pager_index_lines=6
+set menu_scroll
+set status_on_top
+set sort=reverse-threads
+set send_charset=utf-8
+set charset=utf-8
+auto_view text/html
+
+set delete=yes
+set include=yes
+set fast_reply=yes
+set beep=no
+set confirmappend=no
+
+ignore *
+unignore Date To From: Subject Organization
+hdr_order Date: From: To Organization Subject
+
+save-hook .* =reference
+bind pager h display-toggle-weed
+
+# Theme
+source solarized-dark.muttrc
+
+# Account
+set realname="Keith Gaughan"
+set from="keith@gaughan.ie"
+
+set spoolfile="imap://mail.talideon.com/INBOX"
+set folder="imap://mail.talideon.com/"
+set signature="quicksig -q ~/.dotfiles/misc/fortunes ~/.dotfiles/misc/signature|"
+
+# IMAP
+set record="=Sent"
+set postponed="=Drafts"
+set trash="=Trash"
+set copy=yes
+set imap_check_subscribed
+set mail_check=60
+set net_inc=5
+
+# Put IMAP settings in here: imap_user, imap_pass
+source local.muttrc
