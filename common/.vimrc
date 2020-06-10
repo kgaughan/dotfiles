@@ -237,12 +237,12 @@ let g:SuperTabDefaultCompletionType = 'context'
 " Register and load plugins {{{
 " See: https://github.com/junegunn/vim-plug
 call plug#begin()
-Plug 'bling/vim-airline'
+Plug 'bling/vim-airline', { 'tag': 'v0.11' }
 Plug 'dag/vim-fish'
 Plug 'ervandew/supertab'
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'tag': 'v1.23' }
 Plug 'hashivim/vim-terraform'
-Plug 'mrk21/yaml-vim'
+Plug 'mrk21/yaml-vim', { 'tag': 'v0.1.0' }
 Plug 'nvie/vim-flake8'
 if has('python3')
   " Workaround: https://github.com/psf/black/issues/1293
@@ -251,7 +251,7 @@ endif
 Plug 'Raimondi/delimitMate'
 Plug 'rgrinberg/vim-ocaml'
 Plug 'rust-lang/rust.vim'
-Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-fugitive', { 'tag': 'v3.2' }
 Plug 'tpope/vim-sensible'
 Plug 'vimscript/toml'
 call plug#end()
