@@ -245,7 +245,8 @@ Plug 'hashivim/vim-terraform'
 Plug 'mrk21/yaml-vim'
 Plug 'nvie/vim-flake8'
 if has('python3')
-  Plug 'psf/black'
+  " Workaround: https://github.com/psf/black/issues/1293
+  Plug 'psf/black', { 'tag': '19.10b0' }
 endif
 Plug 'Raimondi/delimitMate'
 Plug 'rgrinberg/vim-ocaml'
