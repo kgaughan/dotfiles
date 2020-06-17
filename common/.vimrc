@@ -16,7 +16,6 @@ set nolinebreak
 set showmode     " Because I'm stupid and like to know what mode I'm in.
 set title        " Show the filename in the terminal title.
 set visualbell t_vb=
-set foldmethod=marker
 set lazyredraw
 set wildmenu
 set wildmode=list:longest,full
@@ -214,9 +213,6 @@ let g:airline_powerline_fonts = 0
 " I don't use the custom fonts.
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
-
-" riv.vim
-let g:riv_disable_folding = 1
 
 let python_highlight_all = 1
 
