@@ -125,11 +125,6 @@ au FileType lua
 au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc,*.lsa,*.ini,*.rnc
   \ call ScrubTrailing()
 
-if has('python3')
-  autocmd BufWritePre *.py
-    \ execute ':Black'
-endif
-
 " Automatically give executable permissions
 au BufWritePost *.cgi,*.sh
   \ call EnsureExecutable(expand('<afile>'))
@@ -241,6 +236,8 @@ Plug 'hashivim/vim-terraform'
 Plug 'mrk21/yaml-vim', { 'tag': 'v0.1.0' }
 Plug 'nvie/vim-flake8'
 if has('python3')
+  autocmd BufWritePre *.py
+    \ execute ':Black'
   " Workaround: https://github.com/psf/black/issues/1293
   Plug 'psf/black', { 'tag': '19.10b0' }
 endif

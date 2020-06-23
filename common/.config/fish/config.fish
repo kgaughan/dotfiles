@@ -69,6 +69,7 @@ if status is-interactive >/dev/null
 	if command -s ocaml; and command -s ledit
 		alias ocaml 'ledit ocaml'
 	end >/dev/null
+	command -s neomutt >/dev/null; and alias mutt neomutt
 	# fun stuff
 	command -s curl >/dev/null; and alias weather 'curl wttr.in/dublin'
 

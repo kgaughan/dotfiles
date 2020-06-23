@@ -12,7 +12,7 @@ UXTerm*locale:   true
 UXTerm*faceName: xft:Inconsolata
 UXTerm*faceSize: 9
 
-URxvt.termName: xterm-256color
+URxvt.termName: rxvt-unicode-256color
 URxvt*locale:   true
 URxvt*font:     -*-terminus-medium-r-*-*-*-*-*-*-*-*-iso10646-1
 URxvt*boldFont: -*-terminus-bold-r-*-*-*-*-*-*-*-*-iso10646-1
