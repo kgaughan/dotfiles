@@ -70,6 +70,7 @@ if status is-interactive >/dev/null
 		alias ocaml 'ledit ocaml'
 	end >/dev/null
 	command -s neomutt >/dev/null; and alias mutt neomutt
+	command -s tmux >/dev/null; and alias s "tmux has; and tmux attach; or tmux"
 	# fun stuff
 	command -s curl >/dev/null; and alias weather 'curl wttr.in/dublin'
 
