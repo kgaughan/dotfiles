@@ -4,5 +4,5 @@ set constantshow
 set linenumbers
 set morespace
 set multibuffer
-set nohelp
 set suspend
+set tabsize "4"
