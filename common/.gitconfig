@@ -87,7 +87,14 @@
 [fetch]
 	prune = true
 	pruneTags = true
-[include]
-	path = ~/.gitconfig.local
 [pull]
 	ff = only
+
+[include]
+	path = ~/.gitconfig.local
+[includeIf "gitdir:~/code/gerrit"]
+	path = ~/.gitconfig.gerrit
+[includeIf "gitdir:~/code/personal"]
+	path = ~/.gitconfig.personal
+[includeIf "gitdir:~/code/dotfiles"]
+	path = ~/.gitconfig.personal

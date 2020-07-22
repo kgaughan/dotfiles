@@ -90,6 +90,13 @@ if status is-interactive >/dev/null
 		alias ls "ls -F"
 	end
 
+	# Quickly SSH into an a server.
+	for host in eimhir lir manann
+		alias $host "ssh -t $host.talideon.com s"
+	end
+	alias tilde "ssh -t tilde.club s"
+	alias sdf "ssh -t talideon@sdfeu.org"
+
 	if not set -q ANDROID_ROOT; and not set -q SSH_AUTH_SOCK
 		eval (ssh-agent -c)
 	end >/dev/null
