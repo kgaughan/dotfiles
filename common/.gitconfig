@@ -36,7 +36,7 @@
 	unstage = reset HEAD --
 	dc = diff --cached
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
-	uncommit = !"!f () { git reset --soft \"HEAD~${1:-1}\"; }; f"
+	uncommit = !"f () { git reset --soft \"HEAD~${1:-1}\"; }; f"
 	aggressive = !"git fsck --unreachable; git reflog expire --expire=0 --all; git repack -a -d -l; git prune; git gc --aggressive"
 	pull-all = !"git pull --recurse-submodules --rebase && git submodule update --init --recursive"
 	rebase-against-master = !"git checkout master && git pull --rebase && git checkout @{-1} && git rebase master"
