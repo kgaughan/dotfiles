@@ -101,9 +101,7 @@ if status is-interactive >/dev/null
 		eval (ssh-agent -c)
 	end >/dev/null
 
-	if command -s opam >/dev/null; and test -e ~/.opam/opam-init/init.fish
-		source ~/.opam/opam-init/init.fish >/dev/null 2>&1
-	end
+	command -s opam >/dev/null; and eval (opam env | sed "s/MANPATH '\//MANPATH ':\//")
 end
 
 # Local config under version control.
