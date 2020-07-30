@@ -228,7 +228,7 @@ let g:SuperTabDefaultCompletionType = 'context'
 " Register and load plugins {{{
 " See: https://github.com/junegunn/vim-plug
 call plug#begin()
-Plug 'vim-airline/vim-airline', { 'tag': 'v0.11' }
+Plug 'vim-airline/vim-airline'
 Plug 'dag/vim-fish'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'tag': 'v1.23' }
@@ -244,7 +244,7 @@ endif
 Plug 'Raimondi/delimitMate'
 Plug 'rgrinberg/vim-ocaml'
 Plug 'rust-lang/rust.vim'
-Plug 'tpope/vim-fugitive', { 'tag': 'v3.2' }
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'vimscript/toml'
 call plug#end()
