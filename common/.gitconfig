@@ -50,7 +50,7 @@
 [credential]
 	helper = cache --timeout=3600
 [merge]
-	tool = vimdiff
+	tool = meld
 	conflictstyle = diff3
 	ff = only
 [mergetool]
@@ -58,7 +58,7 @@
 	keeptemporaries = false
 	keepbackups = false
 [diff]
-	tool = vimdiff
+	tool = meld
 	algorithm = histogram
 	renames = copies
 	colorMoved = dimmed_zebra
