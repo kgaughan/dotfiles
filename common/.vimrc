@@ -232,6 +232,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'dag/vim-fish'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'tag': 'v1.23' }
+Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'hashivim/vim-terraform'
 Plug 'mrk21/yaml-vim'
 Plug 'nvie/vim-flake8'
