@@ -219,6 +219,8 @@ let g:rustfmt_autosave = 1
 " Needed for some work stuff. *shrug*
 let g:go_version_warning = 0
 
+let g:vim_markdown_folding_disabled = 1
+
 " Completion {{{
 set completeopt=preview,menuone,longest
 let g:SuperTabDefaultCompletionType = '<C-X><C-O>'
@@ -233,9 +235,11 @@ Plug 'dag/vim-fish'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'tag': 'v1.23' }
 Plug 'Glench/Vim-Jinja2-Syntax'
+Plug 'godlygeek/tabular' " Must come before vim-markdown
 Plug 'hashivim/vim-terraform'
 Plug 'mrk21/yaml-vim'
 Plug 'nvie/vim-flake8'
+Plug 'plasticboy/vim-markdown'
 if has('python3')
   autocmd BufWritePre *.py
     \ execute ':Black'
