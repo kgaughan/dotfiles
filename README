@@ -16,6 +16,18 @@ To reinstall::
 
 Simple!
 
+Adding files
+============
+
+To add a file to a package, write something like this::
+
+   stowage --add .config/i3/config --target ~ common
+
+Here, I'm adding the file `.config/i3/config` in `~` to the `common` package.
+The path provided to the `--add` flag must be relative to the path given by
+the `--target` flag. It's moved into the specified package and then replaced
+with a symlink.
+
 Vim plugins
 ===========
 
