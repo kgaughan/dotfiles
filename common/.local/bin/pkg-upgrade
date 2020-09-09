@@ -15,7 +15,7 @@ if ! has_pkg_manager; then
 fi
 
 if command -v brew >/dev/null; then
-	brew update && brew upgrade && brew cask upgrade && brew cleanup
+	brew update && brew upgrade && brew upgrade --cask && brew cleanup
 	exit 0
 fi
 
