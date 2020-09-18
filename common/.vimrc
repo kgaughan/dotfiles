@@ -1,7 +1,6 @@
 " General Configuration {{{
 set nocompatible " Get rid of VI-isms.
 set nobackup
-set noswapfile
 set tenc=utf-8
 " }}}
 
@@ -64,13 +63,7 @@ endif
 
 " Fancy linenumbers {{{
 " For details, see https://jeffkreeftmeijer.com/vim-number/
-set number         " show line numbers
-set relativenumber " make line numbers above and below relative
-augroup numbertoggle
-  autocmd!
-  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
-  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
-augroup END
+set number " show line numbers
 " }}}
 
 " Fix backspace behaviour under screen. {{{
@@ -234,6 +227,7 @@ let g:SuperTabDefaultCompletionType = 'context'
 call plug#begin()
 Plug 'vim-airline/vim-airline'
 Plug 'dag/vim-fish'
+Plug 'davidhalter/jedi-vim'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'tag': 'v1.23' }
 Plug 'Glench/Vim-Jinja2-Syntax'
