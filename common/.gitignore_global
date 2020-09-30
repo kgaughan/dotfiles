@@ -5,3 +5,4 @@
 *.py[co]
 plan
 .venv/
+.terraform/

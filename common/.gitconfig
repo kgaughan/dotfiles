@@ -92,9 +92,9 @@
 
 [include]
 	path = ~/.gitconfig.local
-[includeIf "gitdir:~/code/gerrit"]
+[includeIf "gitdir:~/code/gerrit/"]
 	path = ~/.gitconfig.gerrit
-[includeIf "gitdir:~/code/personal"]
+[includeIf "gitdir:~/code/personal/"]
 	path = ~/.gitconfig.personal
-[includeIf "gitdir:~/code/dotfiles"]
+[includeIf "gitdir:~/code/dotfiles/"]
 	path = ~/.gitconfig.personal
