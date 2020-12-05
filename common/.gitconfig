@@ -47,6 +47,7 @@
 	show-last = log -n 1 -p
 	# List remote branches
 	lrb = !"f () { git ls-remote --heads \"${1:-origin}\"; }; f"
+	make-patch = !"git --no-pager diff --no-prefix"
 [credential]
 	helper = cache --timeout=3600
 [merge]
