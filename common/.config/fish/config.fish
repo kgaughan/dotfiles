@@ -1,6 +1,9 @@
 # fish setup to prevent some annoyances
 set fish_greeting
-set fish_help_browser w3m
+
+if command -q w3m
+	set fish_help_browser w3m -o confirm_qq=false
+end
 
 # file permissions: rwxr-xr-x
 umask 022
@@ -15,25 +18,25 @@ set -q LIBDIRPATH; or set -x LIBDIRPATH /usr/local/lib /usr/lib /lib
 set -x LIBDIRPATH $LIBDIRPATH ~/.local/lib
 
 for i in most less more
-	if command -s $i
+	if command -q $i
 		set -x PAGER (command -s $i)
 		break
 	end
-end >/dev/null
+end
 
 for i in vim vi
-	if command -s $i
+	if command -q $i
 		set -x EDITOR (command -s $i)
 		break
 	end
-end >/dev/null
+end
 
 # golang
-if command -s go
+if command -q go
 	set -x GOPATH ~/projects/go
 	test -d $GOPATH/bin; or mkdir -p $GOPATH/bin
 	set -x PATH $PATH $GOPATH/bin
-end >/dev/null
+end
 
 if not set -q XDG_CACHE_HOME
 	set -x XDG_CACHE_HOME ~/.cache
@@ -44,12 +47,12 @@ set -x LYNX_LSS ~/.config/lynx.lss
 
 if status is-interactive >/dev/null
 	alias dummy-mailer "python3 -m smtpd -n --class=DebuggingServer localhost:1025"
-	if command -s ged
+	if command -q ged
 		# On MacOS, the ed is so old that it lacks -v support, so use ged.
 		alias ed "ged -v -p '> '"
 	else
 		alias ed "ed -v -p '> '"
-	end >/dev/null
+	end
 	alias m $PAGER
 	alias h "fc -l"
 	alias j jobs
@@ -66,13 +69,13 @@ if status is-interactive >/dev/null
 	# a common typo of mine
 	alias cd.. "cd .."
 	# make the ocaml repl usable
-	if command -s ocaml; and command -s ledit
+	if command -q ocaml; and command -q ledit
 		alias ocaml 'ledit ocaml'
-	end >/dev/null
-	command -s neomutt >/dev/null; and alias mutt neomutt
-	command -s tmux >/dev/null; and alias s "tmux has; and tmux attach; or tmux"
+	end
+	command -q neomutt; and alias mutt neomutt
+	command -q tmux; and alias s "tmux has; and tmux attach; or tmux"
 	# fun stuff
-	command -s curl >/dev/null; and alias weather 'curl wttr.in/dublin'
+	command -q curl; and alias weather 'curl wttr.in/dublin'
 
 	# csh syntax is compatible enough with fish for this to work
 	if test -x /usr/bin/dircolors
@@ -101,7 +104,7 @@ if status is-interactive >/dev/null
 		eval (ssh-agent -c)
 	end >/dev/null
 
-	command -s opam >/dev/null; and eval (opam env | sed "s/MANPATH '\//MANPATH ':\//")
+	command -q opam; and eval (opam env | sed "s/MANPATH '\//MANPATH ':\//")
 end
 
 # Local config under version control.
