@@ -38,10 +38,11 @@ Fetches an RSS feed and saves its enclosures to a directory. Feed items
 can be excluded if they've already been fetched and/or by the item title.
 """
 
+import argparse
 import dbm
 import errno
-import getopt
 from os import path
+import pathlib
 import re
 import shutil
 import socket
@@ -50,10 +51,7 @@ from urllib import request, error, parse
 from xml.dom import minidom
 
 
-__version__ = "0.1.1"
-
-
-USAGE = "Usage: %s [-h] -f<url> -f<dir> [-c<cachedb>] [-e<regex>]*"
+__version__ = "0.2.0"
 
 
 def get_enclosure_filename(enclosure, disposition):
@@ -100,19 +98,20 @@ def parse_item(item, tags):
                 value = child.attributes["url"].value
             else:
                 value = child.firstChild.data
-            result[child.tagName] = value.encode("utf8")
+            result[child.tagName] = value
     return result
 
 
-def fetch_enclosure(url, guid, directory, cache):
+def fetch_enclosure(url, guid, directory: pathlib.Path, cache):
+    print(url, guid)
     fsrc = open_url(url)
-    filename = get_enclosure_filename(url, fsrc.info().getheader("content-disposition"))
+    filename = get_enclosure_filename(url, fsrc.info().get("content-disposition"))
     cache[guid] = filename
-    with open(path.join(directory, filename), "w") as fdst:
+    with open(directory / filename, "wb") as fdst:
         shutil.copyfileobj(fsrc, fdst)
 
 
-def fetch(feed_url, directory, cache, patterns):
+def fetch(feed_url, directory: pathlib.Path, cache, patterns: list, link):
     """
     The meat! Fetch a feed, download its enclosures to a directory, but
     only do so if not already fetched or the title's excluded by some
@@ -123,19 +122,19 @@ def fetch(feed_url, directory, cache, patterns):
     def excluded(title):
         return any(pattern.search(title) for pattern in compiled_patterns)
 
-    def can_download(item):
-        return (
-            "enclosure" in item
-            and item["guid"] not in cache
-            and not excluded(item["title"])
-        )
+    def can_download(item, guid):
+        if guid not in cache and not excluded(item["title"]):
+            return link or "enclosure" in item
+        return False
 
     try:
         ffeed = open_url(feed_url)
         for elem in minidom.parse(ffeed).getElementsByTagName("item"):
-            item = parse_item(elem, ("title", "guid", "enclosure"))
-            if can_download(item):
-                fetch_enclosure(item["enclosure"], item["guid"], directory, cache)
+            item = parse_item(elem, ("title", "guid", "enclosure", "link"))
+            guid = item.get("guid", item["link"])
+            if can_download(item, guid):
+                item_url = item["link"] if link else item["enclosure"]
+                fetch_enclosure(item_url, guid, directory, cache)
     except error.HTTPError as err:
         # The server isn't happy, so don't bother.
         if err.code in (500, 502, 503, 504):
@@ -156,61 +155,58 @@ def open_url(url):
     """
     Open a URL. Mindblowing, I know.
     """
-    request = request.Request(url)
-    request.add_header("User-Agent", "fetchenclosures/1.0")
-    return request.urlopen(request)
+    req = request.Request(url)
+    req.add_header("User-Agent", f"fetchenclosures/{__version__}")
+    return request.urlopen(req)
 
 
-def usage(message=None):
-    """
-    Prints usage information and possibly an error message.
-    """
-    fd = sys.stdout
-    exit_code = 0
-    if message:
-        fd = sys.stderr
-        exit_code = 2
-        print(str(message), file=fd)
-    name = path.basename(sys.argv[0])
-    print(USAGE % (name,), file=fd)
-    sys.exit(exit_code)
+def check_directory(path):
+    result = pathlib.Path(path)
+    if not result.is_dir():
+        raise argparse.ArgumentTypeError(f"not a directory: {path}")
+    return result
+
+
+def make_parser():
+    parser = argparse.ArgumentParser(description="Fetch enclosures in an RSS feed")
+    parser.add_argument(
+        "-f",
+        "--feed",
+        required=True,
+        help="Feed URL",
+    )
+    parser.add_argument(
+        "-d",
+        "--dir",
+        required=True,
+        type=check_directory,
+        help="Destination directory",
+    )
+    parser.add_argument(
+        "-c",
+        "--cache",
+        help="Cache file path",
+    )
+    parser.add_argument(
+        "-e",
+        "--exclude",
+        action="append",
+        help="Exclusion pattern",
+        default=[],
+    )
+    parser.add_argument(
+        "-l",
+        "--link",
+        action="store_true",
+        help="Use the link tag rather than the enclosure as the download source",
+    )
+    return parser
 
 
 def main():
-    try:
-        opts, _ = getopt.getopt(sys.argv[1:], "f:d:c:e:h")
-    except getopt.GetoptError as err:
-        usage(err)
-
-    feed_url = None
-    directory = None
-    cache_path = None
-    exclusion_patterns = []
-    for opt, val in opts:
-        if opt == "-f":
-            feed_url = val
-        elif opt == "-d":
-            directory = val
-        elif opt == "-c":
-            cache_path = val
-        elif opt == "-e":
-            exclusion_patterns.append(val)
-        elif opt == "-h":
-            usage()
-        else:
-            usage(f"Unknown flag: {opt}")
-
-    if feed_url is None:
-        usage("No feed url (-f) supplied.")
-
-    if directory is None:
-        usage("No destination directory (-d) supplied.")
-    if not path.isdir(directory):
-        usage(f"Bad destination directory path: {directory}")
-
-    cache = {} if cache_path is None else dbm.open(cache_path, "c")
-
-    fetch(feed_url, directory, cache, exclusion_patterns)
+    args = make_parser().parse_args()
+    cache = {} if args.cache is None else dbm.open(args.cache, "c")
+    fetch(args.feed, args.dir, cache, args.exclude, args.link)
 
 
 if __name__ == "__main__":
