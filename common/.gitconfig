@@ -112,3 +112,5 @@
 	path = ~/.gitconfig.personal
 [includeIf "gitdir:~/code/dotfiles/"]
 	path = ~/.gitconfig.personal
+[init]
+	defaultBranch = master

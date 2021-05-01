@@ -2,6 +2,7 @@
 set nocompatible " Get rid of VI-isms.
 set nobackup
 set tenc=utf-8
+set nojs         " Only use one space when wordwrapping
 " }}}
 
 " Default tab settings {{{

@@ -38,6 +38,11 @@ if command -q go
 	set -x PATH $PATH $GOPATH/bin
 end
 
+if command -s pipx
+	mkdir -p ~/.config/fish/completions
+	register-python-argcomplete --shell fish pipx >~/.config/fish/completions/pipx.fish
+end >/dev/null
+
 if not set -q XDG_CACHE_HOME
 	set -x XDG_CACHE_HOME ~/.cache
 end
