@@ -1,0 +1,27 @@
+#!/bin/sh
+
+set -eu
+
+usage () {
+	echo "usage: ${0##*/} [-h] [MESSAGE]"
+}
+
+# Ensure data directory exists
+: "${DOING_ROOT:=${XDG_DATA_HOME:-$HOME/.local/share}/doing}"
+mkdir -p "$DOING_ROOT"
+
+while getopts h opt; do
+	case "$opt" in
+	h)
+		usage
+		exit
+		;;
+	esac
+done
+
+shift $((OPTIND - 1))
+
+# Append the remaining text to the end of today's file
+if test -n "$*"; then
+	echo "$(date "+%Y-%m-%d %H:%M:%S")\t$*" >> "$DOING_ROOT/$(date +%Y-%m-%d)"
+fi
