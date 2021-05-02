@@ -1,9 +1,9 @@
 # fish setup to prevent some annoyances
 set fish_greeting
 
-if command -q w3m
+if command -s w3m
 	set fish_help_browser w3m -o confirm_qq=false
-end
+end >/dev/null
 
 # file permissions: rwxr-xr-x
 umask 022
@@ -18,29 +18,24 @@ set -q LIBDIRPATH; or set -x LIBDIRPATH /usr/local/lib /usr/lib /lib
 set -x LIBDIRPATH $LIBDIRPATH ~/.local/lib
 
 for i in most less more
-	if command -q $i
+	if command -s $i
 		set -x PAGER (command -s $i)
 		break
 	end
-end
+end >/dev/null
 
 for i in vim vi
-	if command -q $i
+	if command -s $i
 		set -x EDITOR (command -s $i)
 		break
 	end
-end
+end >/dev/null
 
 # golang
-if command -q go
+if command -s go
 	set -x GOPATH ~/projects/go
 	test -d $GOPATH/bin; or mkdir -p $GOPATH/bin
 	set -x PATH $PATH $GOPATH/bin
-end
-
-if command -s pipx
-	mkdir -p ~/.config/fish/completions
-	register-python-argcomplete --shell fish pipx >~/.config/fish/completions/pipx.fish
 end >/dev/null
 
 if not set -q XDG_CACHE_HOME
@@ -50,9 +45,9 @@ end
 # lynx style sheet
 set -x LYNX_LSS ~/.config/lynx.lss
 
-if status is-interactive >/dev/null
+if status is-interactive
 	alias dummy-mailer "python3 -m smtpd -n --class=DebuggingServer localhost:1025"
-	if command -q ged
+	if command -s ged
 		# On MacOS, the ed is so old that it lacks -v support, so use ged.
 		alias ed "ged -v -p '> '"
 	else
@@ -74,13 +69,13 @@ if status is-interactive >/dev/null
 	# a common typo of mine
 	alias cd.. "cd .."
 	# make the ocaml repl usable
-	if command -q ocaml; and command -q ledit
+	if command -s ocaml; and command -s ledit
 		alias ocaml 'ledit ocaml'
 	end
-	command -q neomutt; and alias mutt neomutt
-	command -q tmux; and alias s "tmux has; and tmux attach; or tmux"
+	command -s neomutt; and alias mutt neomutt
+	command -s tmux; and alias s "tmux has; and tmux attach; or tmux"
 	# fun stuff
-	command -q curl; and alias weather 'curl wttr.in/dublin'
+	command -s curl; and alias weather 'curl wttr.in/dublin'
 
 	# csh syntax is compatible enough with fish for this to work
 	if test -x /usr/bin/dircolors
@@ -107,10 +102,10 @@ if status is-interactive >/dev/null
 
 	if not set -q ANDROID_ROOT; and not set -q SSH_AUTH_SOCK
 		eval (ssh-agent -c)
-	end >/dev/null
+	end
 
-	command -q opam; and eval (opam env | sed "s/MANPATH '\//MANPATH ':\//")
-end
+	command -s opam; and eval (opam env | sed "s/MANPATH '\//MANPATH ':\//")
+end >/dev/null
 
 # Local config under version control.
 test -e ~/.fish.local; and source ~/.fish.local
