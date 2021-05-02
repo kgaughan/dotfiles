@@ -230,7 +230,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'dag/vim-fish'
 Plug 'davidhalter/jedi-vim'
 Plug 'ervandew/supertab'
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'tag': 'v1.23' }
+Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'tag': 'v1.25' }
 Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'godlygeek/tabular' " Must come before vim-markdown
 Plug 'hashivim/vim-terraform'
@@ -238,7 +238,7 @@ Plug 'mrk21/yaml-vim'
 Plug 'nvie/vim-flake8'
 Plug 'plasticboy/vim-markdown'
 if has('python3')
-  Plug 'psf/black', { 'tag': '20.8b1' }
+  Plug 'psf/black', { 'tag': '21.4b2' }
   autocmd BufWritePre *.py execute ':Black'
 endif
 Plug 'Raimondi/delimitMate'
