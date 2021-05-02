@@ -75,7 +75,7 @@ if status is-interactive
 	command -s neomutt; and alias mutt neomutt
 	command -s tmux; and alias s "tmux has; and tmux attach; or tmux"
 	# fun stuff
-	command -s curl; and alias weather 'curl wttr.in/dublin'
+	command -s curl; and alias weather 'curl "wttr.in/dublin?m"'
 
 	# csh syntax is compatible enough with fish for this to work
 	if test -x /usr/bin/dircolors
