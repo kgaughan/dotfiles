@@ -104,6 +104,11 @@ if status is-interactive
 		eval (ssh-agent -c)
 	end
 
+	# pyenv
+	if command -s pyenv
+		pyenv init - | source
+	end >/dev/null
+
 	command -s opam; and eval (opam env | sed "s/MANPATH '\//MANPATH ':\//")
 end >/dev/null
 
