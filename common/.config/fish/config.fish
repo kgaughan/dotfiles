@@ -8,11 +8,7 @@ end >/dev/null
 # file permissions: rwxr-xr-x
 umask 022
 
-for dir in /usr/local/go/bin /usr/{local,pkg}/{sbin,bin} ~/.local/bin
-	if not contains $dir $PATH; and test -d $dir
-		set -x PATH $dir $PATH
-	end
-end
+fish_add_path /usr/local/go/bin /usr/{local,pkg}/{sbin,bin} ~/.local/bin
 
 set -q LIBDIRPATH; or set -x LIBDIRPATH /usr/local/lib /usr/lib /lib
 set -x LIBDIRPATH $LIBDIRPATH ~/.local/lib
@@ -35,7 +31,7 @@ end >/dev/null
 if command -s go
 	set -x GOPATH ~/projects/go
 	test -d $GOPATH/bin; or mkdir -p $GOPATH/bin
-	set -x PATH $PATH $GOPATH/bin
+	fish_add_path $GOPATH/bin
 end >/dev/null
 
 if not set -q XDG_CACHE_HOME
@@ -44,6 +40,11 @@ end
 
 # lynx style sheet
 set -x LYNX_LSS ~/.config/lynx.lss
+
+if command -s pyenv
+	set -Ux PYENV_ROOT $HOME/.pyenv
+	fish_add_path $PYENV_ROOT/shims
+end >/dev/null
 
 if status is-interactive
 	alias dummy-mailer "python3 -m smtpd -n --class=DebuggingServer localhost:1025"
@@ -104,10 +105,10 @@ if status is-interactive
 		eval (ssh-agent -c)
 	end
 
-	# pyenv
 	if command -s pyenv
-		pyenv init - | source
-	end >/dev/null
+		test -e $XDG_CACHE_HOME/pyenv.fish; or pyenv init - > $XDG_CACHE_HOME/pyenv.fish
+		source $XDG_CACHE_HOME/pyenv.fish
+	end
 
 	command -s opam; and eval (opam env | sed "s/MANPATH '\//MANPATH ':\//")
 end >/dev/null
