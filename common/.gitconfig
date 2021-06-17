@@ -54,6 +54,7 @@
 	tool = meld
 	conflictstyle = diff3
 	ff = only
+	renamelimit = 4000
 [mergetool]
 	prompt = false
 	keeptemporaries = false

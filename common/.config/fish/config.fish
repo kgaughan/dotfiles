@@ -1,14 +1,14 @@
 # fish setup to prevent some annoyances
 set fish_greeting
 
-if command -s w3m
-	set fish_help_browser w3m -o confirm_qq=false
-end >/dev/null
-
 # file permissions: rwxr-xr-x
 umask 022
 
-fish_add_path /usr/local/go/bin /usr/{local,pkg}/{sbin,bin} ~/.local/bin
+fish_add_path ~/.local/bin /usr/local/go/bin /usr/{local,pkg}/{sbin,bin}
+
+if command -s w3m
+	set fish_help_browser w3m -o confirm_qq=false
+end >/dev/null
 
 set -q LIBDIRPATH; or set -x LIBDIRPATH /usr/local/lib /usr/lib /lib
 set -x LIBDIRPATH $LIBDIRPATH ~/.local/lib
@@ -40,11 +40,6 @@ end
 
 # lynx style sheet
 set -x LYNX_LSS ~/.config/lynx.lss
-
-if command -s pyenv
-	set -Ux PYENV_ROOT $HOME/.pyenv
-	fish_add_path $PYENV_ROOT/shims
-end >/dev/null
 
 if status is-interactive
 	alias dummy-mailer "python3 -m smtpd -n --class=DebuggingServer localhost:1025"
@@ -106,8 +101,9 @@ if status is-interactive
 	end
 
 	if command -s pyenv
-		test -e $XDG_CACHE_HOME/pyenv.fish; or pyenv init - > $XDG_CACHE_HOME/pyenv.fish
-		source $XDG_CACHE_HOME/pyenv.fish
+		set -Ux PYENV_ROOT ~/.pyenv
+		fish_add_path $PYENV_ROOT/shims
+		pyenv init - | source
 	end
 
 	command -s opam; and eval (opam env | sed "s/MANPATH '\//MANPATH ':\//")
