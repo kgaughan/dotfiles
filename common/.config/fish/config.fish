@@ -4,7 +4,12 @@ set fish_greeting
 # file permissions: rwxr-xr-x
 umask 022
 
-fish_add_path ~/.local/bin /usr/local/go/bin /usr/{local,pkg}/{sbin,bin}
+# fish_add_path ~/.local/bin /usr/local/go/bin /usr/{local,pkg}/{sbin,bin}
+for dir in /usr/{local,pkg}/{sbin,bin} /usr/local/go/bin ~/.local/bin
+	if not contains $dir $PATH; and test -d $dir
+		set -x PATH $dir $PATH
+	end
+end
 
 if command -s w3m
 	set fish_help_browser w3m -o confirm_qq=false
@@ -31,7 +36,8 @@ end >/dev/null
 if command -s go
 	set -x GOPATH ~/projects/go
 	test -d $GOPATH/bin; or mkdir -p $GOPATH/bin
-	fish_add_path $GOPATH/bin
+	# fish_add_path $GOPATH/bin
+	set -x PATH $PATH $GOPATH/bin
 end >/dev/null
 
 if not set -q XDG_CACHE_HOME
