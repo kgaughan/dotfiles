@@ -2,7 +2,6 @@
 set autoindent
 set constantshow
 set linenumbers
-set morespace
 set multibuffer
 set suspend
 set tabsize "4"
