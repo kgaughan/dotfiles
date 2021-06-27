@@ -31,6 +31,7 @@ if exists('+colorcolumn')
 else
   au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>79v.\+', -1)
 endif
+set foldmethod=marker
 
 " Further enhance filename completion by searching subfolders.
 set path+=**
