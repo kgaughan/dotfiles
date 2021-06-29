@@ -40,6 +40,10 @@ if command -s go
 	set -x PATH $PATH $GOPATH/bin
 end >/dev/null
 
+if command -s dotnet
+	set -x DOTNET_CLI_TELEMETRY_OPTOUT true
+end >/dev/null
+
 if not set -q XDG_CACHE_HOME
 	set -x XDG_CACHE_HOME ~/.cache
 end
