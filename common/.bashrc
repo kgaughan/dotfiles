@@ -1,6 +1,6 @@
 # This exists for the limited set of places I'm forced to use bash.
 
-source $HOME/.profile
+test -e $HOME/.profile && source $HOME/.profile
 
 # Exit early if not running interactively {{{
 case $- in
@@ -47,11 +47,11 @@ ssh_agent_is_running() {
 	fi
 }
 
-if ! agent_is_running && test -e $ssh_agent_env; then
+if ! ssh_agent_is_running && test -e $ssh_agent_env; then
 	source $ssh_agent_env
 fi
 
-if ! agent_is_running; then
+if ! ssh_agent_is_running; then
 	(umask 077; ssh-agent | tee $ssh_agent_env) | source -
 	ssh-add
 elif ! ssh-add -l >/dev/null 2>&1; then
