@@ -17,8 +17,7 @@ HISTFILESIZE=2000
 # }}}
 
 # Locale {{{
-export LC_CTYPE=en_IE.UTF-8
-export LC_ALL=en_IE.UTF-8
+export LANG=en_IE.UTF-8
 # }}}
 
 # PATH {{{
