@@ -51,10 +51,11 @@ if ! ssh_agent_is_running && test -e $ssh_agent_env; then
 fi
 
 if ! ssh_agent_is_running; then
-	(umask 077; ssh-agent | tee $ssh_agent_env) | source -
-	ssh-add
+	(umask 077; ssh-agent >$ssh_agent_env)
+	source $ssh_agent_env
+	ssh-add -q
 elif ! ssh-add -l >/dev/null 2>&1; then
-	ssh-add
+	ssh-add -q
 fi >/dev/null
 
 unset ssh_agent_env
