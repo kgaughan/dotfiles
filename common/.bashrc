@@ -61,4 +61,3 @@ fi >/dev/null
 unset ssh_agent_env
 
 # }}}
-export PATH=$PATH:$HOME/.local/bin
