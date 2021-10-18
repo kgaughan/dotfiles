@@ -110,7 +110,7 @@ if status is-interactive
 		eval (ssh-agent -c)
 	end
 
-	if command -s pyenv
+	if not set -q PYENV_ROOT; and command -s pyenv
 		set -Ux PYENV_ROOT ~/.pyenv
 		fish_add_path $PYENV_ROOT/shims
 		pyenv init - | source
