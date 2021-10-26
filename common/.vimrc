@@ -218,6 +218,8 @@ let g:go_version_warning = 0
 
 let g:vim_markdown_folding_disabled = 1
 
+let g:gitgutter_enabled = 1
+
 " Completion {{{
 set completeopt=preview,menuone,longest
 let g:SuperTabDefaultCompletionType = '<C-X><C-O>'
@@ -228,6 +230,7 @@ let g:SuperTabDefaultCompletionType = 'context'
 " See: https://github.com/junegunn/vim-plug
 call plug#begin()
 Plug 'vim-airline/vim-airline'
+Plug 'airblade/vim-gitgutter'
 Plug 'dag/vim-fish'
 Plug 'davidhalter/jedi-vim'
 Plug 'ervandew/supertab'
@@ -235,11 +238,12 @@ Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'tag': 'v1.25' }
 Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'godlygeek/tabular' " Must come before vim-markdown
 Plug 'hashivim/vim-terraform'
+Plug 'junegunn/goyo.vim'
 Plug 'mrk21/yaml-vim'
 Plug 'nvie/vim-flake8'
 Plug 'plasticboy/vim-markdown'
 if has('python3')
-  Plug 'psf/black', { 'tag': '21.5b0' }
+  Plug 'psf/black', { 'tag': '21.9b0' }
   autocmd BufWritePre *.py execute ':Black'
 endif
 Plug 'Raimondi/delimitMate'
