@@ -249,6 +249,7 @@ endif
 Plug 'Raimondi/delimitMate'
 Plug 'rgrinberg/vim-ocaml'
 Plug 'rust-lang/rust.vim'
+Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'vimscript/toml'
