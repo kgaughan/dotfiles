@@ -243,7 +243,7 @@ Plug 'mrk21/yaml-vim'
 Plug 'nvie/vim-flake8'
 Plug 'plasticboy/vim-markdown'
 if has('python3')
-  Plug 'psf/black', { 'tag': '21.9b0' }
+  Plug 'psf/black', { 'tag': '21.12b0' }
   autocmd BufWritePre *.py execute ':Black'
 endif
 Plug 'Raimondi/delimitMate'
