@@ -34,7 +34,7 @@ end >/dev/null
 
 # golang
 if command -s go
-	set -x GOPATH ~/projects/go
+	set -x GOPATH ~/go
 	test -d $GOPATH/bin; or mkdir -p $GOPATH/bin
 	# fish_add_path $GOPATH/bin
 	set -x PATH $PATH $GOPATH/bin
