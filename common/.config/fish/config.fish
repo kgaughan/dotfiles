@@ -110,10 +110,11 @@ if status is-interactive
 		eval (ssh-agent -c)
 	end
 
-	if not set -q PYENV_ROOT; and command -s pyenv
+	if command -s pyenv
 		set -Ux PYENV_ROOT ~/.pyenv
-		fish_add_path $PYENV_ROOT/shims
+		pyenv init --path | source
 		pyenv init - | source
+		pyenv virtualenv-init - | source
 	end
 
 	command -s opam; and eval (opam env | sed "s/MANPATH '\//MANPATH ':\//")
