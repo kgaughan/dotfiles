@@ -234,7 +234,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'dag/vim-fish'
 Plug 'davidhalter/jedi-vim'
 Plug 'ervandew/supertab'
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'tag': 'v1.25' }
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'tag': 'v1.26' }
 Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'godlygeek/tabular' " Must come before vim-markdown
 Plug 'hashivim/vim-terraform'
@@ -243,7 +243,7 @@ Plug 'mrk21/yaml-vim'
 Plug 'nvie/vim-flake8'
 Plug 'plasticboy/vim-markdown'
 if has('python3')
-  Plug 'psf/black', { 'tag': '22.3.0' }
+  Plug 'psf/black', { 'tag': '22.6.0' }
   autocmd BufWritePre *.py execute ':Black'
 endif
 Plug 'Raimondi/delimitMate'
