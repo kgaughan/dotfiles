@@ -110,9 +110,7 @@ def main():
     with open(args[0], "r") as fh:
         msg = email.message_from_file(fh)
 
-    dumped_header = {}
-    for name in headers:
-        dumped_header[name] = False
+    dumped_header = {name: False for name in headers}
     for name, value in msg.items():
         canon_name = name.lower()
         if canon_name not in headers or (dumped_header[canon_name] and first_only):
@@ -125,7 +123,7 @@ def main():
             print(value)
 
     if body:
-        if len(headers) > 0:
+        if headers:
             print()
         # We use this because we don't want the trailing newline Python
         # shoves in with 'print'.

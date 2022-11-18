@@ -64,7 +64,7 @@ def install(args, is_excluded):
             continue
         for root, _, files in os.walk(package, followlinks=True):
             files = [filename for filename in files if not is_excluded(filename)]
-            if len(files) == 0:
+            if not files:
                 continue
             rest = root[len(package) + 1:]
             dest = path.join(args.target, rest)
@@ -98,7 +98,7 @@ def uninstall(args, is_excluded):
             continue
         for root, _, files in os.walk(package, followlinks=True):
             files = [filename for filename in files if not is_excluded(filename)]
-            if len(files) == 0:
+            if not files:
                 continue
             rest = root[len(package) + 1:]
             dest = path.join(args.target, rest)

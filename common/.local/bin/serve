@@ -4,6 +4,7 @@ Serves a directory over HTTP and publishes itself via DNS-SD.
 """
 
 
+
 import getopt
 import os
 import http.server
@@ -26,7 +27,7 @@ USAGE = "Usage: %s [-p<port>] [-d<dir>] [-t<title>]"
 # Hack to force it to serve UTF-8.
 m = http.server.SimpleHTTPRequestHandler.extensions_map
 m[""] = "text/plain"
-m.update(dict((k, v + ";charset=UTF-8") for k, v in list(m.items())))
+m.update({k: f"{v};charset=UTF-8" for k, v in list(m.items())})
 
 
 def avahi_get(obj_path, iface):

@@ -25,7 +25,7 @@ def usage(message=None):
     if message:
         fh = sys.stderr
         exit_code = 2
-        print(str(message), file=fh)
+        print(message, file=fh)
     name = os.path.basename(sys.argv[0])
     print(USAGE % (name,), file=fh)
     sys.exit(exit_code)
