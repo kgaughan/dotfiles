@@ -118,6 +118,8 @@ au FileType groovy,java
   \ setlocal sw=4 ts=4 sts=4 et ai sta
 au FileType lua
   \ setlocal sw=2 ts=2 sts=2 et ai sta
+au FileType ocaml
+  \ let b:delimitMate_quotes = "\"" " Make type variables less annoying
 
 au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc,*.lsa,*.ini,*.rnc
   \ call ScrubTrailing()
