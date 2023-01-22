@@ -213,6 +213,8 @@ let g:terraform_fmt_on_save = 1
 
 let g:rustfmt_autosave = 1
 
+let g:ocaml_highlight_operators = 1
+
 " Needed for some work stuff. *shrug*
 let g:go_version_warning = 0
 
@@ -247,7 +249,7 @@ if has('python3')
   autocmd BufWritePre *.py execute ':Black'
 endif
 Plug 'Raimondi/delimitMate'
-Plug 'rgrinberg/vim-ocaml'
+Plug 'ocaml/vim-ocaml'
 Plug 'rust-lang/rust.vim'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
