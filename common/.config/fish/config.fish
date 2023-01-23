@@ -117,7 +117,7 @@ if status is-interactive
 		pyenv virtualenv-init - | source
 	end
 
-	command -s opam; and eval (opam env | sed "s/MANPATH '\//MANPATH ':\//")
+	command -s opam; and eval (opam env)
 end >/dev/null
 
 # Local config under version control.

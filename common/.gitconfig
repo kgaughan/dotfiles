@@ -50,6 +50,10 @@
 	make-patch = !"git --no-pager diff --no-prefix"
 [credential]
 	helper = cache --timeout=3600
+[init]
+	defaultBranch = master
+[advice]
+	skippedCherryPicks = false
 [merge]
 	tool = meld
 	conflictstyle = diff3
@@ -116,12 +120,9 @@
 	path = ~/.gitconfig.personal
 [includeIf "gitdir:~/code/dotfiles/"]
 	path = ~/.gitconfig.personal
-[init]
-	defaultBranch = master
 [filter "lfs"]
 	required = true
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
-[advice]
-	skippedCherryPicks = false
+
