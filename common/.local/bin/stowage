@@ -33,9 +33,10 @@ from os import path
 import re
 import shutil
 import sys
+from typing import Callable
 
 
-def add(args):
+def add(args: argparse.Namespace):
     target = path.realpath(args.target)
     file_path = path.realpath(args.add)
     package = path.realpath(args.packages[0])
@@ -57,7 +58,7 @@ def add(args):
         os.symlink(dest_path, file_path)
 
 
-def install(args, is_excluded):
+def install(args: argparse.Namespace, is_excluded: Callable[[str], bool]):
     for package in args.packages:
         if not path.isdir(package):
             print(f"no such package: {package}; skipping", file=sys.stderr)
@@ -90,7 +91,7 @@ def install(args, is_excluded):
                     os.symlink(src_path, dest_path)
 
 
-def uninstall(args, is_excluded):
+def uninstall(args: argparse.Namespace, is_excluded: Callable[[str], bool]):
     dirs = []
     for package in args.packages:
         if not path.isdir(package):
@@ -129,9 +130,14 @@ def uninstall(args, is_excluded):
             pass
 
 
-def make_argparser():
+def make_argparser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="A symlink farm manager.")
-    parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
+    parser.add_argument(
+        "--verbose",
+        "-v",
+        action="store_true",
+        help="Verbose output",
+    )
     parser.add_argument(
         "--target",
         "-t",
@@ -146,7 +152,12 @@ def make_argparser():
         metavar="GLOB",
         help="Glob pattern of files to exclude",
     )
-    parser.add_argument("--dry-run", "-n", action="store_true", help="Dry run.")
+    parser.add_argument(
+        "--dry-run",
+        "-n",
+        action="store_true",
+        help="Dry run",
+    )
 
     group = parser.add_mutually_exclusive_group(required=False)
     group.add_argument(
@@ -157,11 +168,17 @@ def make_argparser():
         help="Uninstall symlinks",
     )
     group.add_argument(
-        "--add", "-a", metavar="FILE", help="Stow files in a particular package"
+        "--add",
+        "-a",
+        metavar="FILE",
+        help="Stow files in a particular package",
     )
 
     parser.add_argument(
-        "packages", metavar="PACKAGE", nargs="+", help="Packages to install"
+        "packages",
+        metavar="PACKAGE",
+        nargs="+",
+        help="Packages to install",
     )
     return parser
 
