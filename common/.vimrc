@@ -89,7 +89,8 @@ au BufRead,BufNewFile *.vala,*.vapi
 
 " Dexy/JSON
 au BufNewFile,BufRead *.dexy,*.json
-  \ setfiletype javascript
+  \ setfiletype javascript |
+  \ setlocal sw=2 ts=2 sts=2 et ai sta
 
 au BufNewFile,BufRead *.fth
   \ setfiletype forth
