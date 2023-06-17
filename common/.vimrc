@@ -107,7 +107,10 @@ au BufNewFile,BufRead,Syntax *.erl,*.hs
   \ setlocal et ai si sta
 au BufNewFile,BufRead,Syntax *.py,*.rst
   \ setlocal sw=4 ts=4 sts=4 et ai sta
-au BufNewFile,BufRead,Syntax *.java,*.groovy,Jenkinsfile,Jenkinsfile.*
+au BufNewFile,BufRead,Syntax Jenkinsfile,Jenkinsfile.*
+  \ set filetype=groovy |
+  \ setlocal sw=4 ts=4 sts=4 et ai sta
+au BufNewFile,BufRead,Syntax *.java,*.groovy
   \ setlocal sw=4 ts=4 sts=4 et ai sta
 au BufNewFile,BufRead,Syntax *.rnc
   \ setlocal et ts=2 sts=2 sw=2 ai
