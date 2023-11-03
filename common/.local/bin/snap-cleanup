@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eu -o pipefail
+set -eu
 
 if ! command -v snap >/dev/null; then
 	echo "No snap command: nothing to do" >&2

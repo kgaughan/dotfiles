@@ -120,7 +120,7 @@ au FileType python
   \ setlocal sw=4 ts=4 sts=4 et ai sta
 au FileType groovy,java
   \ setlocal sw=4 ts=4 sts=4 et ai sta
-au FileType lua
+au FileType lua,dart
   \ setlocal sw=2 ts=2 sts=2 et ai sta
 au FileType ocaml
   \ let b:delimitMate_quotes = "\"" " Make type variables less annoying
@@ -240,6 +240,7 @@ call plug#begin()
 Plug 'vim-airline/vim-airline'
 Plug 'airblade/vim-gitgutter'
 Plug 'dag/vim-fish'
+Plug 'dart-lang/dart-vim-plugin'
 Plug 'davidhalter/jedi-vim'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -251,7 +252,7 @@ Plug 'mrk21/yaml-vim'
 Plug 'nvie/vim-flake8'
 Plug 'plasticboy/vim-markdown'
 if has('python3')
-  Plug 'psf/black', { 'tag': '23.3.0' }
+  Plug 'psf/black', { 'tag': '23.9.1' }
   autocmd BufWritePre *.py execute ':Black'
 endif
 Plug 'Raimondi/delimitMate'
