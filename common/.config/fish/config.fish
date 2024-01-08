@@ -5,7 +5,7 @@ set fish_greeting
 umask 022
 
 # fish_add_path ~/.local/bin /usr/local/go/bin /usr/{local,pkg}/{sbin,bin}
-for dir in /usr/{local,pkg}/{sbin,bin} /usr/local/go/bin ~/.local/bin
+for dir in /usr/{local,pkg}/{sbin,bin} /opt/homebrew/bin /usr/local/go/bin ~/.local/bin
 	if not contains $dir $PATH; and test -d $dir
 		set -x PATH $dir $PATH
 	end
