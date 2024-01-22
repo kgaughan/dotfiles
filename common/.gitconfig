@@ -48,6 +48,7 @@
 	# List remote branches
 	lrb = !"f () { git ls-remote --heads \"${1:-origin}\"; }; f"
 	make-patch = !"git --no-pager diff --no-prefix"
+	purge-merged = !"f () { git branch -v | grep -F ' [gone] ' | cut -f3 -d' ' | xargs git branch -D; }; f"
 [credential]
 	helper = cache --timeout=3600
 [init]
