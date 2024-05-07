@@ -242,6 +242,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'dag/vim-fish'
 Plug 'dart-lang/dart-vim-plugin'
 Plug 'davidhalter/jedi-vim'
+Plug 'editorconfig/editorconfig-vim'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'Glench/Vim-Jinja2-Syntax'
@@ -252,7 +253,7 @@ Plug 'mrk21/yaml-vim'
 Plug 'nvie/vim-flake8'
 Plug 'plasticboy/vim-markdown'
 if has('python3')
-  Plug 'psf/black', { 'tag': '23.9.1' }
+  Plug 'psf/black', { 'tag': '24.4.2' }
   autocmd BufWritePre *.py execute ':Black'
 endif
 Plug 'Raimondi/delimitMate'
