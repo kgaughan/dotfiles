@@ -17,6 +17,9 @@ fi
 if command -v brew >/dev/null; then
 	brew update && brew upgrade && brew upgrade --cask && brew cleanup
 elif test "$(id -u)" -eq 0; then
+	if command -v systemctl >/dev/null; then
+		systemctl daemon-reload
+	fi
 	if command -v apt >/dev/null; then
 		apt update && apt upgrade && apt autoremove
 	elif command -v pkg >/dev/null && command -v freebsd-version >/dev/null; then
