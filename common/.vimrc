@@ -22,9 +22,6 @@ set wildmode=list:longest,full
 set wildignore=*.o,*~,*.pyc,*.pyo,*.so,.*.sw*,__pycache__,*.bak,*.a,*.la,*.mo,.git,.svn,*.so
 set backspace=indent,eol,start
 set ttyfast
-" Both for minime, which as oddly slow scrolling.
-set scrolljump=4
-set ttyscroll=100
 " http://stackoverflow.com/questions/235439/vim-80-column-layout-concerns/3765575
 if exists('+colorcolumn')
   set colorcolumn=79
