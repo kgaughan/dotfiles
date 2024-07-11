@@ -245,6 +245,7 @@ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'godlygeek/tabular' " Must come before vim-markdown
 Plug 'hashivim/vim-terraform'
+Plug 'jjo/vim-cue'
 Plug 'junegunn/goyo.vim'
 Plug 'mrk21/yaml-vim'
 Plug 'nvie/vim-flake8'
