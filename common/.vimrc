@@ -78,49 +78,17 @@ au!
 
 au FileType text setlocal textwidth=78
 
-au BufRead *.vala,*.vapi
-  \ set efm=%f:%l.%c-%[%^:]%#:\ %t%[^:]%#:\ %m
-au BufRead,BufNewFile *.vala,*.vapi
-  \ setfiletype vala |
-  \ setlocal cin et
-
-" Dexy/JSON
-au BufNewFile,BufRead *.dexy,*.json
-  \ setfiletype javascript |
-  \ setlocal sw=2 ts=2 sts=2 et ai sta
-
-au BufNewFile,BufRead *.fth
-  \ setfiletype forth
-
-au BufNewFile,BufRead *.genshi
-  \ setfiletype genshi
-
 au FileType yaml setlocal cursorcolumn
 
 " Settings for various modes.
-au BufNewFile,BufRead,Syntax *.rb,*.rhtml,*.scm,*.vim,.vimrc,*.ml,*.xml,*.mll,*.mly,*.lsa,*.xsd,*.css,*.scss
+au BufNewFile,BufRead,Syntax *.vim,.vimrc,*.xml,*.css
   \ setlocal sw=2 ts=2 sts=2 et
-au BufNewFile,BufRead,Syntax *.erl,*.hs
-  \ setlocal et ai si sta
 au BufNewFile,BufRead,Syntax *.py,*.rst
   \ setlocal sw=4 ts=4 sts=4 et ai sta
-au BufNewFile,BufRead,Syntax Jenkinsfile,Jenkinsfile.*
-  \ set filetype=groovy |
-  \ setlocal sw=4 ts=4 sts=4 et ai sta
-au BufNewFile,BufRead,Syntax *.java,*.groovy
-  \ setlocal sw=4 ts=4 sts=4 et ai sta
-au BufNewFile,BufRead,Syntax *.rnc
-  \ setlocal et ts=2 sts=2 sw=2 ai
 au BufNewFile,BufRead,Syntax Makefile
   \ setlocal sw=8 ts=8 sts=8
 au FileType python
   \ setlocal sw=4 ts=4 sts=4 et ai sta
-au FileType groovy,java
-  \ setlocal sw=4 ts=4 sts=4 et ai sta
-au FileType lua,dart
-  \ setlocal sw=2 ts=2 sts=2 et ai sta
-au FileType ocaml
-  \ let b:delimitMate_quotes = "\"" " Make type variables less annoying
 
 au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc,*.lsa,*.ini,*.rnc
   \ call ScrubTrailing()
@@ -159,21 +127,7 @@ inoremap {<CR> {<CR>}<C-o>O
 inoremap [<CR> [<CR>]<C-o>O
 inoremap (<CR> (<CR>)<C-o>O
 
-" Helpful window navigation {{{
-" moves up and down between windows and maximises the focused window.
-map <C-J> <C-W>j<C-W>_
-map <C-K> <C-W>k<C-W>_
-" }}}
-
 " Functions {{{
-
-" Collapse blank lines
-function! Collapse()
-  let save_cursor = getpos('.')
-  %s/\s\+$//e
-  %s/\n\{3,}/\r\r/e
-  call setpos('.', save_cursor)
-endfunction
 
 function! ScrubTrailing()
   let save_cursor = getpos('.')
@@ -195,10 +149,6 @@ endfunction
 
 set pastetoggle=<F11>
 
-" Insert timestamp
-nmap <F3> A<C-R>=strftime('%Y-%m-%d %H:%M:%S')<CR><Esc>
-imap <F3> <C-R>=strftime('%Y-%m-%d %H:%M:%S')<CR>
-
 " airline config
 let g:airline_theme = 'dark'
 let g:airline#extensions#ale#enabled = 1
@@ -211,24 +161,13 @@ let g:airline_right_sep = ''
 
 let python_highlight_all = 1
 
-let g:terraform_align = 1
-let g:terraform_fmt_on_save = 1
-
-let g:rustfmt_autosave = 1
-
-let g:ocaml_highlight_operators = 1
-
 " Needed for some work stuff. *shrug*
 let g:go_version_warning = 0
-
-let g:vim_markdown_folding_disabled = 1
 
 let g:gitgutter_enabled = 1
 
 " Completion {{{
 set completeopt=preview,menuone,longest
-let g:SuperTabDefaultCompletionType = '<C-X><C-O>'
-let g:SuperTabDefaultCompletionType = 'context'
 " }}}
 
 " Register and load plugins {{{
@@ -237,27 +176,8 @@ call plug#begin()
 Plug 'vim-airline/vim-airline'
 Plug 'airblade/vim-gitgutter'
 Plug 'dag/vim-fish'
-Plug 'dart-lang/dart-vim-plugin'
-Plug 'davidhalter/jedi-vim'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'ervandew/supertab'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-Plug 'Glench/Vim-Jinja2-Syntax'
-Plug 'godlygeek/tabular' " Must come before vim-markdown
-Plug 'hashivim/vim-terraform'
-Plug 'jjo/vim-cue'
-Plug 'junegunn/goyo.vim'
 Plug 'mrk21/yaml-vim'
-Plug 'nvie/vim-flake8'
-Plug 'plasticboy/vim-markdown'
-if has('python3')
-  Plug 'psf/black', { 'tag': '24.4.2' }
-  autocmd BufWritePre *.py execute ':Black'
-endif
-Plug 'Raimondi/delimitMate'
-Plug 'ocaml/vim-ocaml'
-Plug 'rust-lang/rust.vim'
-Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'vimscript/toml'

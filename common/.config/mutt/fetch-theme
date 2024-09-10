@@ -1,3 +1,0 @@
-#!/bin/sh
-
-curl -o solarized-dark.muttrc https://raw.githubusercontent.com/altercation/mutt-colors-solarized/master/mutt-colors-solarized-dark-256.muttrc

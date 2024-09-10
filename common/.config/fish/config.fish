@@ -5,7 +5,7 @@ set fish_greeting
 umask 022
 
 # fish_add_path ~/.local/bin /usr/local/go/bin /usr/{local,pkg}/{sbin,bin}
-for dir in /usr/{local,pkg}/{sbin,bin} /opt/homebrew/bin /usr/local/go/bin ~/.local/bin
+for dir in /usr/{local,pkg}/{sbin,bin} /opt/homebrew/bin /usr/local/go/bin ~/.local/bin ~/.cargo/bin
 	if not contains $dir $PATH; and test -d $dir
 		set -x PATH $dir $PATH
 	end
@@ -108,13 +108,6 @@ if status is-interactive
 
 	if not set -q ANDROID_ROOT; and not set -q SSH_AUTH_SOCK
 		eval (ssh-agent -c)
-	end
-
-	if command -s pyenv
-		set -Ux PYENV_ROOT ~/.pyenv
-		pyenv init --path | source
-		pyenv init - | source
-		pyenv virtualenv-init - | source
 	end
 
 	command -s opam; and eval (opam env)
