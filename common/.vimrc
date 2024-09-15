@@ -76,12 +76,12 @@ endif
 augroup vimrcEx
 au!
 
-au FileType text setlocal textwidth=78
+au FileType text setlocal textwidth=120
 
 au FileType yaml setlocal cursorcolumn
 
 " Settings for various modes.
-au BufNewFile,BufRead,Syntax *.vim,.vimrc,*.xml,*.css
+au BufNewFile,BufRead,Syntax *.vim,.vimrc,*.xml
   \ setlocal sw=2 ts=2 sts=2 et
 au BufNewFile,BufRead,Syntax *.py,*.rst
   \ setlocal sw=4 ts=4 sts=4 et ai sta
@@ -89,8 +89,9 @@ au BufNewFile,BufRead,Syntax Makefile
   \ setlocal sw=8 ts=8 sts=8
 au FileType python
   \ setlocal sw=4 ts=4 sts=4 et ai sta
-
-au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc,*.lsa,*.ini,*.rnc
+au FileType ocaml,dart,css,lua
+  \ setlocal sw=2 ts=2 sts=2 et ai sta
+au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc,*.lsa,*.ini,*.rnc,*.lua
   \ call ScrubTrailing()
 
 " Automatically give executable permissions
@@ -161,6 +162,10 @@ let g:airline_right_sep = ''
 
 let python_highlight_all = 1
 
+let g:rustfmt_autosave = 1
+
+let g:ocaml_highlight_operators = 1
+
 " Needed for some work stuff. *shrug*
 let g:go_version_warning = 0
 
@@ -177,7 +182,10 @@ Plug 'vim-airline/vim-airline'
 Plug 'airblade/vim-gitgutter'
 Plug 'dag/vim-fish'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'mrk21/yaml-vim'
+Plug 'ocaml/vim-ocaml'
+Plug 'rust-lang/rust.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'vimscript/toml'
