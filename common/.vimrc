@@ -87,6 +87,10 @@ au BufNewFile,BufRead,Syntax *.py,*.rst
   \ setlocal sw=4 ts=4 sts=4 et ai sta
 au BufNewFile,BufRead,Syntax Makefile
   \ setlocal sw=8 ts=8 sts=8
+au FileType groovy,java
+  \ setlocal sw=4 ts=4 sts=4 noet ai sta
+au FileType *.java,*.groovy,Jenkinsfile*
+  \ setlocal sw=4 ts=4 sts=4 noet ai sta
 au FileType python
   \ setlocal sw=4 ts=4 sts=4 et ai sta
 au FileType ocaml,dart,css,lua
@@ -162,6 +166,9 @@ let g:airline_right_sep = ''
 
 let python_highlight_all = 1
 
+let g:terraform_align = 1
+let g:terraform_fmt_on_save = 1
+
 let g:rustfmt_autosave = 1
 
 let g:ocaml_highlight_operators = 1
@@ -173,6 +180,8 @@ let g:gitgutter_enabled = 1
 
 " Completion {{{
 set completeopt=preview,menuone,longest
+let g:SuperTabDefaultCompletionType = '<C-X><C-O>'
+let g:SuperTabDefaultCompletionType = 'context'
 " }}}
 
 " Register and load plugins {{{
@@ -181,11 +190,20 @@ call plug#begin()
 Plug 'vim-airline/vim-airline'
 Plug 'airblade/vim-gitgutter'
 Plug 'dag/vim-fish'
+Plug 'davidhalter/jedi-vim'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'hashivim/vim-terraform'
 Plug 'mrk21/yaml-vim'
 Plug 'ocaml/vim-ocaml'
 Plug 'rust-lang/rust.vim'
+if has('python3')
+  Plug 'psf/black', { 'tag': '24.4.2' }
+  autocmd BufWritePre *.py execute ':Black'
+endif
+Plug 'Raimondi/delimitMate'
+Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'vimscript/toml'
