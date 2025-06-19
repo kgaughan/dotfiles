@@ -152,8 +152,6 @@ endfunction
 
 " }}}
 
-set pastetoggle=<F11>
-
 " airline config
 let g:airline_theme = 'dark'
 let g:airline#extensions#ale#enabled = 1
