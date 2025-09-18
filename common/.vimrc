@@ -197,7 +197,7 @@ Plug 'mrk21/yaml-vim'
 Plug 'ocaml/vim-ocaml'
 Plug 'rust-lang/rust.vim'
 if has('python3')
-  Plug 'psf/black', { 'tag': '24.4.2' }
+  Plug 'psf/black', { 'tag': '25.1.0' }
   autocmd BufWritePre *.py execute ':Black'
 endif
 Plug 'Raimondi/delimitMate'
