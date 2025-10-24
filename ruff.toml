@@ -1,0 +1,61 @@
+target-version = "py311"
+line-length = 120
+src = ["common/.local/bin"]
+
+[lint]
+ignore = [
+  "PLR2004", # Magic value used in comparison
+  "PLW2901", # Redefined loop variable
+  "T201",    # 'print' found
+  "PLR0912", # Too many branches
+  "C901",    # Function is too complex
+]
+select = [
+  "A",
+  "ANN",
+  "ARG",
+  "B",
+  "C",
+  "DTZ",
+  "E",
+  "EM",
+  "EXE",
+  "F",
+  "FBT",
+  "FLY",
+  "FURB",
+  "G",
+  "I",
+  "ICN",
+  "ISC002",
+  "LOG",
+  "N",
+  "PERF",
+  "PIE",
+  "PLC",
+  "PLE",
+  "PLR",
+  "PLW",
+  "PT",
+  "PYI",
+  "Q",
+  "RET",
+  "RSE",
+  "RUF",
+  "S",
+  "SIM",
+  "SLOT",
+  "T",
+  "TC",
+  "TID",
+  "TRY",
+  "UP",
+  "W",
+  "YTT",
+]
+
+[lint.isort]
+force-sort-within-sections = true
+
+[lint.flake8-tidy-imports]
+ban-relative-imports = "all"

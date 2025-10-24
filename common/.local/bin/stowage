@@ -27,16 +27,16 @@ SOFTWARE.
 """
 
 import argparse
+from collections import abc
 import fnmatch
 import os
 from os import path
 import re
 import shutil
 import sys
-from typing import Callable
 
 
-def add(args: argparse.Namespace):
+def add(args: argparse.Namespace) -> None:
     target = path.realpath(args.target)
     file_path = path.realpath(args.add)
     package = path.realpath(args.packages[0])
@@ -58,7 +58,7 @@ def add(args: argparse.Namespace):
         os.symlink(dest_path, file_path)
 
 
-def install(args: argparse.Namespace, is_excluded: Callable[[str], bool]):
+def install(args: argparse.Namespace, is_excluded: abc.Callable[[str], bool]) -> None:
     for package in args.packages:
         if not path.isdir(package):
             print(f"no such package: {package}; skipping", file=sys.stderr)
@@ -91,7 +91,7 @@ def install(args: argparse.Namespace, is_excluded: Callable[[str], bool]):
                     os.symlink(src_path, dest_path)
 
 
-def uninstall(args: argparse.Namespace, is_excluded: Callable[[str], bool]):
+def uninstall(args: argparse.Namespace, is_excluded: abc.Callable[[str], bool]) -> None:
     dirs = []
     for package in args.packages:
         if not path.isdir(package):
@@ -183,12 +183,12 @@ def make_argparser() -> argparse.ArgumentParser:
     return parser
 
 
-def main():
+def main() -> None:
     parser = make_argparser()
     args = parser.parse_args()
     exclude = [re.compile(fnmatch.translate(pattern)) for pattern in args.exclude]
 
-    def is_excluded(filename):
+    def is_excluded(filename: str)-> bool:
         return any(pattern.match(filename) for pattern in exclude)
 
     if args.add:

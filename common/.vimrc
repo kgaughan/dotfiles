@@ -200,6 +200,7 @@ if has('python3')
   Plug 'psf/black', { 'tag': '25.1.0' }
   autocmd BufWritePre *.py execute ':Black'
 endif
+Plug 'NoahTheDuke/vim-just'
 Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'

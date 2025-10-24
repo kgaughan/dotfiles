@@ -5,14 +5,14 @@ import struct
 import sys
 
 
-def cidr(addr, sz):
+def cidr(addr:str, sz:int) -> str:
     mask = (0xFFFFFFFF >> sz) ^ 0xFFFFFFFF
     (addr_n,) = struct.unpack("!I", socket.inet_aton(addr))
     base = socket.inet_ntoa(struct.pack("!I", addr_n & mask))
     return f"{base}/{sz}"
 
 
-def main():
+def main() -> int:
     if len(sys.argv) != 3:
         print("Two arguments required, IP and CIDR range.", file=sys.stderr)
         return 2
