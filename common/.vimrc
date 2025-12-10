@@ -197,10 +197,11 @@ Plug 'mrk21/yaml-vim'
 Plug 'ocaml/vim-ocaml'
 Plug 'rust-lang/rust.vim'
 if has('python3')
-  Plug 'psf/black', { 'tag': '25.1.0' }
+  Plug 'psf/black', { 'tag': '25.12.0' }
   autocmd BufWritePre *.py execute ':Black'
 endif
 Plug 'NoahTheDuke/vim-just'
+Plug 'gpanders/vim-scdoc'
 Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
