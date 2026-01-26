@@ -37,7 +37,7 @@
 	dc = diff --cached
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 	uncommit = !"f () { git reset --soft \"HEAD~${1:-1}\"; }; f"
-	aggressive = !"git fsck --unreachable; git reflog expire --expire=0 --all; git repack -a -d -l; git prune; git gc --aggressive"
+	aggressive = !"f () { git fsck --unreachable; git reflog expire --expire=0 --all; git repack -a -d -l; git prune; git gc --aggressive; }; f"
 	pull-all = !"git pull --recurse-submodules --rebase && git submodule update --init --recursive"
 	rebase-against-master = !"git checkout master && git pull --rebase && git checkout @{-1} && git rebase master"
 	rebase-against-root = !"git rebase -i $(git merge-base --all master HEAD)"
@@ -48,7 +48,8 @@
 	# List remote branches
 	lrb = !"f () { git ls-remote --heads \"${1:-origin}\"; }; f"
 	make-patch = !"git --no-pager diff --no-prefix"
-	purge-merged = !"f () { git branch -v | grep -F ' [gone] ' | cut -f3 -d' ' | xargs git branch -D; }; f"
+	purge-merged = !"f () { git remote prune origin; git branch --merged | grep -Ev '(^\\*|\\<master\\>|\\<main\\>)' | xargs git branch -d; }; f"
+	purge-gone = !"git branch -v | grep -F ' [gone] ' | cut -f3 -d' ' | xargs git branch -D"
 [credential]
 	helper = cache --timeout=3600
 [init]

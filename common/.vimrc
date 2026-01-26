@@ -90,7 +90,7 @@ au BufNewFile,BufRead,Syntax Makefile
 au FileType groovy,java
   \ setlocal sw=4 ts=4 sts=4 noet ai sta
 au FileType *.java,*.groovy,Jenkinsfile*
-  \ setlocal sw=4 ts=4 sts=4 noet ai sta
+  \ setlocal sw=4 ts=4 sts=4 et ai sta
 au FileType python
   \ setlocal sw=4 ts=4 sts=4 et ai sta
 au FileType ocaml,dart,css,lua
