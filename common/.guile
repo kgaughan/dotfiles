@@ -1,2 +1,3 @@
+(use-modules (texinfo reflection))
 (use-modules (ice-9 readline))
 (activate-readline)
