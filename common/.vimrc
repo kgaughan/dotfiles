@@ -83,6 +83,8 @@ au FileType yaml setlocal cursorcolumn
 " Settings for various modes.
 au BufNewFile,BufRead,Syntax *.vim,.vimrc,*.xml
   \ setlocal sw=2 ts=2 sts=2 et
+au BufNewFile,BufRead,Syntax *.hs,*.cabal
+  \ setlocal sw=2 ts=2 sts=2 et ai sta
 au BufNewFile,BufRead,Syntax *.py,*.rst
   \ setlocal sw=4 ts=4 sts=4 et ai sta
 au BufNewFile,BufRead,Syntax Makefile
@@ -93,9 +95,9 @@ au FileType *.java,*.groovy,Jenkinsfile*
   \ setlocal sw=4 ts=4 sts=4 et ai sta
 au FileType python
   \ setlocal sw=4 ts=4 sts=4 et ai sta
-au FileType ocaml,dart,css,lua
+au FileType ocaml,dart,css,lua,haskell,cabal
   \ setlocal sw=2 ts=2 sts=2 et ai sta
-au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc,*.lsa,*.ini,*.rnc,*.lua
+au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc,*.lsa,*.ini,*.rnc,*.lua,*.hs,*.cabal
   \ call ScrubTrailing()
 
 " Automatically give executable permissions
@@ -188,11 +190,12 @@ call plug#begin()
 Plug 'vim-airline/vim-airline'
 Plug 'airblade/vim-gitgutter'
 Plug 'dag/vim-fish'
-Plug 'davidhalter/jedi-vim'
+"Plug 'davidhalter/jedi-vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'hashivim/vim-terraform'
+Plug 'itchyny/vim-haskell-indent'
 Plug 'mrk21/yaml-vim'
 Plug 'ocaml/vim-ocaml'
 Plug 'rust-lang/rust.vim'
