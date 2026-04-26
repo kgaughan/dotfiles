@@ -200,7 +200,7 @@ Plug 'mrk21/yaml-vim'
 Plug 'ocaml/vim-ocaml'
 Plug 'rust-lang/rust.vim'
 if has('python3')
-  Plug 'psf/black', { 'tag': '25.12.0' }
+  Plug 'psf/black', { 'tag': '26.3.1' }
   autocmd BufWritePre *.py execute ':Black'
 endif
 Plug 'NoahTheDuke/vim-just'
