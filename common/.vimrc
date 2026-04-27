@@ -83,7 +83,7 @@ au FileType yaml setlocal cursorcolumn
 " Settings for various modes.
 au BufNewFile,BufRead,Syntax *.vim,.vimrc,*.xml
   \ setlocal sw=2 ts=2 sts=2 et
-au BufNewFile,BufRead,Syntax *.hs,*.cabal
+au BufNewFile,BufRead,Syntax *.hs,*.cabal,*.gleam
   \ setlocal sw=2 ts=2 sts=2 et ai sta
 au BufNewFile,BufRead,Syntax *.py,*.rst
   \ setlocal sw=4 ts=4 sts=4 et ai sta
@@ -95,7 +95,7 @@ au FileType *.java,*.groovy,Jenkinsfile*
   \ setlocal sw=4 ts=4 sts=4 et ai sta
 au FileType python
   \ setlocal sw=4 ts=4 sts=4 et ai sta
-au FileType ocaml,dart,css,lua,haskell,cabal
+au FileType ocaml,dart,css,lua,haskell,cabal,gleam
   \ setlocal sw=2 ts=2 sts=2 et ai sta
 au BufWritePre *.py,*.rst,*.php,*.css,*.rb,*.rhtml,*.scm,*.sh,*.h,*.c,*.cc,*.lsa,*.ini,*.rnc,*.lua,*.hs,*.cabal
   \ call ScrubTrailing()
